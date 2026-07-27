@@ -1,27 +1,38 @@
-# MoveMate 🚚
+# 🚚 MoveMate
 
-MoveMate is a full-stack web application that helps users manage utility transfers when moving to a new apartment.
+MoveMate is a full-stack web application designed to simplify utility transfers when moving to a new apartment.
+
+The application helps users manage electricity, gas, water and other service transfers in one place.
+
+---
 
 ## 🚀 Features
 
 - User registration and login
 - JWT authentication
 - Protected routes
-- Create / edit / delete transfers
-- Manage electricity, gas, water services
-- User profile
+- Password hashing with bcrypt
+- User profile management
 - Avatar upload
-- Responsive UI
+- Create utility transfer requests
+- View all transfers
+- Edit transfers
+- Delete transfers
+- Responsive user interface
+
+---
 
 ## 🛠 Tech Stack
 
-Frontend:
+### Frontend
+
 - React
 - Vite
 - React Router
 - CSS
 
-Backend:
+### Backend
+
 - Node.js
 - Express.js
 - MongoDB
@@ -30,52 +41,6 @@ Backend:
 - bcrypt
 - Multer
 
+---
+
 ## 📂 Project Structure
-
-movemate/
-│
-├── frontend/
-│
-└── backend/
-
-
-## ⚙️ Installation
-
-Clone repository:
-
-git clone YOUR_LINK
-
-
-Backend:
-
-cd backend
-
-npm install
-
-npm start
-
-
-Frontend:
-
-cd frontend
-
-npm install
-
-npm run dev
-
-
-## 🔐 Environment Variables
-
-Create .env file:
-
-MONGO_URI=
-JWT_SECRET=
-
-## 📸 Screenshots
-
-(Add screenshots here)
-
-
-## 👨‍💻 Author
-
-Giorgi Tsaturovi
