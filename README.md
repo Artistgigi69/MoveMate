@@ -78,4 +78,4 @@ JWT_SECRET=
 
 ## 👨‍💻 Author
 
-Giorgi Tsaturov
+Giorgi Tsaturovi
