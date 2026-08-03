@@ -35,14 +35,55 @@ const transferSchema = new mongoose.Schema({
             status: {
                 type: String,
                 default: "Pending"
+            },
+
+            meterPhoto: {
+                type: String,
+                default: ""
+            },
+
+            requestSentAt: {
+                type: Date,
+                default: null
+            },
+
+            // Lets the new tenant confirm the meter reading from a link,
+            // with no login required.
+            confirmToken: {
+                type: String,
+                default: ""
+            },
+
+            confirmedByTenant: {
+                type: Boolean,
+                default: false
+            },
+
+            confirmedAt: {
+                type: Date,
+                default: null
             }
         }
     ],
 
 
+    newTenant: {
+        name: String,
+        phone: String,
+        email: String,
+        idNumber: String
+    },
+
+
     createdAt: {
         type: Date,
         default: Date.now
+    },
+
+
+    reminderSent: {
+        type: Boolean,
+        default: false
     }
 
 });

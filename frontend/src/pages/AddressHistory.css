@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #16182B;
+  --ink-soft: #8A8FB3;
+  --cloud: #F5F7FC;
+  --card: #FFFFFF;
+
+  --brand: #6C5CE7;
+  --brand-soft: #EFECFD;
+
+  --teal: #14B8A6;
+  --teal-soft: #E3F9F6;
+
+  --coral: #FF6B57;
+  --coral-soft: #FFEBE8;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --shadow-card: 0 8px 24px rgba(22, 24, 43, 0.06);
+  --shadow-hover: 0 14px 32px rgba(22, 24, 43, 0.10);
+}
+
+* { box-sizing: border-box; }
+
+.address-history-page {
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  background: var(--cloud);
+  min-height: 100vh;
+  padding: 40px 48px 64px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.address-history-page h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--ink-soft);
+  font-size: 15px;
+  margin: 6px 0 28px;
+}
+
+.address-empty,
+.address-empty-box {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 40px;
+}
+
+.address-empty-box {
+  background: var(--card);
+  border-radius: var(--radius-tile, var(--radius-lg));
+  box-shadow: var(--shadow-card);
+}
+
+.address-empty-box svg {
+  font-size: 34px;
+  color: var(--brand);
+  margin-bottom: 10px;
+}
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.address-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.address-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.address-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 14px;
+  background: var(--grad-violet, var(--brand));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.address-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.address-info h3 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+}
+
+.address-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.tag-to { background: var(--teal-soft); color: var(--teal); }
+.tag-from { background: var(--coral-soft); color: var(--coral); }
+.tag-date { background: var(--brand-soft); color: var(--brand); }
+
+.use-address-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  background: var(--cloud);
+  color: var(--brand);
+  border: 1px solid var(--brand-soft);
+  border-radius: 999px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.use-address-btn:hover {
+  background: var(--brand-soft);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 700px) {
+  .address-history-page { padding: 28px 20px 48px; }
+  .address-card { flex-wrap: wrap; }
+  .use-address-btn { width: 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

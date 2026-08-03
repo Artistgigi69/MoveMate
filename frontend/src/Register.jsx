@@ -1,15 +1,23 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import registerImage from "./assets/register.png";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import MountainScene from "./illustrations/MountainScene";
+import LanguageSwitcher from "./LanguageSwitcher";
+import "./Auth.css";
 
 function Register() {
+
+  const { t } = useTranslation();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const refCode = searchParams.get("ref");
 
 
   const register = async (e) => {
@@ -19,7 +27,7 @@ const [showPassword, setShowPassword] = useState(false);
 
     try {
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
 
         method: "POST",
 
@@ -30,7 +38,8 @@ const [showPassword, setShowPassword] = useState(false);
         body: JSON.stringify({
   username: name,
   email,
-  password
+  password,
+  refCode
 })
 
       });
@@ -41,14 +50,14 @@ const [showPassword, setShowPassword] = useState(false);
 
       if (response.ok) {
 
-        toast.success("Account created successfully!");
+        toast.success(t("auth.registerSuccess"));
 
         navigate("/login");
 
 
       } else {
 
-        toast.error(data.message || "Registration failed");
+        toast.error(data.message || t("auth.registerFailed"));
 
       }
 
@@ -57,7 +66,7 @@ const [showPassword, setShowPassword] = useState(false);
 
       console.log(error);
 
-      toast.error("Server error");
+      toast.error(t("auth.serverError"));
 
     }
 
@@ -76,22 +85,16 @@ const [showPassword, setShowPassword] = useState(false);
 
 
         <h1>
-          Welcome to our app
+          {t("auth.registerTitle")}
         </h1>
 
 
         <p>
-          Create your account and start using our platform today.
+          {t("auth.registerIntro")}
         </p>
 
 
-        <img
-
-          src={registerImage}
-
-          alt="app illustration"
-
-        />
+        <MountainScene className="scene-illustration" />
 
 
       </div>
@@ -108,17 +111,26 @@ const [showPassword, setShowPassword] = useState(false);
         <div className="register-card">
 
 
+          <LanguageSwitcher className="on-light auth-lang-switcher" />
+
+
           <h1>
-            Create your MoveMate account
+            {t("auth.createAccountTitle")}
           </h1>
 
 
 
           <p className="auth-subtitle">
 
-            Join us today
+            {t("auth.createAccountSubtitle")}
 
           </p>
+
+          {
+            refCode && (
+              <p className="ref-note">{t("referral.invitedNote")}</p>
+            )
+          }
 
 
 
@@ -130,7 +142,7 @@ const [showPassword, setShowPassword] = useState(false);
 
               type="text"
 
-              placeholder="Full name"
+              placeholder={t("auth.fullNamePlaceholder")}
 
               value={name}
 
@@ -147,7 +159,7 @@ const [showPassword, setShowPassword] = useState(false);
 
               type="email"
 
-              placeholder="Email"
+              placeholder={t("auth.emailPlaceholder")}
 
               value={email}
 
@@ -164,7 +176,7 @@ const [showPassword, setShowPassword] = useState(false);
 
   <input
     type={showPassword ? "text" : "password"}
-    placeholder="Password"
+    placeholder={t("auth.passwordPlaceholder")}
     value={password}
     onChange={(e)=>setPassword(e.target.value)}
     required
@@ -173,7 +185,7 @@ const [showPassword, setShowPassword] = useState(false);
   <span
     onClick={() => setShowPassword(!showPassword)}
   >
-    {showPassword ? "🙈" : "👁"}
+    {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
   </span>
 
 </div>
@@ -183,7 +195,7 @@ const [showPassword, setShowPassword] = useState(false);
 
             <button type="submit">
 
-              Create account
+              {t("auth.createAccountButton")}
 
             </button>
 
@@ -198,12 +210,12 @@ const [showPassword, setShowPassword] = useState(false);
           <div className="auth-footer">
 
 
-            Already have an account?
+            {t("auth.haveAccount")}
 
 
             <Link to="/login">
 
-              Login
+              {t("auth.loginLink")}
 
             </Link>
 

@@ -1,0 +1,62 @@
+.move-reminder-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--grad-peach, linear-gradient(135deg, #FFB37B, #FF7A59));
+  box-shadow: var(--glow-peach, 0 14px 30px rgba(255, 122, 89, 0.35));
+  color: white;
+  border-radius: var(--radius-lg, 22px);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-family: 'Inter', sans-serif;
+}
+
+.reminder-icon {
+  font-size: 26px;
+  min-width: 26px;
+}
+
+.move-reminder-banner p {
+  flex: 1;
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.reminder-checklist-btn {
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.22);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.reminder-checklist-btn:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.reminder-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: white;
+  opacity: 0.85;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.reminder-close:hover {
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .move-reminder-banner { flex-wrap: wrap; }
+}

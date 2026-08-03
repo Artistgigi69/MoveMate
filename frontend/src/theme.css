@@ -1,0 +1,55 @@
+/* Shared visual language across the app: vivid gradient cards, soft
+   rounded shapes, tinted glow shadows. Loaded once globally; page-level
+   CSS files keep their own :root blocks for the older flat tokens, but
+   nothing else in the app redeclares these gradient names, so every
+   page inherits the same palette. */
+
+:root {
+  --grad-peach: linear-gradient(135deg, #FFB37B 0%, #FF7A59 100%);
+  --grad-pink: linear-gradient(135deg, #FF8FB1 0%, #FF4D7A 100%);
+  --grad-violet: linear-gradient(135deg, #9B8CFB 0%, #6C5CE7 100%);
+  --grad-indigo: linear-gradient(160deg, #362F78 0%, #6C5CE7 100%);
+  --grad-teal: linear-gradient(135deg, #34D8C6 0%, #0E9E82 100%);
+  --grad-dusk: linear-gradient(180deg, #2C2660 0%, #6C5CE7 55%, #FF8F6B 100%);
+
+  --glow-peach: 0 14px 30px rgba(255, 122, 89, 0.35);
+  --glow-pink: 0 14px 30px rgba(255, 77, 122, 0.35);
+  --glow-violet: 0 14px 30px rgba(108, 92, 231, 0.35);
+  --glow-teal: 0 14px 30px rgba(14, 158, 130, 0.32);
+
+  --radius-tile: 26px;
+  --radius-pill: 999px;
+
+  /* Shared border/divider tokens — every page CSS references these instead
+     of hardcoding hex, so dark mode can flip them in one place below. */
+  --border: #E9EBF5;
+  --divider: #EEF0F8;
+}
+
+/* ===== Dark mode =====
+   Declared on .app.dark, a DOM ancestor of every routed page. Custom
+   properties inherit down from the nearest ancestor that sets them, so
+   this wins over the identical --ink/--cloud/etc. names each page's own
+   :root block declares, without editing every one of those files. */
+.app.dark {
+  --ink: #F1F2FA;
+  --ink-soft: #9DA1C4;
+  --cloud: #12132A;
+  --card: #1C1E3D;
+
+  --border: #33355C;
+  --divider: #2B2D50;
+
+  --brand-soft: rgba(108, 92, 231, 0.22);
+  --teal-soft: rgba(20, 184, 166, 0.2);
+  --coral-soft: rgba(255, 107, 87, 0.2);
+  --amber-soft: rgba(255, 176, 32, 0.2);
+  --success-soft: rgba(34, 197, 94, 0.2);
+  --violet-soft: rgba(108, 92, 231, 0.22);
+
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0 14px 32px rgba(0, 0, 0, 0.45);
+
+  background: var(--cloud);
+  color-scheme: dark;
+}

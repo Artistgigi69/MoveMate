@@ -1,452 +1,124 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./App.css";
-import Navbar from "./Navbar";
+import { useTranslation } from "react-i18next";
+import {
+  MdLocalShipping,
+  MdBolt,
+  MdCheckCircle,
+  MdHome,
+  MdCreditCard,
+  MdCameraAlt
+} from "react-icons/md";
+import "./Profile.css";
 
-function Profile() {
 
-  const [user, setUser] = useState(null);
-  const [avatar, setAvatar] = useState(null);
+function Profile(){
 
-  const [oldAddress, setOldAddress] = useState("");
-  const [newAddress, setNewAddress] = useState("");
-  const [moveDate, setMoveDate] = useState("");
 
-  const [services, setServices] = useState([]);
+const navigate = useNavigate();
 
-  const [transfers, setTransfers] = useState([]);
+const { t } = useTranslation();
 
-  const navigate = useNavigate();
+const [user,setUser] = useState(null);
 
+const [dashboard,setDashboard] = useState(null);
 
 
-  // GET PROFILE
-  const getProfile = async () => {
 
-    try {
 
-      const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/profile`,
-        {
-          headers:{
-            Authorization: token
-          }
-        }
-      );
+// ================= UPLOAD AVATAR =================
 
 
-      const data = await response.json();
+const uploadAvatar = async(e)=>{
 
-      console.log("PROFILE:", data);
 
-      setUser(data);
+const file = e.target.files[0];
 
 
-    } catch(error){
+if(!file) return;
 
-      console.log(
-        "PROFILE ERROR:",
-        error
-      );
 
-    }
 
-  };
+const formData = new FormData();
 
 
+formData.append(
+"avatar",
+file
+);
 
 
 
-  // GET TRANSFERS
-  const getTransfers = async () => {
+try{
 
-    try {
 
-      const token = localStorage.getItem("token");
+const token = localStorage.getItem("token");
 
 
-      const response = await fetch(
-        "http://localhost:5000/transfers",
-        {
-          headers:{
-            Authorization: token
-          }
-        }
-      );
 
+const res = await fetch(
 
-      const data = await response.json();
+`${import.meta.env.VITE_API_URL}/profile/upload-avatar`,
 
+{
 
-      console.log(
-        "TRANSFERS:",
-        data
-      );
+method:"POST",
 
+headers:{
 
-      setTransfers(data);
+Authorization:token
 
+},
 
-    } catch(error){
+body:formData
 
-      console.log(
-        "TRANSFERS ERROR:",
-        error
-      );
+}
 
-    }
+);
 
-  };
 
 
+const data = await res.json();
 
+if(!data.avatar){
+  return;
+}
 
 
-  useEffect(()=>{
+setUser(prev=>({
 
-    getProfile();
+...prev,
 
-    getTransfers();
+avatar:data.avatar
 
-  },[]);
+}));
 
 
 
 
 
+// обновляем Sidebar
 
+window.dispatchEvent(
+new Event("userUpdated")
+);
 
-  // LOGOUT
-  const logout = () => {
 
-    localStorage.removeItem("token");
 
-    navigate("/login");
+}
 
-  };
+catch(error){
 
+console.log(
+"UPLOAD ERROR:",
+error
+);
 
 
+}
 
 
-
-
-
-  // UPLOAD AVATAR
-  const uploadAvatar = async () => {
-
-
-    if(!avatar){
-
-      alert("Select file first");
-
-      return;
-
-    }
-
-
-    try {
-
-
-      const formData = new FormData();
-
-
-      formData.append(
-        "avatar",
-        avatar
-      );
-
-
-      formData.append(
-        "userId",
-        user._id
-      );
-
-
-
-      const response = await fetch(
-        "http://localhost:5000/upload-avatar",
-        {
-          method:"POST",
-          body:formData
-        }
-      );
-
-
-
-      const data = await response.json();
-
-
-      console.log(
-        "UPLOAD:",
-        data
-      );
-
-
-      window.location.reload();
-
-
-
-    } catch(error){
-
-      console.log(
-        "UPLOAD ERROR:",
-        error
-      );
-
-    }
-
-
-  };
-
-
-
-
-
-
-
-
-  // SERVICES CHECKBOX
-  const changeService = (service)=>{
-
-
-    if(services.includes(service)){
-
-
-      setServices(
-        services.filter(
-          item=>item!==service
-        )
-      );
-
-
-    }else{
-
-
-      setServices([
-        ...services,
-        service
-      ]);
-
-
-    }
-
-
-  };
-
-
-
-
-
-
-
-
-
-  // CREATE TRANSFER
-  const createTransfer = async()=>{
-
-
-    try{
-
-
-      const token = localStorage.getItem("token");
-
-
-
-      const response = await fetch(
-        "http://localhost:5000/transfers",
-        {
-
-          method:"POST",
-
-
-          headers:{
-
-            "Content-Type":"application/json",
-
-            Authorization:token
-
-          },
-
-
-          body:JSON.stringify({
-
-            oldAddress,
-
-            newAddress,
-
-            moveDate,
-
-            services
-
-          })
-
-        }
-
-      );
-
-
-
-      const data = await response.json();
-
-
-      console.log(
-        "TRANSFER:",
-        data
-      );
-
-
-      alert(
-        "Transfer created!"
-      );
-
-
-
-      getTransfers();
-
-
-
-      setOldAddress("");
-
-      setNewAddress("");
-
-      setMoveDate("");
-
-      setServices([]);
-
-
-
-    }catch(error){
-
-
-      console.log(
-        "TRANSFER ERROR:",
-        error
-      );
-
-
-    }
-
-
-  };
-
-
-
-
-
-
-
-
-
-  // DELETE TRANSFER
-  const deleteTransfer = async(id)=>{
-
-
-    try{
-
-
-      const token = localStorage.getItem("token");
-
-
-      const response = await fetch(
-
-        `http://localhost:5000/transfers/${id}`,
-
-        {
-          method:"DELETE",
-
-          headers:{
-            Authorization:token
-          }
-
-        }
-
-      );
-
-
-
-      const data = await response.json();
-
-
-
-      console.log(
-        "DELETE:",
-        data
-      );
-
-
-
-      getTransfers();
-
-
-
-    }catch(error){
-
-
-      console.log(
-        "DELETE ERROR:",
-        error
-      );
-
-
-    }
-
-
-  };
-
-
-// UPDATE STATUS
-const updateStatus = async (transferId, serviceIndex, newStatus) => {
-
-  try {
-
-    const token = localStorage.getItem("token");
-
-
-    const response = await fetch(
-      `http://localhost:5000/transfers/${transferId}/status`,
-      {
-        method:"PUT",
-
-        headers:{
-          "Content-Type":"application/json",
-          Authorization: token
-        },
-
-        body:JSON.stringify({
-
-          serviceIndex,
-
-          status:newStatus
-
-        })
-
-      }
-    );
-
-
-    const data = await response.json();
-
-
-    console.log(
-      "STATUS UPDATE:",
-      data
-    );
-
-
-    getTransfers();
-
-
-  } catch(error){
-
-    console.log(
-      "STATUS ERROR:",
-      error
-    );
-
-  }
 
 };
 
@@ -455,75 +127,511 @@ const updateStatus = async (transferId, serviceIndex, newStatus) => {
 
 
 
-  return (
-
-<>
-<Navbar />
 
 
-<div className="container">
+// ================= LOAD DATA =================
+
+
+
+useEffect(()=>{
+
+
+const token = localStorage.getItem("token");
+
+
+
+
+const loadProfile = async()=>{
+
+
+try{
+
+
+const res = await fetch(
+
+`${import.meta.env.VITE_API_URL}/profile`,
+
+{
+
+headers:{
+
+Authorization:token
+
+}
+
+}
+
+);
+
+
+
+const data = await res.json();
+
+
+setUser(data);
+
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+
+
+};
+
+
+
+
+
+
+
+const loadDashboard = async()=>{
+
+
+try{
+
+
+const res = await fetch(
+
+`${import.meta.env.VITE_API_URL}/dashboard`,
+
+{
+
+headers:{
+
+Authorization:token
+
+}
+
+}
+
+);
+
+
+
+const data = await res.json();
+
+
+setDashboard(data);
+
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+
+};
+
+
+
+
+
+loadProfile();
+
+loadDashboard();
+
+
+
+},[]);
+
+
+
+
+
+
+
+
+if(!user){
+
+
+return(
+
+<div className="loading">
+
+{t("common.loading")}
+
+</div>
+
+)
+
+
+}
+
+
+
+
+
+
+
+
+
+return(
+
+
+<div className="dashboard">
+
+
+
+
+
+<div className="header">
+
+
+<div>
 
 
 <h1>
-Profile
+
+{t("dashboard.greeting", { name: user.username })}
+
 </h1>
+
+
+
+<p>
+
+{t("dashboard.subtitle")}
+
+</p>
+
+
+</div>
+
+
+
+
+<button
+  className="new-btn"
+  onClick={() => navigate("/create")}
+>
+
+{t("dashboard.newTransfer")}
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div className="stats">
+
+
+
+
+
+<div className="card blue">
+
+
+<div className="icon">
+
+<MdLocalShipping />
+
+</div>
+
+
+<div>
+
+<p>
+
+{t("profile.totalTransfers")}
+
+</p>
+
+
+<h2>
+
+{dashboard?.totalTransfers || 0}
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div className="card purple">
+
+
+<div className="icon">
+
+<MdBolt />
+
+</div>
+
+
+<div>
+
+<p>
+
+{t("profile.activeServices")}
+
+</p>
+
+
+<h2>
+
+{dashboard?.totalServices || 0}
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div className="card green">
+
+
+<div className="icon">
+
+<MdCheckCircle />
+
+</div>
+
+
+<div>
+
+<p>
+
+{t("profile.status")}
+
+</p>
+
+
+<h2>
+
+{t("profile.active")}
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div className="content">
+
+
+
+
+
+
+<div className="activity">
+
+
+
+<h2>
+
+{t("dashboard.recentActivity")}
+
+</h2>
+
 
 
 
 
 {
-user &&
+
+dashboard?.lastTransfer ? (
+
+
+<div className="item">
+
+
+<MdHome />
+
+
+<p>
+
+{t("profile.moveFrom", { address: dashboard.lastTransfer.oldAddress })}
+
+</p>
+
+
+<span>
+
+{t("profile.recent")}
+
+</span>
+
+
+
+</div>
+
+
+
+)
+
+:
+
+(
+
+<p>
+
+{t("profile.noTransfersYet")}
+
+</p>
+
+
+)
+
+}
+
+
+
+
+
+
+
+<div className="item">
+
+<MdCreditCard />
+
+<p>
+
+{t("profile.paymentMethodAdded")}
+
+</p>
+
+
+<span>
+
+{t("profile.yesterday")}
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+<div className="item">
+
+<MdBolt />
+
+<p>
+
+{t("profile.electricityServiceUpdated")}
+
+</p>
+
+
+<span>
+
+{t("profile.twoDaysAgo")}
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
 
 <div className="profile-card">
 
 
 
-{
-user.avatar ?
+
+
+
+<label className="big-avatar avatar-upload">
+
+
+
 
 
 <img
 
-src={`http://localhost:5000/uploads/${user.avatar}`}
+src={
 
-className="avatar-img"
+user.avatar
 
-alt="avatar"
+?
+
+`${import.meta.env.VITE_API_URL}/uploads/${user.avatar}`
+
+:
+
+"https://i.pravatar.cc/150"
+
+}
 
 />
 
 
-:
 
 
-<div className="avatar">
 
-{
-user.username
-?
-user.username[0].toUpperCase()
-:
-"U"
-}
+<div className="camera">
+
+<MdCameraAlt />
 
 </div>
-
-
-}
-
-
-
-
-
-
-<h2>
-{user.username}
-</h2>
-
-
-<p>
-{user.email}
-</p>
 
 
 
@@ -533,304 +641,128 @@ user.username[0].toUpperCase()
 
 type="file"
 
-onChange={
-(e)=>setAvatar(e.target.files[0])
-}
+accept="image/*"
+
+onChange={uploadAvatar}
 
 />
 
 
-<button onClick={uploadAvatar}>
-Upload Avatar
-</button>
-
-
-
-
-
-
-
-<h3>
-Create Transfer
-</h3>
-
-
-
-
-<input
-
-placeholder="Old address"
-
-value={oldAddress}
-
-onChange={
-(e)=>setOldAddress(e.target.value)
-}
-
-/>
-
-
-
-<input
-
-placeholder="New address"
-
-value={newAddress}
-
-onChange={
-(e)=>setNewAddress(e.target.value)
-}
-
-/>
-
-
-
-<input
-
-type="date"
-
-value={moveDate}
-
-onChange={
-(e)=>setMoveDate(e.target.value)
-}
-
-/>
-
-
-
-
-
-
-<div>
-
-
-{
-["electricity","gas","water","arnona"]
-.map(service=>(
-
-
-<label key={service}>
-
-
-<input
-
-type="checkbox"
-
-checked={
-services.includes(service)
-}
-
-onChange={()=>
-changeService(service)
-}
-
-/>
-
-
-{service}
-
-
-<br/>
 
 
 </label>
 
 
-))
-
-}
-
-
-</div>
 
 
 
 
 
-<button onClick={createTransfer}>
-Create Transfer
-</button>
+<h2>
+
+{user.username}
+
+</h2>
 
 
-
-
-
-
-
-
-<h3>
-My Transfers
-</h3>
-
-
-
-
-
-{
-transfers.map(item=>(
-
-
-<div
-
-key={item._id}
-
-className="transfer-card"
-
->
 
 
 <p>
-From: {item.oldAddress}
-</p>
 
+{user.email}
 
-<p>
-To: {item.newAddress}
-</p>
-
-
-<p>
-Date: {item.moveDate}
 </p>
 
 
 
 
 
-<h4>
-Services:
-</h4>
+
+
+<div className="line"></div>
 
 
 
-{
-item.services.map((s,index)=>(
 
-<div key={index}>
 
-<p>
-{s.name.toUpperCase()}
-</p>
+
+
+
+<div className="info">
+
 
 <span>
-Status: {s.status}
+
+{t("profile.account")}
+
 </span>
 
-{
-s.status === "Pending" && (
 
-<button
-onClick={() =>
-updateStatus(
-item._id,
-index,
-"Processing"
-)
-}
->
-Start Process
-</button>
+<b>
 
-)
-}
+{user.plan === "premium" ? t("profile.premium") : t("profile.free")}
+
+</b>
 
 
-{
-s.status === "Processing" && (
-
-<button
-onClick={() =>
-updateStatus(
-item._id,
-index,
-"Completed"
-)
-}
->
-Complete
-</button>
-
-)
-}
+</div>
 
 
-{
-s.status === "Completed" && (
+
+
+
+
+
+
+
+<div className="info">
+
 
 <span>
-✅ Completed
+
+{t("profile.security")}
+
 </span>
+
+
+<b>
+
+{t("profile.protected")}
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
 
 )
-}
-
-</div>
-
-))
-
-}
-
-
-
-
-
-<button
-
-onClick={()=>
-deleteTransfer(item._id)
-}
-
->
-
-Delete Transfer
-
-</button>
-
-
-
-
-</div>
-
-
-))
-
-}
-
-
-
-
-
-
-<span className="status">
-Account Active
-</span>
-
-
-
-
-</div>
-
-}
-
-
-
-
-<button onClick={logout}>
-Logout
-</button>
-
-
-
-</div>
-
-
-</>
-
-);
 
 
 }
+
 
 
 export default Profile;

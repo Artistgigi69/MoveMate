@@ -1,0 +1,320 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #16182B;
+  --ink-soft: #8A8FB3;
+  --cloud: #F5F7FC;
+  --card: #FFFFFF;
+
+  --brand: #6C5CE7;
+  --brand-soft: #EFECFD;
+
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --shadow-card: 0 8px 24px rgba(22, 24, 43, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+.utility-page {
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  background: var(--cloud);
+  min-height: 100vh;
+  padding: 40px 48px 64px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.utility-page h1,
+.utility-page h2 {
+  font-family: 'Manrope', sans-serif;
+  margin: 0;
+}
+
+/* Header */
+.utility-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.utility-header h1 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.utility-header p {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.utility-icon-badge {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: white;
+}
+
+.utility-icon-badge.peach { background: var(--grad-peach); box-shadow: var(--glow-peach); }
+.utility-icon-badge.pink { background: var(--grad-pink); box-shadow: var(--glow-pink); }
+.utility-icon-badge.teal { background: var(--grad-teal); box-shadow: var(--glow-teal); }
+.utility-icon-badge.violet { background: var(--grad-violet); box-shadow: var(--glow-violet); }
+
+/* Total tile */
+.utility-total {
+  border-radius: var(--radius-tile, var(--radius-lg));
+  padding: 28px 30px;
+  color: white;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.utility-total::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -15%;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+}
+
+.utility-total.peach { background: var(--grad-peach); box-shadow: var(--glow-peach); }
+.utility-total.pink { background: var(--grad-pink); box-shadow: var(--glow-pink); }
+.utility-total.teal { background: var(--grad-teal); box-shadow: var(--glow-teal); }
+.utility-total.violet { background: var(--grad-violet); box-shadow: var(--glow-violet); }
+
+.utility-total p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  position: relative;
+  z-index: 1;
+}
+
+.utility-total h2 {
+  font-size: 36px;
+  margin: 8px 0 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.utility-total-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.pay-btn.ghost {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.pay-btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.calc-result {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--cloud);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin: 4px 0 6px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.calc-result strong {
+  color: var(--ink);
+}
+
+.pay-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 22px;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.pay-btn:hover {
+  background: rgba(255, 255, 255, 0.32);
+  transform: translateY(-2px);
+}
+
+/* History */
+.utility-history {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  box-shadow: var(--shadow-card);
+}
+
+.utility-history h2 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.utility-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--divider);
+}
+
+.utility-row:last-child { border-bottom: none; }
+
+.utility-row h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 2px;
+}
+
+.utility-row span {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.utility-row strong {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.utility-empty {
+  color: var(--ink-soft);
+  font-size: 14px;
+  text-align: center;
+  padding: 12px 0;
+}
+
+.utility-empty a {
+  color: var(--brand);
+  font-weight: 700;
+}
+
+/* Modal (pay form) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 24, 43, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 380px;
+  background: var(--card);
+  border-radius: var(--radius-tile, var(--radius-lg));
+  padding: 30px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+}
+
+.modal-box h2 {
+  font-size: 19px;
+  font-weight: 800;
+  margin: 0 0 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.form-group input,
+.form-group select {
+  font-family: 'Inter', sans-serif;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  outline: none;
+  background: var(--cloud);
+  color: var(--ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.modal-actions .pay-btn,
+.modal-cancel {
+  flex: 1;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.modal-actions .pay-btn {
+  background: var(--grad-violet);
+  box-shadow: none;
+}
+
+.modal-actions .pay-btn:hover,
+.modal-cancel:hover { transform: translateY(-2px); }
+
+.modal-cancel {
+  background: var(--cloud);
+  color: var(--ink-soft);
+}
+
+@media (max-width: 700px) {
+  .utility-page { padding: 28px 20px 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

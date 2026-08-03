@@ -1,156 +1,237 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { MdBolt, MdLocalFireDepartment, MdWaterDrop, MdAccountBalance } from "react-icons/md";
+import "./CreateTransfer.css";
+
+const SERVICE_ICONS = {
+  electricity: MdBolt,
+  gas: MdLocalFireDepartment,
+  water: MdWaterDrop,
+  arnona: MdAccountBalance
+};
+
 function EditTransfer() {
 
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [transfer, setTransfer] = useState({
-    title: "",
-    from: "",
-    to: "",
-    amount: ""
-  });
+  const [oldAddress, setOldAddress] = useState("");
+  const [newAddress, setNewAddress] = useState("");
+  const [moveDate, setMoveDate] = useState("");
+  const [services, setServices] = useState([]);
+
+  const [newTenantName, setNewTenantName] = useState("");
+  const [newTenantPhone, setNewTenantPhone] = useState("");
+  const [newTenantEmail, setNewTenantEmail] = useState("");
+  const [newTenantId, setNewTenantId] = useState("");
 
   const [loading, setLoading] = useState(true);
 
+  const changeService = (service) => {
+    if (services.includes(service)) {
+      setServices(services.filter(item => item !== service));
+    } else {
+      setServices([...services, service]);
+    }
+  };
 
   useEffect(() => {
 
     const getTransfer = async () => {
 
       try {
+        const token = localStorage.getItem("token");
 
         const response = await fetch(
-          `http://localhost:5000/transfers/${id}`
+          `${import.meta.env.VITE_API_URL}/transfers/${id}`,
+          {
+            headers: {
+              Authorization: token
+            }
+          }
         );
 
         const data = await response.json();
 
-        setTransfer(data);
+        setOldAddress(data.oldAddress || "");
+        setNewAddress(data.newAddress || "");
+        setMoveDate(data.moveDate || "");
+        setServices(
+          (data.services || []).map(s => s.name)
+        );
+        setNewTenantName(data.newTenant?.name || "");
+        setNewTenantPhone(data.newTenant?.phone || "");
+        setNewTenantEmail(data.newTenant?.email || "");
+        setNewTenantId(data.newTenant?.idNumber || "");
+
         setLoading(false);
 
       } catch (error) {
-
         console.log(error);
-
       }
 
     };
-
 
     getTransfer();
 
   }, [id]);
 
-
-  const handleChange = (e) => {
-
-    setTransfer({
-      ...transfer,
-      [e.target.name]: e.target.value
-    });
-
-  };
-
-
   const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-
     try {
+      const token = localStorage.getItem("token");
 
       await fetch(
-  `http://localhost:5000/transfers/${id}`,
-  {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(transfer)
-  }
-);
+        `${import.meta.env.VITE_API_URL}/transfers/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token
+          },
+          body: JSON.stringify({
+            oldAddress,
+            newAddress,
+            moveDate,
+            services,
+            newTenant: {
+              name: newTenantName,
+              phone: newTenantPhone,
+              email: newTenantEmail,
+              idNumber: newTenantId
+            }
+          })
+        }
+      );
 
-toast.success("Transfer updated!");
-
-navigate("/transfers");
-
+      toast.success(t("transfers.transferUpdated"));
+      navigate("/transfers");
 
     } catch (error) {
-
+      toast.error(t("transfers.somethingWrong"));
       console.log(error);
-
     }
 
   };
 
-
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <div className="transfers-loading">{t("common.loading")}</div>;
   }
 
-
   return (
+    <div className="create-transfer-page">
 
-    <div className="container">
+      <h1>{t("transfers.editTransfer")}</h1>
+      <p className="subtitle">{t("transfers.editTransferSubtitle")}</p>
 
-      <h1>Edit Transfer</h1>
+      <form className="transfer-form-card" onSubmit={handleSubmit}>
 
+        <div className="form-section">
+          <label className="field-label">{t("transfers.moveDetails")}</label>
 
-      <form onSubmit={handleSubmit}>
+          <div className="field-group">
+            <input
+              placeholder={t("transfers.oldAddress")}
+              value={oldAddress}
+              onChange={(e) => setOldAddress(e.target.value)}
+            />
 
+            <input
+              placeholder={t("transfers.newAddress")}
+              value={newAddress}
+              onChange={(e) => setNewAddress(e.target.value)}
+            />
 
-        <input
-          type="text"
-          name="title"
-          value={transfer.title}
-          onChange={handleChange}
-          placeholder="Title"
-        />
+            <input
+              type="date"
+              value={moveDate}
+              onChange={(e) => setMoveDate(e.target.value)}
+            />
+          </div>
+        </div>
 
+        <div className="form-section">
+          <label className="field-label">{t("transfers.servicesToTransfer")}</label>
 
-        <input
-          type="text"
-          name="from"
-          value={transfer.from}
-          onChange={handleChange}
-          placeholder="From"
-        />
+          <div className="service-grid">
+            {
+              ["electricity", "gas", "water", "arnona"].map(service => {
+                const ServiceIcon = SERVICE_ICONS[service];
+                return (
+                  <label
+                    key={service}
+                    className={
+                      services.includes(service)
+                        ? `service-option ${service} selected`
+                        : `service-option ${service}`
+                    }
+                  >
+                    <input
+                      type="checkbox"
+                      checked={services.includes(service)}
+                      onChange={() => changeService(service)}
+                    />
 
+                    <span className="service-icon"><ServiceIcon /></span>
+                    <span className="service-name">{t(`nav.${service}`)}</span>
+                  </label>
+                );
+              })
+            }
+          </div>
+        </div>
 
-        <input
-          type="text"
-          name="to"
-          value={transfer.to}
-          onChange={handleChange}
-          placeholder="To"
-        />
+        <div className="form-section">
+          <label className="field-label">{t("transfers.newTenantSection")}</label>
+          <p className="field-hint">
+            {t("transfers.newTenantHint")}
+          </p>
 
+          <div className="field-group">
+            <input
+              placeholder={t("transfers.fullName")}
+              value={newTenantName}
+              onChange={(e) => setNewTenantName(e.target.value)}
+            />
 
-        <input
-          type="number"
-          name="amount"
-          value={transfer.amount}
-          onChange={handleChange}
-          placeholder="Amount"
-        />
+            <div className="field-row">
+              <input
+                placeholder={t("transfers.phoneNumber")}
+                value={newTenantPhone}
+                onChange={(e) => setNewTenantPhone(e.target.value)}
+              />
 
+              <input
+                placeholder={t("transfers.email")}
+                type="email"
+                value={newTenantEmail}
+                onChange={(e) => setNewTenantEmail(e.target.value)}
+              />
+            </div>
 
-        <button type="submit">
-          Save Changes
+            <input
+              placeholder={t("transfers.idNumber")}
+              maxLength={9}
+              value={newTenantId}
+              onChange={(e) => setNewTenantId(e.target.value.replace(/\D/g, ""))}
+            />
+          </div>
+        </div>
+
+        <button type="submit" className="submit-btn">
+          {t("transfers.saveChanges")}
         </button>
-
 
       </form>
 
-
     </div>
-
   );
 
 }
-
 
 export default EditTransfer;

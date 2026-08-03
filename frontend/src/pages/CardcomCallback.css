@@ -1,0 +1,28 @@
+.cardcom-callback-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cloud, #F5F7FC);
+  font-family: 'Inter', sans-serif;
+}
+
+.cardcom-callback-box {
+  background: var(--card, #FFFFFF);
+  border-radius: var(--radius-tile, 26px);
+  padding: 48px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(22, 24, 43, 0.08);
+  color: var(--ink, #16182B);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.callback-icon {
+  font-size: 48px;
+  display: block;
+  margin: 0 auto 16px;
+}
+
+.callback-icon.success { color: #22C55E; }
+.callback-icon.failed { color: #FF6B57; }

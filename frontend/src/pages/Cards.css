@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap');
+
+:root {
+  --ink: #16182B;
+  --ink-soft: #8A8FB3;
+  --cloud: #F5F7FC;
+  --card: #FFFFFF;
+
+  --brand: #6C5CE7;
+  --brand-soft: #EFECFD;
+
+  --teal: #14B8A6;
+  --teal-soft: #E3F9F6;
+
+  --coral: #FF6B57;
+  --coral-soft: #FFEBE8;
+
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --shadow-card: 0 8px 24px rgba(22, 24, 43, 0.06);
+  --shadow-hover: 0 14px 32px rgba(22, 24, 43, 0.10);
+}
+
+* { box-sizing: border-box; }
+
+.cards-page {
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  background: var(--cloud);
+  min-height: 100vh;
+  padding: 40px 48px 64px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.cards-page h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 32px;
+}
+
+/* Bank cards grid */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.bank-card {
+  position: relative;
+  border-radius: var(--radius-tile, var(--radius-lg));
+  padding: 26px 24px;
+  color: white;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.bank-card::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 220px;
+  height: 220px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.bank-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.bank-card.visa {
+  background: var(--grad-violet, linear-gradient(135deg, #6C5CE7 0%, #4832A8 100%));
+}
+
+.bank-card.mastercard {
+  background: var(--grad-peach, linear-gradient(135deg, #FF6B57 0%, #C23F2E 100%));
+}
+
+.card-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.card-brand svg {
+  font-size: 22px;
+}
+
+.bank-card h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin: 18px 0;
+  z-index: 1;
+}
+
+.card-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  z-index: 1;
+  margin-bottom: 14px;
+}
+
+.primary {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.secondary-btn,
+.danger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  z-index: 1;
+  margin-top: 6px;
+  margin-right: 8px;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+.danger-btn {
+  background: rgba(0, 0, 0, 0.18);
+  color: white;
+}
+
+.secondary-btn:hover,
+.danger-btn:hover { transform: translateY(-2px); }
+
+.secondary-btn:focus-visible,
+.danger-btn:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Add card form */
+.add-card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 28px 30px;
+  box-shadow: var(--shadow-card);
+  max-width: 460px;
+}
+
+.add-card h2 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 20px;
+}
+
+.add-card-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+  line-height: 1.5;
+}
+
+.add-card button {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  background: var(--grad-violet, var(--brand));
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 20px;
+  cursor: pointer;
+  margin-top: 6px;
+  box-shadow: var(--glow-violet, 0 8px 20px rgba(108, 92, 231, 0.35));
+  transition: transform 0.15s ease;
+}
+
+.add-card button:hover { transform: translateY(-2px); }
+.add-card button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.add-card button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .cards-page { padding: 28px 20px 48px; }
+  .cards-container { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
