@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { MdAttachMoney } from "react-icons/md";
+import { useCurrency } from "../CurrencyContext";
 import "./AddExpense.css";
 
 
@@ -9,6 +10,8 @@ function AddExpense() {
 
 
 const { t } = useTranslation();
+
+const { symbol } = useCurrency();
 
 const navigate = useNavigate();
 
@@ -226,7 +229,7 @@ name="amount"
 
 type="number"
 
-placeholder="$ 0"
+placeholder={`${symbol} 0`}
 
 value={expense.amount}
 
@@ -273,6 +276,34 @@ required
 <option value="">
 
 {t("expenses.chooseCategory")}
+
+</option>
+
+
+<option value="electricity">
+
+{t("nav.electricity")}
+
+</option>
+
+
+<option value="gas">
+
+{t("nav.gas")}
+
+</option>
+
+
+<option value="water">
+
+{t("nav.water")}
+
+</option>
+
+
+<option value="arnona">
+
+{t("nav.arnona")}
 
 </option>
 

@@ -53,3 +53,37 @@
   background: var(--cloud);
   color-scheme: dark;
 }
+
+/* ===== Header illustration =====
+   Small decorative SVG (HeaderScene) dropped into the empty space of a
+   page header, wherever one exists. Shared here so every page gets the
+   same sizing/behavior without repeating it in ~10 CSS files. */
+.header-illustration {
+  width: 140px;
+  height: auto;
+  max-height: 90px;
+  flex-shrink: 0;
+  margin: 0 8px;
+  opacity: 0.95;
+}
+
+@media (max-width: 1024px) {
+  .header-illustration {
+    display: none;
+  }
+}
+
+/* Generic header row for pages whose title has no other flex sibling to
+   pair the illustration with (Cards, Checklist, Referrals, etc). Pages
+   with their own two-sided header (Dashboard, Expenses, Transfers) keep
+   their existing class and just gained a third flex child. */
+.page-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.page-header-row h1 {
+  margin: 0 !important;
+}

@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { MdBolt, MdLocalFireDepartment, MdWaterDrop, MdAccountBalance } from "react-icons/md";
+import HeaderScene from "./illustrations/HeaderScene";
 
 const SERVICE_ICONS = {
   electricity: MdBolt,
@@ -86,8 +87,13 @@ function CreateTransfer() {
   return (
     <div className="create-transfer-page">
 
-      <h1>{t("transfers.createTransfer")}</h1>
-      <p className="subtitle">{t("transfers.createTransferSubtitle")}</p>
+      <div className="page-header-row">
+        <div>
+          <h1>{t("transfers.createTransfer")}</h1>
+          <p className="subtitle">{t("transfers.createTransferSubtitle")}</p>
+        </div>
+        <HeaderScene className="header-illustration" />
+      </div>
 
       <div className="transfer-form-card">
 

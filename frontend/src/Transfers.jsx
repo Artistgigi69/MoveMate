@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { MdAddAPhoto, MdSend, MdMailOutline, MdCheckCircle, MdPictureAsPdf } from "react-icons/md";
+import { useCurrency } from "./CurrencyContext";
+import HeaderScene from "./illustrations/HeaderScene";
 
 function Transfers() {
 
   const { t } = useTranslation();
+  const { currency } = useCurrency();
 
   const [transfers, setTransfers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -131,7 +134,7 @@ function Transfers() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/export/history-pdf`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/export/history-pdf?currency=${currency}`, {
         headers: { Authorization: token }
       });
 
@@ -225,6 +228,7 @@ function Transfers() {
 
       <div className="transfers-header-row">
         <h1>{t("transfers.myTransfers")}</h1>
+        <HeaderScene className="header-illustration" />
         <button className="export-pdf-btn" onClick={downloadPdf}>
           <MdPictureAsPdf /> {t("transfers.exportPdf")}
         </button>

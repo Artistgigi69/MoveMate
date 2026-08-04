@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "./ThemeContext";
 import LanguageSwitcher from "./LanguageSwitcher";
+import CurrencySwitcher from "./CurrencySwitcher";
 import "./Navbar.css";
 
 import {
@@ -394,6 +395,8 @@ location.pathname===item.path
 
 
 <LanguageSwitcher />
+
+<CurrencySwitcher />
 
 
 

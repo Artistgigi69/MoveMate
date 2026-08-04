@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { MdHistory, MdHome, MdArrowForward } from "react-icons/md";
+import HeaderScene from "../illustrations/HeaderScene";
 import "./AddressHistory.css";
 
 function AddressHistory() {
@@ -77,8 +78,13 @@ function AddressHistory() {
   return (
     <div className="address-history-page">
 
-      <h1><MdHistory /> {t("addressHistory.title")}</h1>
-      <p className="subtitle">{t("addressHistory.subtitle")}</p>
+      <div className="page-header-row">
+        <div>
+          <h1><MdHistory /> {t("addressHistory.title")}</h1>
+          <p className="subtitle">{t("addressHistory.subtitle")}</p>
+        </div>
+        <HeaderScene className="header-illustration" />
+      </div>
 
       {
         loading ? (

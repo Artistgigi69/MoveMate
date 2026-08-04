@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdChecklist, MdAdd, MdClose } from "react-icons/md";
+import HeaderScene from "../illustrations/HeaderScene";
 import "./Checklist.css";
 
 function Checklist() {
@@ -103,8 +104,13 @@ function Checklist() {
   return (
     <div className="checklist-page">
 
-      <h1><MdChecklist /> {t("checklist.title")}</h1>
-      <p className="subtitle">{t("checklist.subtitle")}</p>
+      <div className="page-header-row">
+        <div>
+          <h1><MdChecklist /> {t("checklist.title")}</h1>
+          <p className="subtitle">{t("checklist.subtitle")}</p>
+        </div>
+        <HeaderScene className="header-illustration" />
+      </div>
 
       {
         !loading && items.length > 0 && (

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { MdCardGiftcard, MdContentCopy, MdPerson } from "react-icons/md";
+import HeaderScene from "../illustrations/HeaderScene";
 import "./Referrals.css";
 
 function Referrals() {
@@ -45,8 +46,13 @@ function Referrals() {
   return (
     <div className="referrals-page">
 
-      <h1><MdCardGiftcard /> {t("referral.title")}</h1>
-      <p className="subtitle">{t("referral.subtitle")}</p>
+      <div className="page-header-row">
+        <div>
+          <h1><MdCardGiftcard /> {t("referral.title")}</h1>
+          <p className="subtitle">{t("referral.subtitle")}</p>
+        </div>
+        <HeaderScene className="header-illustration" />
+      </div>
 
       {
         loading ? (

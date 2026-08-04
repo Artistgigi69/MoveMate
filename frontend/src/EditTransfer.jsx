@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { MdBolt, MdLocalFireDepartment, MdWaterDrop, MdAccountBalance } from "react-icons/md";
+import HeaderScene from "./illustrations/HeaderScene";
 import "./CreateTransfer.css";
 
 const SERVICE_ICONS = {
@@ -126,8 +127,13 @@ function EditTransfer() {
   return (
     <div className="create-transfer-page">
 
-      <h1>{t("transfers.editTransfer")}</h1>
-      <p className="subtitle">{t("transfers.editTransferSubtitle")}</p>
+      <div className="page-header-row">
+        <div>
+          <h1>{t("transfers.editTransfer")}</h1>
+          <p className="subtitle">{t("transfers.editTransferSubtitle")}</p>
+        </div>
+        <HeaderScene className="header-illustration" />
+      </div>
 
       <form className="transfer-form-card" onSubmit={handleSubmit}>
 

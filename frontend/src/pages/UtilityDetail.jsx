@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { useCurrency } from "../CurrencyContext";
 import {
   MdBolt,
   MdLocalFireDepartment,
@@ -34,6 +35,7 @@ const UTILITIES = {
 function UtilityDetail() {
 
   const { t } = useTranslation();
+  const { symbol } = useCurrency();
   const { type } = useParams();
   const config = UTILITIES[type];
   const label = config ? t(`nav.${type}`) : "";
@@ -202,7 +204,7 @@ function UtilityDetail() {
 
       <div className={`utility-total ${config.gradient}`}>
         <p>{t("dashboard.totalSpent")}</p>
-        <h2>${total}</h2>
+        <h2>{symbol}{total}</h2>
         <div className="utility-total-actions">
           <button className="pay-btn" onClick={() => setShowPayModal(true)}>
             {t("utility.payBill", { service: label })}
@@ -229,7 +231,7 @@ function UtilityDetail() {
                   <h3>{item.title}</h3>
                   <span>{item.description || t("utility.noDetails")}</span>
                 </div>
-                <strong>${item.amount}</strong>
+                <strong>{symbol}{item.amount}</strong>
               </div>
             ))
           )
@@ -257,7 +259,7 @@ function UtilityDetail() {
                         type="number"
                         min="1"
                         step="0.01"
-                        placeholder="$ 0"
+                        placeholder={`${symbol} 0`}
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         required
@@ -349,7 +351,7 @@ function UtilityDetail() {
 
               <div className="calc-result">
                 <span>{t("utility.consumption")}: <strong>{consumption}</strong></span>
-                <span>{t("utility.estimatedTotal")}: <strong>${estimatedTotal.toFixed(2)}</strong></span>
+                <span>{t("utility.estimatedTotal")}: <strong>{symbol}{estimatedTotal.toFixed(2)}</strong></span>
               </div>
 
               <div className="modal-actions">

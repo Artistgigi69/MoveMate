@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { FaCcVisa, FaCcMastercard } from "react-icons/fa";
 import { MdCreditCard, MdStar, MdLock } from "react-icons/md";
+import HeaderScene from "../illustrations/HeaderScene";
 import "./Cards.css";
 
 
@@ -144,9 +145,12 @@ const setDefault = async(id)=>{
     <div className="cards-page">
 
 
-      <h1>
-        <MdCreditCard /> {t("dashboard.paymentMethods")}
-      </h1>
+      <div className="page-header-row">
+        <h1>
+          <MdCreditCard /> {t("dashboard.paymentMethods")}
+        </h1>
+        <HeaderScene className="header-illustration" />
+      </div>
 
 
 

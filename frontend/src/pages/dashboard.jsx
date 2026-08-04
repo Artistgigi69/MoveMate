@@ -16,7 +16,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../ThemeContext";
+import { useCurrency } from "../CurrencyContext";
 import MoveReminderBanner from "../MoveReminderBanner";
+import HeaderScene from "../illustrations/HeaderScene";
 
 import {
   MdAccountBalanceWallet,
@@ -25,6 +27,7 @@ import {
   MdBolt,
   MdWaterDrop,
   MdLocalFireDepartment,
+  MdAccountBalance,
   MdFastfood,
   MdDirectionsCar,
   MdShoppingCart,
@@ -35,6 +38,10 @@ import {
 import "./Dashboard.css";
 
 const CATEGORY_ICONS = {
+  electricity: MdBolt,
+  gas: MdLocalFireDepartment,
+  water: MdWaterDrop,
+  arnona: MdAccountBalance,
   Utilities: MdBolt,
   Food: MdFastfood,
   Transport: MdDirectionsCar,
@@ -50,6 +57,7 @@ function Dashboard() {
 
   const navigate = useNavigate();
   const { darkMode } = useTheme();
+  const { symbol } = useCurrency();
   const { t } = useTranslation();
 
   const [data, setData] = useState(null);
@@ -103,6 +111,8 @@ function Dashboard() {
           <p>{t("dashboard.subtitle")}</p>
         </div>
 
+        <HeaderScene className="header-illustration" />
+
         <button className="profile-btn" onClick={() => navigate("/profile")}>
           <span className="avatar">G</span>
           {t("dashboard.myProfile")}
@@ -114,7 +124,7 @@ function Dashboard() {
         <div className="stat-card balance">
           <span className="stat-icon"><MdAccountBalanceWallet /></span>
           <span className="stat-label">{t("dashboard.totalSpent")}</span>
-          <h2>${data?.total || 0}</h2>
+          <h2>{symbol}{data?.total || 0}</h2>
           <p>{t("dashboard.acrossAllExpenses")}</p>
         </div>
 
@@ -238,7 +248,7 @@ function Dashboard() {
                         <small>{new Date(item.createdAt).toLocaleDateString()}</small>
                       </div>
                     </div>
-                    <strong>-${item.amount}</strong>
+                    <strong>-{symbol}{item.amount}</strong>
                   </div>
                 );
               })

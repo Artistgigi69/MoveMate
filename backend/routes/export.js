@@ -11,6 +11,11 @@ const router = express.Router();
 router.get("/history-pdf", verifyToken, async (req, res) => {
   try {
 
+    // pdfkit's built-in Helvetica font uses WinAnsi encoding, which doesn't
+    // include the ₪ glyph — it would render as a missing box. "NIS" is the
+    // safe text fallback; the web UI can still show the real ₪ symbol.
+    const currencyLabel = req.query.currency === "ILS" ? "NIS " : "$";
+
     const [transfers, expenses] = await Promise.all([
       Transfer.find({ userId: req.userId }).sort({ createdAt: -1 }),
       Expense.find({ userId: req.userId }).sort({ createdAt: -1 })
@@ -71,7 +76,7 @@ router.get("/history-pdf", verifyToken, async (req, res) => {
       total += Number(e.amount) || 0;
 
       doc.fontSize(11).fillColor("#16182B")
-        .text(`${e.title}  —  $${e.amount}`, { continued: false });
+        .text(`${e.title}  —  ${currencyLabel}${e.amount}`, { continued: false });
 
       doc.fontSize(9).fillColor("#8A8FB3")
         .text(`${e.category} · ${new Date(e.createdAt).toLocaleDateString()}${e.description ? " · " + e.description : ""}`);
@@ -81,7 +86,7 @@ router.get("/history-pdf", verifyToken, async (req, res) => {
     });
 
     doc.moveDown(0.5);
-    doc.fontSize(12).text(`Total: $${total.toFixed(2)}`, { align: "right" });
+    doc.fontSize(12).text(`Total: ${currencyLabel}${total.toFixed(2)}`, { align: "right" });
 
     doc.end();
 

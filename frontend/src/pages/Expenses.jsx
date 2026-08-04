@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useCurrency } from "../CurrencyContext";
 import {
   MdAttachMoney,
   MdBarChart,
   MdCreditCard,
   MdBolt,
+  MdLocalFireDepartment,
+  MdWaterDrop,
+  MdAccountBalance,
   MdFastfood,
   MdDirectionsCar,
   MdShoppingCart,
   MdHome,
   MdCategory
 } from "react-icons/md";
+import HeaderScene from "../illustrations/HeaderScene";
 import "./Expenses.css";
 
 
@@ -19,6 +24,8 @@ function Expenses() {
 
 
 const { t } = useTranslation();
+
+const { symbol } = useCurrency();
 
 const [expenses,setExpenses]=useState([]);
 
@@ -171,6 +178,22 @@ sum+Number(item.amount),
 const getIcon=(category)=>{
 
 
+if(category==="electricity")
+return MdBolt;
+
+
+if(category==="gas")
+return MdLocalFireDepartment;
+
+
+if(category==="water")
+return MdWaterDrop;
+
+
+if(category==="arnona")
+return MdAccountBalance;
+
+
 if(category==="Food")
 return MdFastfood;
 
@@ -197,6 +220,9 @@ return MdCategory;
 };
 
 
+const NAV_CATEGORIES=["electricity","gas","water","arnona"];
+
+
 const CATEGORY_KEYS={
 Food:"categoryFood",
 Transport:"categoryTransport",
@@ -208,6 +234,9 @@ Other:"categoryOther"
 
 
 const categoryLabel=(category)=>{
+
+if(NAV_CATEGORIES.includes(category))
+return t(`nav.${category}`);
 
 const key=CATEGORY_KEYS[category];
 
@@ -273,6 +302,7 @@ return(
 </div>
 
 
+<HeaderScene className="header-illustration" />
 
 
 
@@ -316,7 +346,7 @@ to="/add-expense"
 
 <h1>
 
-${total}
+{symbol}{total}
 
 </h1>
 
@@ -384,7 +414,7 @@ ${total}
 
 <h2>
 
-${
+{symbol}{
 
 expenses.length
 
@@ -508,7 +538,7 @@ key={expense._id}
 
 <div className="amount">
 
-${expense.amount}
+{symbol}{expense.amount}
 
 </div>
 
