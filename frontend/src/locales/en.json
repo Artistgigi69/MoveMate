@@ -32,6 +32,7 @@
     "dashboard": "Dashboard",
     "expenses": "Expenses",
     "addExpense": "Add Expense",
+    "calendar": "Calendar",
     "electricity": "Electricity",
     "gas": "Gas",
     "water": "Water",
@@ -44,6 +45,7 @@
     "premium": "Premium",
     "paymentMethods": "Payment Methods",
     "profile": "Profile",
+    "support": "Help & Support",
     "settings": "Settings",
     "premiumUser": "Premium User",
     "darkMode": "Dark mode",
@@ -286,6 +288,63 @@
     "upgradeButton": "Upgrade to Premium",
     "honestNote": "Priority processing and 24/7 support aren't live yet — this is a supporter tier for now.",
     "gatewayError": "Payment gateway isn't set up yet"
+  },
+  "support": {
+    "title": "Help & Support",
+    "subtitle": "Answers to common questions, or reach out to us directly",
+    "faqTitle": "Frequently asked questions",
+    "contactTitle": "Still need help?",
+    "contactHint": "Send us a message and we'll get back to you.",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "What's this about?",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Describe your question or issue...",
+    "sendButton": "Send message",
+    "sent": "Message sent — we'll get back to you soon",
+    "myMessages": "Your messages",
+    "status": {
+      "open": "Open",
+      "resolved": "Resolved"
+    },
+    "faq": {
+      "transferUtility": {
+        "q": "How do I transfer a utility to my new address?",
+        "a": "Create a transfer from the Create Transfer page (addresses, move date, services), then use \"Send request\" on each service to notify the provider. Its status moves from Not sent to Sent to Completed."
+      },
+      "arnona": {
+        "q": "What is Arnona?",
+        "a": "Arnona is the Israeli municipal property tax. MoveMate tracks it alongside electricity, gas and water so you don't forget to transfer it when you move."
+      },
+      "twoFactor": {
+        "q": "How does two-factor authentication work?",
+        "a": "Enable it in Settings — scan the QR code with an authenticator app like Google Authenticator, then enter the 6-digit code it generates each time you log in."
+      },
+      "addCard": {
+        "q": "How do I add a payment card?",
+        "a": "Go to Payment Methods and click Add Card. You'll be redirected to Cardcom's secure page to enter your card details."
+      },
+      "cardSafety": {
+        "q": "Is my card data safe?",
+        "a": "Yes — your card number is entered directly on Cardcom's page and never touches MoveMate's servers. We only store a token and the last 4 digits."
+      },
+      "referrals": {
+        "q": "How do referrals work?",
+        "a": "Share your personal link from the Referrals page. Anyone who signs up through it is added to your referral list."
+      },
+      "reminders": {
+        "q": "How do I get reminders about my move?",
+        "a": "Enable push notifications in Settings, and you'll get a browser notification a few days before your move date."
+      },
+      "newTenant": {
+        "q": "What happens with the new tenant at my old address?",
+        "a": "If you added their email when creating the transfer, you can send them a link from the Transfers page so they can confirm the meter reading themselves."
+      }
+    }
+  },
+  "calendar": {
+    "title": "Payment calendar",
+    "subtitle": "See what you paid, when, and how much",
+    "paymentsOn": "Payments on {{date}}"
   },
   "home": {
     "heroTitleLine1": "Move easier.",

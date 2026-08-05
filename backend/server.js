@@ -19,6 +19,7 @@ const paymentsRoutes = require("./routes/payments");
 const checklistRoutes = require("./routes/checklist");
 const pushRoutes = require("./routes/push");
 const exportRoutes = require("./routes/export");
+const supportRoutes = require("./routes/support");
 const { checkMoveReminders } = require("./services/reminders");
 
 // ================== CREATE UPLOADS FOLDER ==================
@@ -45,6 +46,7 @@ app.use("/payments", paymentsRoutes);
 app.use("/checklist", checklistRoutes);
 app.use("/push", pushRoutes);
 app.use("/export", exportRoutes);
+app.use("/support", supportRoutes);
 
 // ================== TEST ==================
 app.get("/", (req, res) => {

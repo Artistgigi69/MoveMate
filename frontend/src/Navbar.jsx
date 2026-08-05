@@ -24,7 +24,9 @@ import {
   MdDarkMode,
   MdChecklist,
   MdCardGiftcard,
-  MdWorkspacePremium
+  MdWorkspacePremium,
+  MdCalendarMonth,
+  MdHelpOutline
 } from "react-icons/md";
 
 
@@ -153,6 +155,13 @@ icon:<MdAddCircle/>
 
 
 {
+name:t("nav.calendar"),
+path:"/calendar",
+icon:<MdCalendarMonth/>
+},
+
+
+{
 name:t("nav.electricity"),
 path:"/utilities/electricity",
 icon:<MdBolt/>
@@ -233,6 +242,13 @@ icon:<MdCreditCard/>
 name:t("nav.profile"),
 path:"/profile",
 icon:<MdPerson/>
+},
+
+
+{
+name:t("nav.support"),
+path:"/support",
+icon:<MdHelpOutline/>
 },
 
 

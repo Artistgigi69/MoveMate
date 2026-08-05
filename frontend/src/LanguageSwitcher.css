@@ -3,9 +3,10 @@
   gap: 4px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 12px;
+  border-radius: 999px;
   padding: 4px;
   margin-top: 8px;
+  flex-shrink: 0;
 }
 
 .lang-btn {
@@ -16,7 +17,7 @@
   color: rgba(255, 255, 255, 0.75);
   background: transparent;
   border: none;
-  border-radius: 9px;
+  border-radius: 999px;
   padding: 8px 6px;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;

@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #16182B;
+  --ink-soft: #8A8FB3;
+  --cloud: #F5F7FC;
+  --card: #FFFFFF;
+  --brand: #6C5CE7;
+  --brand-soft: #EFECFD;
+  --teal: #14B8A6;
+  --teal-soft: #E3F9F6;
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --shadow-card: 0 8px 24px rgba(22, 24, 43, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+.support-page {
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  background: var(--cloud);
+  min-height: 100vh;
+  padding: 40px 48px 64px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.support-page h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--ink-soft);
+  font-size: 15px;
+  margin: 6px 0 0;
+}
+
+.faq-card,
+.contact-card,
+.tickets-card {
+  background: var(--card);
+  border-radius: var(--radius-tile, var(--radius-lg));
+  padding: 26px 28px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 20px;
+}
+
+.faq-card h2,
+.contact-card h2,
+.tickets-card h2 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--divider, #EEF0F8);
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--ink);
+  padding: 14px 0;
+  cursor: pointer;
+}
+
+.faq-chevron {
+  min-width: 20px;
+  color: var(--ink-soft);
+  transition: transform 0.2s ease;
+}
+
+.faq-item.open .faq-chevron {
+  transform: rotate(180deg);
+  color: var(--brand);
+}
+
+.faq-answer {
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.contact-hint {
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  margin: 0 0 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.form-group input,
+.form-group textarea {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border, #E9EBF5);
+  background: var(--cloud);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group textarea {
+  height: 110px;
+  resize: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.support-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--grad-violet, var(--brand));
+  color: white;
+  font-weight: 700;
+  font-size: 14.5px;
+  cursor: pointer;
+  box-shadow: var(--glow-violet, 0 8px 20px rgba(108, 92, 231, 0.35));
+  transition: transform 0.15s ease;
+}
+
+.support-submit-btn:hover {
+  transform: translateY(-2px);
+}
+
+.support-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.ticket-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--divider, #EEF0F8);
+}
+
+.ticket-row:last-child {
+  border-bottom: none;
+}
+
+.ticket-row strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.ticket-row p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.ticket-status {
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.ticket-status.open {
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+
+.ticket-status.resolved {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+@media (max-width: 700px) {
+  .support-page { padding: 28px 20px 48px; }
+}

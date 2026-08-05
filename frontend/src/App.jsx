@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import { ThemeProvider, useTheme } from "./ThemeContext";
 import { CurrencyProvider } from "./CurrencyContext";
@@ -23,6 +23,8 @@ import ConfirmMeter from "./pages/ConfirmMeter";
 import Checklist from "./pages/Checklist";
 import Referrals from "./pages/Referrals";
 import Premium from "./pages/Premium";
+import Support from "./pages/Support";
+import PaymentCalendar from "./pages/PaymentCalendar";
 
 import ProtectedRoute from "./ProtectedRoute";
 import Navbar from "./Navbar";
@@ -33,54 +35,66 @@ import "react-toastify/dist/ReactToastify.css";
 import Cards from "./pages/Cards";
 
 
-function AppShell() {
+// Pages a signed-in user should still be able to see without the sidebar —
+// the login/register forms and the no-login-required tenant confirmation
+// link. Without this, a leftover token in localStorage makes the sidebar
+// render right alongside the login form (e.g. "/" always sends you to
+// /login regardless of auth state, but the token is still sitting there).
+const PUBLIC_ROUTES = ["/login", "/register"];
 
-  const { darkMode } = useTheme();
+function isPublicPath(pathname) {
+  return PUBLIC_ROUTES.includes(pathname) || pathname.startsWith("/confirm/");
+}
+
+
+function AppContent() {
+
+  const location = useLocation();
 
   const token = localStorage.getItem("token");
+
+  const showNavbar = token && !isPublicPath(location.pathname);
 
 
   return (
 
-    <div className={darkMode ? "app dark" : "app"}>
+    <>
 
-      <BrowserRouter>
-
-        <ToastContainer />
+      <ToastContainer />
 
 
-        {
-          token && (
+      {
+        showNavbar && (
 
-            <Navbar />
+          <Navbar />
 
-          )
-        }
+        )
+      }
 
 
 
-        <div className="main-content">
+      <div className="main-content">
 
 
-          <Routes>
+        <Routes>
 
 
-            <Route
-              path="/"
-              element={<Navigate to="/login" />}
-            />
+          <Route
+            path="/"
+            element={<Navigate to={token ? "/dashboard" : "/login"} />}
+          />
 
 
-            <Route
-              path="/login"
-              element={<Login />}
-            />
+          <Route
+            path="/login"
+            element={token ? <Navigate to="/dashboard" /> : <Login />}
+          />
 
 
-            <Route
-              path="/register"
-              element={<Register />}
-            />
+          <Route
+            path="/register"
+            element={token ? <Navigate to="/dashboard" /> : <Register />}
+          />
 
 
             <Route
@@ -200,6 +214,26 @@ function AppShell() {
 
 
             <Route
+              path="/support"
+              element={
+                <ProtectedRoute>
+                  <Support />
+                </ProtectedRoute>
+              }
+            />
+
+
+            <Route
+              path="/calendar"
+              element={
+                <ProtectedRoute>
+                  <PaymentCalendar />
+                </ProtectedRoute>
+              }
+            />
+
+
+            <Route
               path="/checklist"
               element={
                 <ProtectedRoute>
@@ -255,14 +289,32 @@ function AppShell() {
             />
 
 
-          </Routes>
+        </Routes>
 
 
-        </div>
+      </div>
 
+
+    </>
+
+  );
+
+}
+
+
+function AppShell() {
+
+  const { darkMode } = useTheme();
+
+  return (
+
+    <div className={darkMode ? "app dark" : "app"}>
+
+      <BrowserRouter>
+
+        <AppContent />
 
       </BrowserRouter>
-
 
     </div>
 

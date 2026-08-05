@@ -83,6 +83,11 @@ const [showPassword, setShowPassword] = useState(false);
 
       <div className="register-left">
 
+        <span className="auth-orb auth-orb-1" />
+        <span className="auth-orb auth-orb-2" />
+        <span className="auth-orb auth-orb-3" />
+        <span className="auth-orb auth-orb-4" />
+        <span className="auth-orb auth-orb-5" />
 
         <h1>
           {t("auth.registerTitle")}
