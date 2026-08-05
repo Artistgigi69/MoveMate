@@ -7,11 +7,39 @@ const User = require("../models/User");
 
 const router = express.Router();
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 
 // ================== REGISTER ==================
 router.post("/register", async (req, res) => {
   try {
     const { username, email, password, refCode } = req.body;
+
+    if (!username || username.trim().length < 2) {
+      return res.status(400).json({
+        message: "Name must be at least 2 characters"
+      });
+    }
+
+    if (!email || !EMAIL_RE.test(email)) {
+      return res.status(400).json({
+        message: "Please enter a valid email address"
+      });
+    }
+
+    if (!password || password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters"
+      });
+    }
+
+    const existing = await User.findOne({ email });
+
+    if (existing) {
+      return res.status(400).json({
+        message: "An account with this email already exists"
+      });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -37,6 +65,13 @@ router.post("/register", async (req, res) => {
     res.json({ message: "User created" });
 
   } catch (error) {
+
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: "An account with this email already exists"
+      });
+    }
+
     res.status(500).json({ message: error.message });
   }
 });
@@ -64,6 +99,12 @@ async function generateReferralCode(username) {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required"
+      });
+    }
 
     const user = await User.findOne({ email });
 

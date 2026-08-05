@@ -18,11 +18,25 @@ router.post("/", verifyToken, async (req, res) => {
       description
     } = req.body;
 
+    if (!title || !category) {
+      return res.status(400).json({
+        message: "Title and category are required"
+      });
+    }
+
+    const numericAmount = Number(amount);
+
+    if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+      return res.status(400).json({
+        message: "Amount must be a positive number"
+      });
+    }
+
 
     const expense = await Expense.create({
       userId: req.userId,
       title,
-      amount,
+      amount: numericAmount,
       category,
       date,
       description
@@ -72,12 +86,35 @@ router.get("/", verifyToken, async (req, res) => {
 router.put("/:id", verifyToken, async (req, res) => {
   try {
 
+    // Only ever touch these fields from the request body — passing req.body
+    // straight through would let a caller slip in userId and reassign the
+    // expense to someone else's account.
+    const updates = {};
+
+    if (req.body.title !== undefined) updates.title = req.body.title;
+    if (req.body.category !== undefined) updates.category = req.body.category;
+    if (req.body.date !== undefined) updates.date = req.body.date;
+    if (req.body.description !== undefined) updates.description = req.body.description;
+
+    if (req.body.amount !== undefined) {
+
+      const numericAmount = Number(req.body.amount);
+
+      if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+        return res.status(400).json({
+          message: "Amount must be a positive number"
+        });
+      }
+
+      updates.amount = numericAmount;
+    }
+
     const expense = await Expense.findOneAndUpdate(
       {
         _id: req.params.id,
         userId: req.userId
       },
-      req.body,
+      updates,
       {
         new: true
       }

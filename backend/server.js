@@ -4,8 +4,12 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const fs = require("fs");
+const helmet = require("helmet");
 
 require("dotenv").config();
+
+const { apiLimiter, authLimiter } = require("./middleware/rateLimiters");
+const errorHandler = require("./middleware/errorHandler");
 
 const authRoutes = require("./routes/auth");
 const transferRoutes = require("./routes/transfers");
@@ -29,14 +33,21 @@ if (!fs.existsSync("uploads")) {
 
 
 // ================== MIDDLEWARE ==================
+app.use(helmet({
+  // Uploaded avatars/meter photos are fetched cross-origin by the frontend
+  // dev server (different port) — helmet's default same-origin CORP header
+  // would silently block those <img> loads.
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 app.use(cors());
 app.use(express.json());
+app.use(apiLimiter);
 
 app.use("/uploads", express.static("uploads"));
 
 
 // ================== ROUTES ==================
-app.use("/auth", authRoutes);
+app.use("/auth", authLimiter, authRoutes);
 app.use("/transfers", transferRoutes);
 app.use("/profile", profileRoutes);
 app.use("/expenses", expenseRoutes);
@@ -52,6 +63,10 @@ app.use("/support", supportRoutes);
 app.get("/", (req, res) => {
   res.send("Server is running 🚀");
 });
+
+
+// ================== ERROR HANDLER (must be last) ==================
+app.use(errorHandler);
 
 
 // ================== MONGODB ==================

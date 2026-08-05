@@ -73,9 +73,17 @@ router.post("/cardcom/pay", verifyToken, async (req, res) => {
 
     const { utilityType, amount, cardId } = req.body;
 
-    if (!utilityType || !amount) {
+    if (!utilityType || !["electricity", "gas", "water", "arnona"].includes(utilityType)) {
       return res.status(400).json({
-        message: "utilityType and amount are required"
+        message: "A valid utilityType is required"
+      });
+    }
+
+    const numericAmount = Number(amount);
+
+    if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+      return res.status(400).json({
+        message: "Amount must be a positive number"
       });
     }
 
@@ -95,14 +103,14 @@ router.post("/cardcom/pay", verifyToken, async (req, res) => {
 
       const result = await cardcom.chargeWithToken({
         token: card.cardcomToken,
-        amount,
+        amount: numericAmount,
         description: `${utilityType} bill`
       });
 
       const expense = await Expense.create({
         userId: req.userId,
         title: `${utilityType} payment`,
-        amount,
+        amount: numericAmount,
         category: utilityType,
         description: `Paid with ${card.brand} •••• ${card.last4} (Cardcom #${result.transactionId})`
       });
@@ -115,7 +123,7 @@ router.post("/cardcom/pay", verifyToken, async (req, res) => {
     const backendBase = `${req.protocol}://${req.get("host")}`;
 
     const { url, lowProfileId } = await cardcom.createLowProfile({
-      amount,
+      amount: numericAmount,
       operation: "ChargeAndCreateToken",
       successUrl: `${FRONTEND_URL}/cards/callback?lowProfileId={LowProfileId}`,
       failedUrl: `${FRONTEND_URL}/cards/callback?lowProfileId={LowProfileId}&failed=1`,
@@ -127,7 +135,7 @@ router.post("/cardcom/pay", verifyToken, async (req, res) => {
       lowProfileId,
       userId: req.userId,
       purpose: "utility-payment",
-      meta: { utilityType, amount }
+      meta: { utilityType, amount: numericAmount }
     });
 
     res.json({ url });

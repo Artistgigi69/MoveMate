@@ -19,6 +19,12 @@ router.post("/", verifyToken, async (req, res) => {
       newTenant
     } = req.body;
 
+    if (!oldAddress || !newAddress || !moveDate || !Array.isArray(services) || services.length === 0) {
+      return res.status(400).json({
+        message: "Old address, new address, move date and at least one service are required"
+      });
+    }
+
 
     const transfer = await Transfer.create({
       userId: req.userId,
@@ -109,6 +115,12 @@ router.put("/:id", verifyToken, async (req, res) => {
       services,
       newTenant
     } = req.body;
+
+    if (!oldAddress || !newAddress || !moveDate || !Array.isArray(services) || services.length === 0) {
+      return res.status(400).json({
+        message: "Old address, new address, move date and at least one service are required"
+      });
+    }
 
 
     const transfer = await Transfer.findOne({
@@ -356,6 +368,12 @@ router.put("/:id/status", verifyToken, async (req, res) => {
       status
     } = req.body;
 
+    if (!["Pending", "Processing", "Completed"].includes(status)) {
+      return res.status(400).json({
+        message: "Status must be Pending, Processing or Completed"
+      });
+    }
+
 
     const transfer = await Transfer.findOne({
       _id: req.params.id,
@@ -366,6 +384,13 @@ router.put("/:id/status", verifyToken, async (req, res) => {
     if (!transfer) {
       return res.status(404).json({
         message: "Not found"
+      });
+    }
+
+
+    if (!transfer.services[serviceIndex]) {
+      return res.status(400).json({
+        message: "Invalid service"
       });
     }
 
