@@ -169,7 +169,7 @@ function Transfers() {
     try {
       const token = localStorage.getItem("token");
 
-      await fetch(`http://localhost:5000/transfers/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/transfers/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: token

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { MdSettings, MdNotifications, MdLock, MdCameraAlt, MdShieldMoon } from "react-icons/md";
+import { MdSettings, MdNotifications, MdLock, MdCameraAlt, MdShieldMoon, MdInstallMobile } from "react-icons/md";
 import { getSubscriptionStatus, subscribeToPush, unsubscribeFromPush } from "../push";
 import "./Settings.css";
 
@@ -29,11 +29,55 @@ const [pushEnabled,setPushEnabled]=useState(false);
 const [pushBusy,setPushBusy]=useState(false);
 
 
+const [installPrompt,setInstallPrompt]=useState(null);
+const [installed,setInstalled]=useState(false);
+
+
 useEffect(()=>{
 
 getSubscriptionStatus().then(setPushEnabled).catch(()=>{});
 
+// Already running as an installed app (standalone window, no browser chrome)?
+if(window.matchMedia("(display-mode: standalone)").matches){
+setInstalled(true);
+}
+
+const onBeforeInstall=(e)=>{
+e.preventDefault();
+setInstallPrompt(e);
+};
+
+const onInstalled=()=>{
+setInstalled(true);
+setInstallPrompt(null);
+};
+
+window.addEventListener("beforeinstallprompt",onBeforeInstall);
+window.addEventListener("appinstalled",onInstalled);
+
+return()=>{
+window.removeEventListener("beforeinstallprompt",onBeforeInstall);
+window.removeEventListener("appinstalled",onInstalled);
+};
+
 },[]);
+
+
+const installApp=async()=>{
+
+if(!installPrompt) return;
+
+installPrompt.prompt();
+
+const {outcome}=await installPrompt.userChoice;
+
+if(outcome==="accepted"){
+toast.success(t("settings.installStarted"));
+}
+
+setInstallPrompt(null);
+
+};
 
 
 const togglePush=async()=>{
@@ -793,6 +837,42 @@ onChange={togglePush}
 </div>
 
 
+
+{
+!installed && (
+
+<div className="setting-row">
+
+
+<div>
+
+<h3>
+<MdInstallMobile /> {t("settings.installTitle")}
+</h3>
+
+
+<p>
+{installPrompt ? t("settings.installHint") : t("settings.installUnavailableHint")}
+</p>
+
+
+</div>
+
+
+
+<button
+  className="security-btn"
+  onClick={installApp}
+  disabled={!installPrompt}
+>
+  {t("settings.installButton")}
+</button>
+
+
+</div>
+
+)
+}
 
 
 

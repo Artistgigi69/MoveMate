@@ -222,7 +222,12 @@
     "disableHint": "Enter the current 6-digit code from your authenticator app to confirm.",
     "pushTitle": "Push notifications",
     "pushHint": "Get a browser notification before your move date and when requests change status",
-    "pushEnabled": "Push notifications enabled 🎉"
+    "pushEnabled": "Push notifications enabled 🎉",
+    "installTitle": "Install app",
+    "installHint": "Add MoveMate to your home screen for a full-screen, app-like experience",
+    "installUnavailableHint": "Your browser will offer this automatically once it decides the app qualifies — try visiting a few more times, or use your browser's \"Add to Home Screen\" menu option",
+    "installButton": "Install",
+    "installStarted": "Installing MoveMate..."
   },
   "utility": {
     "trackAndPay": "Track and pay your {{service}} bills",

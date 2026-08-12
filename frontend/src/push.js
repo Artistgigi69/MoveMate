@@ -39,8 +39,9 @@ export async function subscribeToPush() {
     throw new Error("Push notifications are not configured on the server yet");
   }
 
-  const registration = await navigator.serviceWorker.register("/sw.js");
-  await navigator.serviceWorker.ready;
+  // main.jsx already registers /sw.js on app load (needed for installability
+  // regardless of push) — just wait for it to be active.
+  const registration = await navigator.serviceWorker.ready;
 
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,

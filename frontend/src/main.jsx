@@ -10,3 +10,13 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+
+// Registered unconditionally (not just when the user opts into push) so
+// the browser recognizes this as an installable app on first visit.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((error) => {
+      console.log('Service worker registration failed:', error);
+    });
+  });
+}
