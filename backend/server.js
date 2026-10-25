@@ -32,6 +32,11 @@ if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
 }
 
+// Leases and other ID-bearing documents — deliberately NOT under /uploads.
+if (!fs.existsSync("private_uploads")) {
+  fs.mkdirSync("private_uploads");
+}
+
 
 // ================== MIDDLEWARE ==================
 app.use(helmet({
@@ -40,7 +45,9 @@ app.use(helmet({
   // would silently block those <img> loads.
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
-app.use(cors());
+// Content-Disposition carries the original file name on lease downloads;
+// cross-origin JS can't read it unless it's exposed.
+app.use(cors({ exposedHeaders: ["Content-Disposition"] }));
 app.use(express.json());
 app.use(apiLimiter);
 

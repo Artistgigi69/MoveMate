@@ -1,4 +1,5 @@
 const path = require("path");
+const { PRIVATE_DIR } = require("../middleware/upload");
 
 const SERVICE_NAMES_HE = {
   electricity: "חשמל",
@@ -67,8 +68,8 @@ function buildArnonaEmail(transfer, kind) {
 
   if (transfer.leaseFile) {
     attachments.push({
-      filename: transfer.leaseFile.replace(/^\d+-/, ""),
-      path: path.join(__dirname, "..", "uploads", transfer.leaseFile)
+      filename: transfer.leaseFileName || "חוזה-שכירות" + path.extname(transfer.leaseFile),
+      path: path.join(__dirname, "..", PRIVATE_DIR, transfer.leaseFile)
     });
   }
 
@@ -76,7 +77,7 @@ function buildArnonaEmail(transfer, kind) {
     (transfer.services || []).forEach(s => {
       if (s.meterPhoto) {
         attachments.push({
-          filename: `${SERVICE_NAMES_HE[s.name] || s.name}-${s.meterPhoto.replace(/^\d+-/, "")}`,
+          filename: `מונה-${SERVICE_NAMES_HE[s.name] || s.name}${path.extname(s.meterPhoto)}`,
           path: path.join(__dirname, "..", "uploads", s.meterPhoto)
         });
       }

@@ -74,6 +74,21 @@ export const api = {
     return request(`/transfers/${id}/meter-photo`, { method: "POST", form });
   },
 
+  // The lease is private, so it's fetched with the token and handed to the
+  // browser as a blob rather than linked directly.
+  downloadLease: async id => {
+    const res = await fetch(`${BASE}/transfers/${id}/lease`, { headers: { Authorization: getToken() || "" } });
+    if (!res.ok) throw new Error("Не удалось скачать договор");
+    const cd = res.headers.get("Content-Disposition") || "";
+    const name = decodeURIComponent(
+      cd.match(/filename\*=UTF-8''([^;]+)/i)?.[1] || cd.match(/filename="([^"]+)"/i)?.[1] || "lease"
+    );
+    const url = URL.createObjectURL(await res.blob());
+    const a = Object.assign(document.createElement("a"), { href: url, download: name });
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
   uploadLease: (id, file) => {
     const form = new FormData();
     form.append("lease", file);

@@ -113,6 +113,15 @@ export function StatusDetail() {
         <>
           <p className="note">{transfer.oldAddress} → {transfer.newAddress}, {transfer.moveDate}</p>
 
+          {transfer.leaseFile && (
+            <button
+              className="btn ghost small"
+              onClick={() => api.downloadLease(id).catch(err => setError(err.message))}
+            >
+              Скачать договор{transfer.leaseFileName ? ` (${transfer.leaseFileName})` : ""}
+            </button>
+          )}
+
           <ul className="list">
             {transfer.services.map((s, i) => {
               const info = service(s.name);

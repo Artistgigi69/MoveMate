@@ -3,10 +3,13 @@ const crypto = require("crypto");
 
 const Transfer = require("../models/Transfer");
 const verifyToken = require("../middleware/auth");
+const path = require("path");
 const upload = require("../middleware/upload");
+const { privateUpload, PRIVATE_DIR } = require("../middleware/upload");
 const mailer = require("../services/mailer");
 const { buildArnonaEmail } = require("../services/arnonaEmail");
 const { findMunicipality } = require("../data/municipalities");
+const { personError } = require("../utils/validate");
 
 const router = express.Router();
 
@@ -29,6 +32,20 @@ router.post("/", verifyToken, async (req, res) => {
       return res.status(400).json({
         message: "Old address, new address, move date and at least one service are required"
       });
+    }
+
+    // The old frontend sends neither block; when they're present (v2),
+    // they go into letters to municipalities, so they must be valid.
+    const personProblem =
+      (applicant !== undefined && personError(applicant, "Applicant")) ||
+      (newTenant !== undefined && personError(newTenant, "New tenant", false));
+
+    if (personProblem) {
+      return res.status(400).json({ message: personProblem });
+    }
+
+    if (oldCity && !findMunicipality(oldCity) || newCity && !findMunicipality(newCity)) {
+      return res.status(400).json({ message: "Unknown city" });
     }
 
 
@@ -281,7 +298,7 @@ router.post(
 router.post(
   "/:id/lease",
   verifyToken,
-  upload.single("lease"),
+  privateUpload.single("lease"),
 
   async (req, res) => {
     try {
@@ -300,6 +317,7 @@ router.post(
       }
 
       transfer.leaseFile = req.file.filename;
+      transfer.leaseFileName = req.file.originalname;
 
       await transfer.save();
 
@@ -310,6 +328,31 @@ router.post(
     }
   }
 );
+
+
+
+// ================== DOWNLOAD LEASE (owner only) ==================
+router.get("/:id/lease", verifyToken, async (req, res) => {
+  try {
+
+    const transfer = await Transfer.findOne({
+      _id: req.params.id,
+      userId: req.userId
+    });
+
+    if (!transfer || !transfer.leaseFile) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    res.download(
+      path.join(__dirname, "..", PRIVATE_DIR, transfer.leaseFile),
+      transfer.leaseFileName || "lease" + path.extname(transfer.leaseFile)
+    );
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 
 

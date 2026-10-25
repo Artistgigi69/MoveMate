@@ -52,7 +52,14 @@ const transferSchema = new mongoose.Schema({
     },
 
 
+    // Stored under private_uploads/ with a random name; leaseFileName is the
+    // user's original name, used for downloads and email attachments.
     leaseFile: {
+        type: String,
+        default: ""
+    },
+
+    leaseFileName: {
         type: String,
         default: ""
     },
