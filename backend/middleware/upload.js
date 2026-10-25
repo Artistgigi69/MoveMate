@@ -1,8 +1,23 @@
 const crypto = require("crypto");
+const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 
 const MAX_SIZE = 10 * 1024 * 1024;
+
+// STORAGE_DIR points at a persistent disk in production (Render wipes the
+// app's own folder on every deploy). Locally it defaults to backend/.
+const STORAGE_ROOT = process.env.STORAGE_DIR
+  ? path.resolve(process.env.STORAGE_DIR)
+  : path.join(__dirname, "..");
+
+const PUBLIC_DIR = path.join(STORAGE_ROOT, "uploads");
+// Leases and other ID-bearing documents — deliberately NOT under /uploads.
+const PRIVATE_DIR = path.join(STORAGE_ROOT, "private_uploads");
+
+for (const dir of [PUBLIC_DIR, PRIVATE_DIR]) {
+  fs.mkdirSync(dir, { recursive: true });
+}
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
 const DOCUMENT_TYPES = [...IMAGE_TYPES, "application/pdf"];
@@ -33,7 +48,7 @@ function onlyTypes(types) {
 // Public: served from /uploads (avatars, meter photos shown to the new
 // tenant on the confirmation link).
 const upload = multer({
-  storage: storageIn("uploads/"),
+  storage: storageIn(PUBLIC_DIR),
   limits: { fileSize: MAX_SIZE },
   defParamCharset: "utf8", // keep Hebrew/Russian file names intact
   fileFilter: onlyTypes(IMAGE_TYPES)
@@ -42,7 +57,7 @@ const upload = multer({
 // Private: never served statically — leases carry ID numbers. Read them
 // back only through an authenticated route.
 const privateUpload = multer({
-  storage: storageIn("private_uploads/"),
+  storage: storageIn(PRIVATE_DIR),
   limits: { fileSize: MAX_SIZE },
   defParamCharset: "utf8", // keep Hebrew/Russian file names intact
   fileFilter: onlyTypes(DOCUMENT_TYPES)
@@ -51,4 +66,5 @@ const privateUpload = multer({
 
 module.exports = upload;
 module.exports.privateUpload = privateUpload;
-module.exports.PRIVATE_DIR = "private_uploads";
+module.exports.PUBLIC_DIR = PUBLIC_DIR;
+module.exports.PRIVATE_DIR = PRIVATE_DIR;

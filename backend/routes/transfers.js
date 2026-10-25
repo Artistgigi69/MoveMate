@@ -345,7 +345,7 @@ router.get("/:id/lease", verifyToken, async (req, res) => {
     }
 
     res.download(
-      path.join(__dirname, "..", PRIVATE_DIR, transfer.leaseFile),
+      path.join(PRIVATE_DIR, transfer.leaseFile),
       transfer.leaseFileName || "lease" + path.extname(transfer.leaseFile)
     );
 

@@ -3,7 +3,6 @@ console.log("SERVER STARTING 🚀");
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const fs = require("fs");
 const helmet = require("helmet");
 
 require("dotenv").config();
@@ -27,15 +26,9 @@ const supportRoutes = require("./routes/support");
 const municipalityRoutes = require("./routes/municipalities");
 const { checkMoveReminders } = require("./services/reminders");
 
-// ================== CREATE UPLOADS FOLDER ==================
-if (!fs.existsSync("uploads")) {
-  fs.mkdirSync("uploads");
-}
-
-// Leases and other ID-bearing documents — deliberately NOT under /uploads.
-if (!fs.existsSync("private_uploads")) {
-  fs.mkdirSync("private_uploads");
-}
+// Upload folders are created (and located, via STORAGE_DIR) in
+// middleware/upload.js.
+const { PUBLIC_DIR } = require("./middleware/upload");
 
 
 // ================== MIDDLEWARE ==================
@@ -51,7 +44,7 @@ app.use(cors({ exposedHeaders: ["Content-Disposition"] }));
 app.use(express.json());
 app.use(apiLimiter);
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(PUBLIC_DIR));
 
 
 // ================== ROUTES ==================

@@ -96,3 +96,7 @@ address before `npm run build`.
   `source` link; some cities are still empty.
 - Send the first arnona letters to your own address to review them.
 - Have a native speaker review the Hebrew and Arabic texts.
+
+## 🌍 Deploying
+
+See [DEPLOY.md](DEPLOY.md): MongoDB Atlas, Gmail SMTP, Render (backend, `render.yaml`) and Vercel (frontend-v2).
