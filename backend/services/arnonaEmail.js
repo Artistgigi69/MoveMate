@@ -1,5 +1,4 @@
 const path = require("path");
-const { PUBLIC_DIR, PRIVATE_DIR } = require("../middleware/upload");
 
 const SERVICE_NAMES_HE = {
   electricity: "חשמל",
@@ -9,7 +8,8 @@ const SERVICE_NAMES_HE = {
 
 // Universal arnona letter, in Hebrew since that's what municipalities process.
 // `kind` is "close" (old city: stop billing me) or "open" (new city: start
-// billing me). Returns { subject, text, attachments } for mailer.sendMail.
+// billing me). Returns { subject, text, attachments }, where each attachment
+// is { filename, bucket, file } — a fileStore reference the caller loads.
 function buildArnonaEmail(transfer, kind) {
 
   const a = transfer.applicant || {};
@@ -69,7 +69,8 @@ function buildArnonaEmail(transfer, kind) {
   if (transfer.leaseFile) {
     attachments.push({
       filename: transfer.leaseFileName || "חוזה-שכירות" + path.extname(transfer.leaseFile),
-      path: path.join(PRIVATE_DIR, transfer.leaseFile)
+      bucket: "private",
+      file: transfer.leaseFile
     });
   }
 
@@ -78,7 +79,8 @@ function buildArnonaEmail(transfer, kind) {
       if (s.meterPhoto) {
         attachments.push({
           filename: `מונה-${SERVICE_NAMES_HE[s.name] || s.name}${path.extname(s.meterPhoto)}`,
-          path: path.join(PUBLIC_DIR, s.meterPhoto)
+          bucket: "public",
+          file: s.meterPhoto
         });
       }
     });

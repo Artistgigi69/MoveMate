@@ -26,9 +26,7 @@ const supportRoutes = require("./routes/support");
 const municipalityRoutes = require("./routes/municipalities");
 const { checkMoveReminders } = require("./services/reminders");
 
-// Upload folders are created (and located, via STORAGE_DIR) in
-// middleware/upload.js.
-const { PUBLIC_DIR } = require("./middleware/upload");
+const fileStore = require("./services/fileStore");
 
 
 // ================== MIDDLEWARE ==================
@@ -44,7 +42,11 @@ app.use(cors({ exposedHeaders: ["Content-Disposition"] }));
 app.use(express.json());
 app.use(apiLimiter);
 
-app.use("/uploads", express.static(PUBLIC_DIR));
+// Public uploads (avatars, meter photos) live in MongoDB — see
+// services/fileStore.js. Leases are not reachable here.
+app.get("/uploads/:name", (req, res, next) => {
+  fileStore.sendFile(res, "public", req.params.name).catch(next);
+});
 
 
 // ================== ROUTES ==================

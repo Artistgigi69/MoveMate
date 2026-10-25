@@ -1,6 +1,5 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const path = require("path");
 
 const { buildArnonaEmail } = require("../services/arnonaEmail");
 
@@ -32,7 +31,8 @@ test("close letter: old address, new tenant, readings, all attachments", () => {
 
 test("lease is read from private storage, never the public folder", () => {
   const lease = buildArnonaEmail(transfer, "close").attachments[0];
-  assert.equal(path.basename(path.dirname(lease.path)), "private_uploads");
+  assert.equal(lease.bucket, "private");
+  assert.equal(lease.file, "abc123.pdf");
 });
 
 test("open letter: new address, no tenant block, lease only", () => {

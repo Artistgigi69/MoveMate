@@ -5,7 +5,8 @@ const Transfer = require("../models/Transfer");
 const verifyToken = require("../middleware/auth");
 const path = require("path");
 const upload = require("../middleware/upload");
-const { privateUpload, PRIVATE_DIR } = require("../middleware/upload");
+const { privateUpload } = require("../middleware/upload");
+const fileStore = require("../services/fileStore");
 const mailer = require("../services/mailer");
 const { buildArnonaEmail } = require("../services/arnonaEmail");
 const { findMunicipality } = require("../data/municipalities");
@@ -344,8 +345,10 @@ router.get("/:id/lease", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "Not found" });
     }
 
-    res.download(
-      path.join(PRIVATE_DIR, transfer.leaseFile),
+    await fileStore.sendFile(
+      res,
+      "private",
+      transfer.leaseFile,
       transfer.leaseFileName || "lease" + path.extname(transfer.leaseFile)
     );
 
@@ -440,10 +443,18 @@ async function sendArnona(transfer) {
 
     const mail = buildArnonaEmail(transfer, kind);
 
+    // A missing file shouldn't block the letter — send what we have.
+    const attachments = [];
+    for (const a of mail.attachments) {
+      const content = await fileStore.readFile(a.bucket, a.file);
+      if (content) attachments.push({ filename: a.filename, content });
+    }
+
     await mailer.sendMail({
       to: city.email,
       cc: transfer.applicant && transfer.applicant.email,
-      ...mail
+      ...mail,
+      attachments
     });
   }
 

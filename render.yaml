@@ -1,27 +1,22 @@
 # Render Blueprint for the backend API. See DEPLOY.md.
 #
-# Uploaded files (meter photos, leases) live on a persistent disk mounted at
-# /var/data — Render wipes the app folder on every deploy. Disks need a paid
-# instance, hence plan: starter.
+# Free plan: the service sleeps after 15 minutes without traffic and the
+# first request then takes up to a minute. Uploaded files (meter photos,
+# leases) are stored in MongoDB, so the free plan's throwaway disk is fine.
+# To go paid later, change plan to starter (no other changes needed).
 
 services:
   - type: web
     name: movemate-api
     runtime: node
     rootDir: backend
-    plan: starter
+    plan: free
     buildCommand: npm ci
     startCommand: npm start
     healthCheckPath: /
-    disk:
-      name: movemate-files
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: NODE_VERSION
         value: "22"
-      - key: STORAGE_DIR
-        value: /var/data
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET

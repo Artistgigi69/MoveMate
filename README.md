@@ -69,8 +69,9 @@ readings, new tenant, lease) → sign up at the end → submit → status.
 - Electricity, gas and water show links to the provider's own page.
 - The new tenant confirms meter readings from a shared link
   (`/confirm/:token`, no account needed).
-- Leases are stored in `backend/private_uploads/` and only the owner can
-  download them.
+- Uploaded files are stored in MongoDB (GridFS, `backend/services/fileStore.js`),
+  so they survive redeploys without a persistent disk. Leases go to a private
+  bucket and only the owner can download them.
 
 ## ▶️ Running locally
 
