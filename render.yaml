@@ -22,9 +22,9 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: SMTP_HOST
-        value: smtp.gmail.com
+        value: smtp-relay.brevo.com
       - key: SMTP_PORT
-        value: "465"
+        value: "587"
       - key: SMTP_USER
         sync: false
       - key: SMTP_PASS
