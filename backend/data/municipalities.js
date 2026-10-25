@@ -7,6 +7,9 @@
 //             (`formUrl`); a candidate for automatic filling later.
 //   ""      — not found yet; the user contacts the city themselves.
 //
+// water (optional): the city's water corporation, where the user moves the
+// water account. Only filled where an official page named it.
+//
 // Every email/form below was read on the city's official page in `source`
 // (checked 2026-10-25). Never add a guessed address: a wrong one leaks the
 // user's ID number and lease to a stranger. Re-check before going live —
@@ -32,14 +35,17 @@ const municipalities = [
     method: "email", email: "hiuvim@haifa.muni.il",
     formUrl: "https://haifaforms.haifa.muni.il/?page_id=91044",
     source: "https://www.haifa.muni.il/resident-service/arnona/switching/",
-    note: "Факс 04-8356035."
+    note: "Факс 04-8356035.",
+    // Named on the city's arnona page; we couldn't open its own site.
+    water: { name: "Мей Кармель (מי כרמל)", url: "" }
   },
   {
     key: "rishon", he: "ראשון לציון", ru: "Ришон-ле-Цион",
     method: "form", email: "",
     formUrl: "https://cityforms.co.il:60140/appbuilder/forms?code=8102005056A175301188E8CFFEF4DE61&Process=oneproc",
     source: "https://www.rishonlezion.muni.il/Residents/arnona/Pages/PropertyTaxRenting.aspx",
-    note: ""
+    note: "",
+    water: { name: "Маниб Ришон (מניב ראשון)", url: "" }
   },
   {
     key: "petah-tikva", he: "פתח תקווה", ru: "Петах-Тиква",
@@ -99,7 +105,8 @@ const municipalities = [
     method: "form", email: "",
     formUrl: "https://www.rehovot.muni.il/flowmateapp.php?name=%D7%94%D7%97%D7%9C%D7%A4%D7%94%20%D7%9E%D7%91%D7%A2%D7%9C%D7%99%D7%9D%20%D7%9C%D7%93%D7%99%D7%99%D7%A8%D7%99%D7%9D",
     source: "https://www.rehovot.muni.il/%D7%94%D7%97%D7%9C%D7%A4%D7%AA-%D7%9E%D7%97%D7%96%D7%99%D7%A7%D7%99%D7%9D-%D7%91%D7%A0%D7%9B%D7%A1/",
-    note: "Отдельные формы: жилец→жилец, владелец→жилец, возврат владельцу."
+    note: "Отдельные формы: жилец→жилец, владелец→жилец, возврат владельцу.",
+    water: { name: "А-Беэр а-Шлишит (הבאר השלישית)", url: "http://www.habeer3.co.il/122/" }
   },
   {
     key: "ashkelon", he: "אשקלון", ru: "Ашкелон",

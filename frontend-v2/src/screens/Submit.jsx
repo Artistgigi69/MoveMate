@@ -36,7 +36,11 @@ export default function Submit() {
           moveDate: draft.moveDate,
           applicant: draft.applicant,
           newTenant: hasTenant ? draft.newTenant : undefined,
-          services: draft.services.map(name => ({ name, meterReading: draft.readings[name] || "" }))
+          services: draft.services.map(name => ({
+            name,
+            meterReading: draft.readings[name] || "",
+            provider: name === "gas" ? draft.gasProvider : ""
+          }))
         });
         id = created._id;
         setTransferId(id);

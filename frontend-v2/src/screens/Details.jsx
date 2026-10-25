@@ -4,6 +4,7 @@ import { Field, FilePick, PersonFields, Screen } from "../ui";
 import { SERVICES, useDraft } from "../draft";
 import { validatePerson } from "../validate";
 import { getToken } from "../api";
+import { GAS_PROVIDERS } from "../providers";
 
 export default function Details() {
   const navigate = useNavigate();
@@ -54,6 +55,14 @@ export default function Details() {
           {meters.map(m => (
             <div key={m.key} className="meter">
               <h3>{m.icon} {m.label}</h3>
+              {m.key === "gas" && (
+                <Field label="Газовая компания" hint="Указана на баллоне или в счёте за газ">
+                  <select value={draft.gasProvider} onChange={e => update({ gasProvider: e.target.value })}>
+                    <option value="">— выберите —</option>
+                    {GAS_PROVIDERS.map(p => <option key={p.key} value={p.key}>{p.name}</option>)}
+                  </select>
+                </Field>
+              )}
               <Field label="Показания" error={errors.readings[m.key]}>
                 <input
                   inputMode="decimal"

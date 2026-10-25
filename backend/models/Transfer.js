@@ -77,6 +77,12 @@ const transferSchema = new mongoose.Schema({
                 default: ""
             },
 
+            // Company key where the user picks one (gas: amisragas, supergas…).
+            provider: {
+                type: String,
+                default: ""
+            },
+
             // How the request actually went out: "email", "auto" (online
             // form) or "manual" (we only marked it — the user still has to
             // contact the provider).

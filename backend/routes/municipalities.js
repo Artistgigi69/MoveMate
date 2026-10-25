@@ -11,7 +11,7 @@ const router = express.Router();
 // the email stays server-side.
 router.get("/", (req, res) => {
   res.json(
-    municipalities.map(({ key, he, ru, method, formUrl }) => ({ key, he, ru, method, formUrl }))
+    municipalities.map(({ key, he, ru, method, formUrl, water }) => ({ key, he, ru, method, formUrl, water }))
   );
 });
 

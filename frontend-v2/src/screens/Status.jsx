@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { Screen, SENT_VIA_LABELS, STATUS_LABELS } from "../ui";
 import { SERVICES } from "../draft";
 import { api, getToken, setToken } from "../api";
+import { ELECTRICITY, gasProvider } from "../providers";
 
 const service = key => SERVICES.find(s => s.key === key) || { label: key, icon: "•" };
 
@@ -64,13 +65,42 @@ export function StatusDetail() {
     api.municipalities().then(setCities).catch(() => setCities([]));
   }, [id]);
 
-  // Arnona that couldn't be emailed: point the user at each city's own form.
-  const arnonaForms = transfer
-    ? [
-        { city: cities.find(c => c.key === transfer.oldCity), label: "закрыть на старой квартире" },
-        { city: cities.find(c => c.key === transfer.newCity), label: "открыть на новой квартире" }
-      ].filter(f => f.city?.formUrl)
-    : [];
+  // For anything we couldn't send: where the user does it themselves.
+  // Returns [{ text, url? }] — an entry without url is a hint, not a link.
+  const selfServiceLinks = s => {
+    const oldCity = cities.find(c => c.key === transfer.oldCity);
+    const newCity = cities.find(c => c.key === transfer.newCity);
+    const ends = [
+      { city: oldCity, label: "старая квартира" },
+      { city: newCity, label: "новая квартира" }
+    ];
+
+    if (s.name === "arnona") {
+      return ends
+        .filter(e => e.city?.formUrl)
+        .map(e => ({ text: `Форма арноны ${e.city.ru} (${e.label})`, url: e.city.formUrl }));
+    }
+
+    if (s.name === "electricity") {
+      return [{ text: `Смена клиента в ${ELECTRICITY.name}`, url: ELECTRICITY.url }];
+    }
+
+    if (s.name === "gas") {
+      const p = gasProvider(s.provider);
+      if (p?.url) return [{ text: `Смена клиента в ${p.name}`, url: p.url }];
+      return [{ text: "Позвоните в газовую компанию, указанную на баллоне или в счёте" }];
+    }
+
+    if (s.name === "water") {
+      const known = ends.filter(e => e.city?.water);
+      if (known.length === 0) {
+        return [{ text: "Водная компания указана в вашем счёте за воду" }];
+      }
+      return known.map(e => ({ text: `${e.city.water.name} (${e.label})`, url: e.city.water.url }));
+    }
+
+    return [];
+  };
 
   if (!getToken()) return <Navigate to="/auth" replace />;
 
@@ -100,10 +130,12 @@ export function StatusDetail() {
                         : SENT_VIA_LABELS[s.sentVia] || s.sentVia}
                     </small>
                   )}
-                  {manualPending && s.name === "arnona" && arnonaForms.map(f => (
-                    <a key={f.label} className="form-link" href={f.city.formUrl} target="_blank" rel="noreferrer">
-                      Форма {f.city.ru}: {f.label} ↗
+                  {manualPending && selfServiceLinks(s).map(l => l.url ? (
+                    <a key={l.text} className="form-link" href={l.url} target="_blank" rel="noreferrer">
+                      {l.text} ↗
                     </a>
+                  ) : (
+                    <small key={l.text}>{l.text}</small>
                   ))}
                   {manualPending && (
                     <button

@@ -41,10 +41,11 @@ router.post("/", verifyToken, async (req, res) => {
       newCity,
       applicant,
 
-      // Accepts plain names (old frontend) or { name, meterReading }.
+      // Accepts plain names (old frontend) or { name, meterReading, provider }.
       services: services.map(s => ({
         name: typeof s === "string" ? s : s.name,
         meterReading: typeof s === "string" ? "" : (s.meterReading || ""),
+        provider: typeof s === "string" ? "" : (s.provider || ""),
         status: "Pending",
         confirmToken: crypto.randomBytes(16).toString("hex")
       })),
@@ -156,6 +157,7 @@ router.put("/:id", verifyToken, async (req, res) => {
         status: existing ? existing.status : "Pending",
         meterPhoto: existing ? existing.meterPhoto : "",
         meterReading: existing ? existing.meterReading : "",
+        provider: existing ? existing.provider : "",
         sentVia: existing ? existing.sentVia : "",
         requestSentAt: existing ? existing.requestSentAt : null,
         confirmToken: existing ? existing.confirmToken : crypto.randomBytes(16).toString("hex"),
