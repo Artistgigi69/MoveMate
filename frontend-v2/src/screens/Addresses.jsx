@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Field, Screen } from "../ui";
+import { Field, Screen, Section } from "../ui";
 import { useDraft } from "../draft";
 import { useI18n } from "../i18n";
 import { api } from "../api";
@@ -52,25 +52,25 @@ export default function Addresses() {
       title={t("addr.title")}
       footer={<button className="btn primary" onClick={next}>{t("common.next")}</button>}
     >
-      <fieldset className="card">
-        <legend>{t("addr.old")}</legend>
+      <Section icon="home" title={t("addr.old")}>
         <Field label={t("addr.city")} error={errors.oldCity}>{citySelect("oldCity")}</Field>
         <Field label={t("addr.address")} error={errors.oldAddress}>
           <input value={draft.oldAddress} onChange={set("oldAddress")} placeholder={t("addr.addressPh")} autoComplete="street-address" />
         </Field>
-      </fieldset>
+      </Section>
 
-      <fieldset className="card">
-        <legend>{t("addr.new")}</legend>
+      <Section icon="pin" title={t("addr.new")}>
         <Field label={t("addr.city")} error={errors.newCity}>{citySelect("newCity")}</Field>
         <Field label={t("addr.address")} error={errors.newAddress}>
           <input value={draft.newAddress} onChange={set("newAddress")} placeholder={t("addr.addressPh")} />
         </Field>
-      </fieldset>
+      </Section>
 
-      <Field label={t("addr.date")} error={errors.moveDate}>
-        <input type="date" value={draft.moveDate} onChange={set("moveDate")} />
-      </Field>
+      <Section icon="calendar" title={t("addr.date")}>
+        <Field error={errors.moveDate}>
+          <input type="date" value={draft.moveDate} onChange={set("moveDate")} />
+        </Field>
+      </Section>
 
       {cities?.length === 0 && <p className="note warn">{t("addr.citiesFailed")}</p>}
     </Screen>

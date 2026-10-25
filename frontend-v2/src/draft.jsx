@@ -6,16 +6,15 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 const DRAFT_KEY = "mm2_draft";
 
-// Labels live in i18n.jsx as "service.<key>".
+// Labels live in i18n.jsx as "service.<key>", icons in icons.jsx under
+// the same key.
 export const SERVICES = [
-  { key: "electricity", icon: "⚡", meter: true },
-  { key: "water", icon: "💧", meter: true },
-  { key: "gas", icon: "🔥", meter: true },
-  { key: "arnona", icon: "🏛️", meter: false },
-  { key: "internet", icon: "📶", meter: false }
+  { key: "electricity", meter: true },
+  { key: "water", meter: true },
+  { key: "gas", meter: true },
+  { key: "arnona", meter: false },
+  { key: "internet", meter: false }
 ];
-
-export const serviceIcon = key => SERVICES.find(s => s.key === key)?.icon || "•";
 
 const emptyPerson = { name: "", idNumber: "", phone: "", email: "" };
 

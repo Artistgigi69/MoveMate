@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Field, FilePick, PersonFields, Screen } from "../ui";
+import { Field, FilePick, PersonFields, Screen, Section } from "../ui";
+import { Icon } from "../icons";
 import { SERVICES, useDraft } from "../draft";
 import { validatePerson } from "../validate";
 import { getToken } from "../api";
@@ -41,22 +42,22 @@ export default function Details() {
       title={t("det.title")}
       footer={<button className="btn primary" onClick={next}>{t("common.next")}</button>}
     >
-      <fieldset className="card">
-        <legend>{t("det.you")}</legend>
+      <Section icon="user" title={t("det.you")}>
         <PersonFields
           value={draft.applicant}
           onChange={applicant => update({ applicant })}
           errors={errors.applicant}
         />
-      </fieldset>
+      </Section>
 
       {meters.length > 0 && (
-        <fieldset className="card">
-          <legend>{t("det.meters")}</legend>
-          <p className="note">{t("det.metersNote")}</p>
+        <Section icon="camera" title={t("det.meters")} note={t("det.metersNote")}>
           {meters.map(m => (
             <div key={m.key} className="meter">
-              <h3>{m.icon} {t(`service.${m.key}`)}</h3>
+              <h3 className="meter-title">
+                <span className={"choice-icon small svc-" + m.key}><Icon name={m.key} size={16} /></span>
+                {t(`service.${m.key}`)}
+              </h3>
               {m.key === "gas" && (
                 <Field label={t("det.gasCompany")} hint={t("det.gasHint")}>
                   <select value={draft.gasProvider} onChange={e => update({ gasProvider: e.target.value })}>
@@ -77,33 +78,31 @@ export default function Details() {
                 label={t("det.meterPhoto")}
                 accept="image/*"
                 capture="environment"
+                icon="camera"
                 file={files.photos[m.key]}
                 onPick={f => setPhoto(m.key, f)}
               />
             </div>
           ))}
-        </fieldset>
+        </Section>
       )}
 
-      <fieldset className="card">
-        <legend>{t("det.tenant")}</legend>
-        <p className="note">{t("det.tenantNote")}</p>
+      <Section icon="users" title={t("det.tenant")} note={t("det.tenantNote")}>
         <PersonFields
           value={draft.newTenant}
           onChange={newTenant => update({ newTenant })}
           errors={errors.newTenant}
         />
-      </fieldset>
+      </Section>
 
-      <fieldset className="card">
-        <legend>{t("det.lease")}</legend>
+      <Section icon="file" title={t("det.lease")}>
         <FilePick
           label={t("det.leaseCopy")}
           accept="image/*,application/pdf"
           file={files.lease}
           onPick={setLease}
         />
-      </fieldset>
+      </Section>
     </Screen>
   );
 }

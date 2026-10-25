@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Screen } from "../ui";
-import { serviceIcon } from "../draft";
+import { Icon } from "../icons";
 import { useI18n } from "../i18n";
 import { api, uploadUrl } from "../api";
 
@@ -56,7 +56,10 @@ export default function Confirm() {
 
           <div className="card status-item">
             <div className="status-head">
-              <span>{serviceIcon(info.serviceName)} {service}</span>
+              <span className="status-name">
+                <span className={"choice-icon small svc-" + info.serviceName}><Icon name={info.serviceName} size={16} /></span>
+                {service}
+              </span>
             </div>
             {info.meterReading && (
               <p className="reading">
@@ -70,7 +73,7 @@ export default function Confirm() {
           </div>
 
           {info.confirmedByTenant
-            ? <p className="note success">✓ {t("confirm.done")}</p>
+            ? <p className="note success ok-line"><Icon name="check" size={16} strokeWidth={2.6} />{t("confirm.done")}</p>
             : <p className="note">{t("confirm.check")}</p>}
         </>
       )}

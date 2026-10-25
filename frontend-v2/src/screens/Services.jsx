@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Screen } from "../ui";
 import { SERVICES, useDraft } from "../draft";
 import { useI18n } from "../i18n";
+import { Icon } from "../icons";
 
 export default function Services() {
   const navigate = useNavigate();
@@ -45,9 +46,9 @@ export default function Services() {
               aria-pressed={on}
               onClick={() => toggle(s.key)}
             >
-              <span className="choice-icon">{s.icon}</span>
+              <span className={"choice-icon svc-" + s.key}><Icon name={s.key} size={22} /></span>
               <span className="choice-label">{t(`service.${s.key}`)}</span>
-              <span className="choice-check">{on ? "✓" : ""}</span>
+              <span className="choice-check">{on && <Icon name="check" size={14} strokeWidth={3} />}</span>
             </button>
           );
         })}

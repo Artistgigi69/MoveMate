@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { Screen } from "../ui";
-import { serviceIcon } from "../draft";
+import { Icon } from "../icons";
 import { useI18n } from "../i18n";
 import { api, getToken, setToken } from "../api";
 import { ELECTRICITY, gasProvider } from "../providers";
@@ -37,17 +37,22 @@ export function StatusList() {
               <Link to={`/status/${tr._id}`} className="row-link">
                 <span>
                   <strong>{tr.newAddress}</strong>
-                  <small>{tr.moveDate} · {tr.services.map(s => serviceIcon(s.name)).join(" ")}</small>
+                  <small className="row-meta">
+                    <bdi>{tr.moveDate}</bdi>
+                    <span className="mini-icons">
+                      {tr.services.map(s => <Icon key={s._id || s.name} name={s.name} size={14} />)}
+                    </span>
+                  </small>
                 </span>
-                <span className="pill">{done}/{tr.services.length}</span>
+                <span className={"pill" + (done === tr.services.length ? " completed" : "")}>{done}/{tr.services.length}</span>
               </Link>
             </li>
           );
         })}
       </ul>
 
-      <button className="btn ghost small" onClick={() => { setToken(null); window.location.href = "/"; }}>
-        {t("st.logout")}
+      <button className="btn ghost small with-icon" onClick={() => { setToken(null); window.location.href = "/"; }}>
+        <Icon name="logout" size={18} className="flip-rtl" />{t("st.logout")}
       </button>
     </Screen>
   );
@@ -82,14 +87,16 @@ function TenantShare({ transfer, service }) {
     <div className="share">
       <small>{t("st.tenantLink")}</small>
       <div className="share-actions">
-        <button className="btn ghost small" onClick={copy}>{copied ? t("st.copied") : t("st.copy")}</button>
+        <button className="btn secondary small with-icon" onClick={copy}>
+          <Icon name={copied ? "check" : "copy"} size={16} />{copied ? t("st.copied") : t("st.copy")}
+        </button>
         <a
-          className="btn ghost small"
+          className="btn secondary small with-icon"
           href={`https://wa.me/${phone}?text=${encodeURIComponent(text)}`}
           target="_blank"
           rel="noreferrer"
         >
-          {t("st.whatsapp")}
+          <Icon name="chat" size={16} />{t("st.whatsapp")}
         </a>
       </div>
     </div>
@@ -151,16 +158,18 @@ export function StatusDetail() {
 
       {transfer && (
         <>
-          <p className="note">
-            <bdi>{transfer.oldAddress}</bdi> → <bdi>{transfer.newAddress}</bdi>, <bdi>{transfer.moveDate}</bdi>
-          </p>
+          <div className="route card">
+            <span className="route-point"><Icon name="home" size={18} /><bdi>{transfer.oldAddress}</bdi></span>
+            <span className="route-point"><Icon name="pin" size={18} /><bdi>{transfer.newAddress}</bdi></span>
+            <span className="route-point muted"><Icon name="calendar" size={18} /><bdi>{transfer.moveDate}</bdi></span>
+          </div>
 
           {transfer.leaseFile && (
             <button
-              className="btn ghost small"
+              className="btn secondary small with-icon"
               onClick={() => api.downloadLease(id).catch(err => setError(errText(err)))}
             >
-              {t("st.downloadLease")}{transfer.leaseFileName ? ` (${transfer.leaseFileName})` : ""}
+              <Icon name="download" size={16} />{t("st.downloadLease")}{transfer.leaseFileName ? ` (${transfer.leaseFileName})` : ""}
             </button>
           )}
 
@@ -171,7 +180,10 @@ export function StatusDetail() {
               return (
                 <li key={s._id} className="card status-item">
                   <div className="status-head">
-                    <span>{serviceIcon(s.name)} {t(`service.${s.name}`)}</span>
+                    <span className="status-name">
+                      <span className={"choice-icon small svc-" + s.name}><Icon name={s.name} size={16} /></span>
+                      {t(`service.${s.name}`)}
+                    </span>
                     <span className={"pill " + s.status.toLowerCase()}>{t(`status.${s.status}`)}</span>
                   </div>
                   {s.sentVia && (
@@ -181,7 +193,7 @@ export function StatusDetail() {
                   )}
                   {manualPending && selfServiceLinks(s).map(l => l.url ? (
                     <a key={l.text} className="form-link" href={l.url} target="_blank" rel="noreferrer">
-                      {l.text} ↗
+                      {l.text} <Icon name="external" size={14} />
                     </a>
                   ) : (
                     <small key={l.text}>{l.text}</small>
@@ -195,7 +207,7 @@ export function StatusDetail() {
                     </button>
                   )}
                   {s.meterReading && <small>{t("st.reading", { value: s.meterReading })}</small>}
-                  {s.confirmedByTenant && <small>✓ {t("st.tenantConfirmed")}</small>}
+                  {s.confirmedByTenant && <small className="ok-line"><Icon name="check" size={14} strokeWidth={2.6} />{t("st.tenantConfirmed")}</small>}
                   {canAskTenant && <TenantShare transfer={transfer} service={s} />}
                 </li>
               );

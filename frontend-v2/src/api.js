@@ -48,13 +48,19 @@ async function request(path, { method = "GET", body, form } = {}) {
     throw keyedError("srv.network");
   }
 
-  const data = await res.json().catch(() => ({}));
+  let parsed = true;
+  const data = await res.json().catch(() => {
+    parsed = false;
+    return {};
+  });
 
   if (res.status === 401 || res.status === 403) {
     if (token) setToken(null);
   }
 
-  if (!res.ok) {
+  // A non-JSON success (e.g. an HTML page from a misrouted proxy) must not
+  // reach the screens as data.
+  if (!res.ok || !parsed) {
     throw data.message ? new Error(data.message) : keyedError("srv.generic");
   }
 
