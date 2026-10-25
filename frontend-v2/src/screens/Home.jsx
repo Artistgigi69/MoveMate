@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { Screen } from "../ui";
 import { SERVICES, useDraft } from "../draft";
+import { useI18n } from "../i18n";
 
 export default function Home() {
   const navigate = useNavigate();
   const { draft, reset } = useDraft();
+  const { t } = useI18n();
   const hasDraft = Boolean(draft.oldAddress || draft.services.length);
 
   return (
@@ -12,32 +14,32 @@ export default function Home() {
       footer={
         <>
           <button className="btn primary" onClick={() => navigate("/addresses")}>
-            {hasDraft ? "Продолжить" : "Начать"}
+            {hasDraft ? t("home.continue") : t("home.start")}
           </button>
           {hasDraft && (
             <button className="btn ghost" onClick={() => { reset(); navigate("/addresses"); }}>
-              Начать заново
+              {t("home.restart")}
             </button>
           )}
         </>
       }
     >
       <section className="hero">
-        <h1>Переезжаете? Переоформим коммуналку за вас</h1>
-        <p>Один раз заполните адреса и данные — мы подготовим и отправим заявки. Регистрация понадобится только в конце.</p>
+        <h1>{t("home.title")}</h1>
+        <p>{t("home.lead")}</p>
       </section>
 
       <ul className="service-row">
         {SERVICES.map(s => (
-          <li key={s.key}><span>{s.icon}</span>{s.label}</li>
+          <li key={s.key}><span>{s.icon}</span>{t(`service.${s.key}`)}</li>
         ))}
       </ul>
 
       <ol className="how">
-        <li>Старый и новый адрес, дата переезда</li>
-        <li>Какие услуги переоформить</li>
-        <li>Ваши данные, фото счётчиков, договор</li>
-        <li>Отправка и отслеживание статуса</li>
+        <li>{t("home.how1")}</li>
+        <li>{t("home.how2")}</li>
+        <li>{t("home.how3")}</li>
+        <li>{t("home.how4")}</li>
       </ol>
     </Screen>
   );

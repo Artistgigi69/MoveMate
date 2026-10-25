@@ -506,8 +506,11 @@ router.get("/public/confirm/:token", async (req, res) => {
 
     res.json({
       address: transfer.oldAddress,
+      // First name only: enough for the new tenant to recognise the request.
+      applicantName: (transfer.applicant?.name || "").trim().split(/\s+/)[0],
       serviceName: service.name,
       meterPhoto: service.meterPhoto,
+      meterReading: service.meterReading,
       confirmedByTenant: service.confirmedByTenant,
       confirmedAt: service.confirmedAt
     });

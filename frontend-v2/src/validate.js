@@ -24,17 +24,17 @@ export function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || ""));
 }
 
-// Returns { field: message } for a person block; `required` false means an
+// Returns { field: i18n key } for a person block; `required` false means an
 // empty block is fine but a partly filled one still has to be valid.
 export function validatePerson(p, required = true) {
   const errors = {};
   const empty = !p.name && !p.idNumber && !p.phone && !p.email;
   if (!required && empty) return errors;
 
-  if (!p.name || p.name.trim().length < 2) errors.name = "Введите имя и фамилию";
-  if (!isValidTeudat(p.idNumber)) errors.idNumber = "Неверный номер теудат зеут";
-  if (!isValidPhone(p.phone)) errors.phone = "Неверный номер телефона";
-  if (!isValidEmail(p.email)) errors.email = "Неверный email";
+  if (!p.name || p.name.trim().length < 2) errors.name = "err.name";
+  if (!isValidTeudat(p.idNumber)) errors.idNumber = "err.id";
+  if (!isValidPhone(p.phone)) errors.phone = "err.phone";
+  if (!isValidEmail(p.email)) errors.email = "err.email";
 
   return errors;
 }

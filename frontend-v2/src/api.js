@@ -2,6 +2,14 @@ const BASE = import.meta.env.VITE_API_URL || "/api";
 
 const TOKEN_KEY = "mm2_token";
 
+// Errors carry an i18n key when we know the meaning; otherwise the server
+// message is translated (or shown as is) by errText() in i18n.jsx.
+function keyedError(key) {
+  return Object.assign(new Error(key), { key });
+}
+
+export const uploadUrl = file => `${BASE}/uploads/${file}`;
+
 export function getToken() {
   try {
     return localStorage.getItem(TOKEN_KEY);
@@ -37,7 +45,7 @@ async function request(path, { method = "GET", body, form } = {}) {
   try {
     res = await fetch(BASE + path, { method, headers, body: payload });
   } catch {
-    throw new Error("Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.");
+    throw keyedError("srv.network");
   }
 
   const data = await res.json().catch(() => ({}));
@@ -47,7 +55,7 @@ async function request(path, { method = "GET", body, form } = {}) {
   }
 
   if (!res.ok) {
-    throw new Error(data.message || "Ошибка сервера");
+    throw data.message ? new Error(data.message) : keyedError("srv.generic");
   }
 
   return data;
@@ -64,6 +72,8 @@ export const api = {
   listTransfers: () => request("/transfers"),
   getTransfer: id => request(`/transfers/${id}`),
   submitTransfer: id => request(`/transfers/${id}/submit`, { method: "POST" }),
+  confirmInfo: token => request(`/transfers/public/confirm/${token}`),
+  confirmReading: token => request(`/transfers/public/confirm/${token}`, { method: "POST" }),
   markServiceSent: (id, index) => request(`/transfers/${id}/services/${index}/send`, { method: "PUT" }),
 
   uploadMeterPhoto: (id, serviceIndex, file, meterReading) => {
@@ -78,7 +88,7 @@ export const api = {
   // browser as a blob rather than linked directly.
   downloadLease: async id => {
     const res = await fetch(`${BASE}/transfers/${id}/lease`, { headers: { Authorization: getToken() || "" } });
-    if (!res.ok) throw new Error("Не удалось скачать договор");
+    if (!res.ok) throw keyedError("srv.leaseFailed");
     const cd = res.headers.get("Content-Disposition") || "";
     const name = decodeURIComponent(
       cd.match(/filename\*=UTF-8''([^;]+)/i)?.[1] || cd.match(/filename="([^"]+)"/i)?.[1] || "lease"

@@ -1,22 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Screen, SENT_VIA_LABELS } from "../ui";
-import { SERVICES, useDraft } from "../draft";
+import { Screen } from "../ui";
+import { useDraft } from "../draft";
+import { useI18n } from "../i18n";
 import { api, getToken } from "../api";
-
-const label = key => SERVICES.find(s => s.key === key)?.label || key;
 
 export default function Submit() {
   const navigate = useNavigate();
   const { draft, files, reset } = useDraft();
+  const { t, errText, pick } = useI18n();
   const [stage, setStage] = useState("");
   const [error, setError] = useState("");
   const [transferId, setTransferId] = useState(null);
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    api.municipalities().then(setCities).catch(() => setCities([]));
+  }, []);
 
   if (!getToken()) return <Navigate to="/auth" replace />;
   if (draft.services.length === 0 && !transferId) return <Navigate to="/services" replace />;
 
   const hasTenant = Object.values(draft.newTenant).some(Boolean);
+  const cityName = key => pick(cities.find(c => c.key === key)?.names) || key;
+  const service = name => t(`service.${name}`);
 
   // Idempotent per step: if uploads fail after the transfer was created, a
   // retry reuses it instead of creating a duplicate.
@@ -27,7 +34,7 @@ export default function Submit() {
       let id = transferId;
 
       if (!id) {
-        setStage("Создаём заявку…");
+        setStage(t("sub.creating"));
         const created = await api.createTransfer({
           oldAddress: draft.oldAddress,
           newAddress: draft.newAddress,
@@ -49,23 +56,23 @@ export default function Submit() {
       for (const [i, name] of draft.services.entries()) {
         const photo = files.photos[name];
         if (photo) {
-          setStage(`Загружаем фото: ${label(name)}…`);
+          setStage(t("sub.uploadingPhoto", { service: service(name) }));
           await api.uploadMeterPhoto(id, i, photo, draft.readings[name]);
         }
       }
 
       if (files.lease) {
-        setStage("Загружаем договор…");
+        setStage(t("sub.uploadingLease"));
         await api.uploadLease(id, files.lease);
       }
 
-      setStage("Отправляем заявки…");
+      setStage(t("sub.sending"));
       await api.submitTransfer(id);
 
       reset();
       navigate(`/status/${id}`, { replace: true });
     } catch (err) {
-      setError(err.message);
+      setError(errText(err));
       setStage("");
     }
   };
@@ -74,38 +81,35 @@ export default function Submit() {
     <Screen
       step={5}
       back="/details"
-      title="Проверьте и отправьте"
+      title={t("sub.title")}
       footer={
         <button className="btn primary" onClick={send} disabled={Boolean(stage)}>
-          {stage || (transferId ? "Повторить отправку" : "Отправить заявки")}
+          {stage || (transferId ? t("sub.retry") : t("sub.send"))}
         </button>
       }
     >
       <dl className="summary card">
-        <dt>Откуда</dt><dd>{draft.oldAddress}, {draft.oldCityName || draft.oldCity}</dd>
-        <dt>Куда</dt><dd>{draft.newAddress}, {draft.newCityName || draft.newCity}</dd>
-        <dt>Дата</dt><dd>{draft.moveDate}</dd>
-        <dt>Заявитель</dt><dd>{draft.applicant.name} · {draft.applicant.idNumber}</dd>
-        {hasTenant && <><dt>Новый жилец</dt><dd>{draft.newTenant.name}</dd></>}
-        <dt>Договор</dt><dd>{files.lease ? files.lease.name : "не приложен"}</dd>
+        <dt>{t("sub.from")}</dt><dd>{draft.oldAddress}, {cityName(draft.oldCity)}</dd>
+        <dt>{t("sub.to")}</dt><dd>{draft.newAddress}, {cityName(draft.newCity)}</dd>
+        <dt>{t("sub.date")}</dt><dd>{draft.moveDate}</dd>
+        <dt>{t("sub.applicant")}</dt><dd>{draft.applicant.name} · <bdi>{draft.applicant.idNumber}</bdi></dd>
+        {hasTenant && <><dt>{t("sub.tenant")}</dt><dd>{draft.newTenant.name}</dd></>}
+        <dt>{t("sub.lease")}</dt><dd>{files.lease ? files.lease.name : t("sub.leaseNone")}</dd>
       </dl>
 
       <ul className="list card">
         {draft.services.map(name => (
           <li key={name}>
-            <span>{label(name)}</span>
+            <span>{service(name)}</span>
             <small>
-              {draft.readings[name] ? `показания ${draft.readings[name]}` : ""}
-              {files.photos[name] ? " · фото ✓" : ""}
+              {draft.readings[name] ? t("sub.reading", { value: draft.readings[name] }) : ""}
+              {files.photos[name] ? ` · ${t("sub.photo")}` : ""}
             </small>
           </li>
         ))}
       </ul>
 
-      <p className="note">
-        Арнону отправим письмом в муниципалитет, если для вашего города есть адрес.
-        Остальное пока отметим как «{SENT_VIA_LABELS.manual.toLowerCase()}» — статус будет виден на следующем экране.
-      </p>
+      <p className="note">{t("sub.note")}</p>
 
       {error && <p className="note error">{error}</p>}
     </Screen>

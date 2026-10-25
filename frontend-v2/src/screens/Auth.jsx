@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Field, Screen } from "../ui";
 import { useDraft } from "../draft";
 import { api, setToken } from "../api";
+import { useI18n } from "../i18n";
 
 export default function Auth() {
   const navigate = useNavigate();
   const { draft } = useDraft();
+  const { t, errText } = useI18n();
 
   const [mode, setMode] = useState("register");
   const [name, setName] = useState(draft.applicant.name);
@@ -46,32 +48,32 @@ export default function Auth() {
 
       done(res.token);
     } catch (err) {
-      setError(err.message);
+      setError(errText(err));
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <Screen step={4} back="/details" title={mode === "register" ? "Создайте аккаунт" : "Вход"}>
-      <p className="note">Аккаунт нужен, чтобы сохранить заявки и показывать их статус.</p>
+    <Screen step={4} back="/details" title={mode === "register" ? t("auth.titleRegister") : t("auth.titleLogin")}>
+      <p className="note">{t("auth.note")}</p>
 
       <form onSubmit={submit} className="stack">
         {tempToken ? (
-          <Field label="Код из приложения-аутентификатора">
+          <Field label={t("auth.code")}>
             <input value={code} onChange={e => setCode(e.target.value)} inputMode="numeric" autoComplete="one-time-code" autoFocus />
           </Field>
         ) : (
           <>
             {mode === "register" && (
-              <Field label="Имя">
+              <Field label={t("auth.name")}>
                 <input value={name} onChange={e => setName(e.target.value)} autoComplete="name" />
               </Field>
             )}
-            <Field label="Email">
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
+            <Field label={t("person.email")}>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" dir="ltr" />
             </Field>
-            <Field label="Пароль" hint={mode === "register" ? "Минимум 6 символов" : ""}>
+            <Field label={t("auth.password")} hint={mode === "register" ? t("auth.passwordHint") : ""}>
               <input
                 type="password"
                 value={password}
@@ -85,7 +87,7 @@ export default function Auth() {
         {error && <p className="note error">{error}</p>}
 
         <button className="btn primary" disabled={busy}>
-          {busy ? "Подождите…" : tempToken ? "Подтвердить" : mode === "register" ? "Создать и продолжить" : "Войти и продолжить"}
+          {busy ? t("auth.wait") : tempToken ? t("auth.confirm") : mode === "register" ? t("auth.createContinue") : t("auth.loginContinue")}
         </button>
       </form>
 
@@ -95,7 +97,7 @@ export default function Auth() {
           className="btn ghost"
           onClick={() => { setMode(mode === "register" ? "login" : "register"); setError(""); }}
         >
-          {mode === "register" ? "Уже есть аккаунт? Войти" : "Нет аккаунта? Зарегистрироваться"}
+          {mode === "register" ? t("auth.haveAccount") : t("auth.noAccount")}
         </button>
       )}
     </Screen>
