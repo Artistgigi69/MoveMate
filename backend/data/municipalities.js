@@ -54,16 +54,18 @@ const municipalities = [
   {
     key: "petah-tikva",
     names: { he: "פתח תקווה", ru: "Петах-Тиква", en: "Petah Tikva", ar: "بيتح تكفا" },
-    method: "", email: "", formUrl: "",
+    method: "email", email: "megurim@ptikva.org.il",
+    formUrl: "https://por139.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick&NOSE=1&TAT=101&SUG=2",
     source: "https://www.petah-tikva.muni.il/arnona/ExchangeHolders",
-    note: "Сайт блокирует автоматический доступ — проверить вручную."
+    note: "Email жилого отдела для таких уведомлений. Факс 03-9052540."
   },
   {
     key: "ashdod",
     names: { he: "אשדוד", ru: "Ашдод", en: "Ashdod", ar: "أسدود" },
-    method: "", email: "", formUrl: "",
-    source: "https://www.ashdod.muni.il/media/16516411/%D7%97%D7%95%D7%91%D7%A8%D7%AA-%D7%90%D7%A8%D7%A0%D7%95%D7%A0%D7%94-2026-%D7%9E%D7%95%D7%A0%D7%92%D7%A9%D7%AA-pdfua.pdf",
-    note: "Каналы описаны в PDF-брошюре 2026 (почта, лично, факс) — не удалось прочитать, проверить вручную."
+    method: "form", email: "",
+    formUrl: "https://forms-ashdod.binaa.co.il/smartforms/28/",
+    source: "https://digital.ashdod.muni.il/page/Gvia-ChangeRentPay-form",
+    note: ""
   },
   {
     key: "netanya",
@@ -100,9 +102,10 @@ const municipalities = [
   {
     key: "ramat-gan",
     names: { he: "רמת גן", ru: "Рамат-Ган", en: "Ramat Gan", ar: "رمات غان" },
-    method: "", email: "", formUrl: "",
-    source: "https://smart-digital.ramat-gan.muni.il/",
-    note: "Сайт не открылся — проверить вручную."
+    method: "form", email: "",
+    formUrl: "https://por759.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick&NOSE=1&TAT=1001&SUG=1",
+    source: "https://www.ramat-gan.muni.il/department-money/content-pages/arnona-header/",
+    note: ""
   },
   {
     key: "bat-yam",
@@ -124,9 +127,10 @@ const municipalities = [
   {
     key: "ashkelon",
     names: { he: "אשקלון", ru: "Ашкелон", en: "Ashkelon", ar: "عسقلان" },
-    method: "", email: "", formUrl: "",
-    source: "https://ashkelon.muni.gov.il/he",
-    note: "Сайт не открылся — проверить вручную."
+    method: "form", email: "",
+    formUrl: "https://por154.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick",
+    source: "https://ashkelon.muni.gov.il/he/%D7%A9%D7%99%D7%A8%D7%95%D7%AA%D7%99%D7%9D-%D7%9C%D7%AA%D7%95%D7%A9%D7%91/%D7%90%D7%A8%D7%A0%D7%95%D7%A0%D7%94",
+    note: "Ссылка на список всех цифровых форм города — смену жильца выбрать в нём."
   },
   {
     key: "herzliya",
@@ -154,23 +158,26 @@ const municipalities = [
   {
     key: "modiin",
     names: { he: "מודיעין-מכבים-רעות", ru: "Модиин", en: "Modiin", ar: "موديعين" },
-    method: "", email: "", formUrl: "",
-    source: "https://www.modiin.muni.il/",
-    note: "Не найдено — проверить вручную."
+    method: "form", email: "",
+    formUrl: "https://por256.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick&NOSE=31&TAT=3012&SUG=47",
+    source: "https://www.modiin.muni.il/modiinwebsite/ArticlePage.aspx?PageID=1534_10972",
+    note: ""
   },
   {
     key: "raanana",
     names: { he: "רעננה", ru: "Раанана", en: "Raanana", ar: "رعنانا" },
-    method: "", email: "", formUrl: "",
-    source: "https://www.raanana.muni.il/residents/arnona/arnona-forms/",
-    note: "Вероятно, на странице форм арноны — проверить вручную."
+    method: "email", email: "misim@raanana.muni.il",
+    formUrl: "https://por176.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick",
+    source: "https://www.raanana.muni.il/residents/arnona/propertyexchange/",
+    note: "Email указан на странице смены жильца «для связи и согласования услуги». Факс 09-7610484."
   },
   {
     key: "lod",
     names: { he: "לוד", ru: "Лод", en: "Lod", ar: "اللد" },
-    method: "", email: "", formUrl: "",
-    source: "https://www.lod.muni.il/he/179/",
-    note: "Есть только личные адреса сотрудников, канала для смены жильца нет."
+    method: "form", email: "",
+    formUrl: "https://forms.mast.co.il/PayersReplacment/index?p=3E9B756E-232A-4BDB-8FC3-D6C2A00BB81A&t=2",
+    source: "https://www.lod.muni.il/he/106/",
+    note: ""
   },
   {
     key: "ramla",
@@ -183,9 +190,10 @@ const municipalities = [
   {
     key: "nazareth",
     names: { he: "נצרת", ru: "Назарет", en: "Nazareth", ar: "الناصرة" },
-    method: "", email: "", formUrl: "",
-    source: "https://www.nazareth.muni.il/",
-    note: "Не найдено — проверить вручную."
+    method: "", email: "",
+    formUrl: "",
+    source: "https://www.nazareth.muni.il/arabic/service/arnona/Pages/default.aspx",
+    note: "На странице арноны только общий email отдела платежей (Paymnt.d@nazareth.muni.il), смена жильца не упомянута — письма туда не шлём."
   },
   {
     key: "karmiel",
