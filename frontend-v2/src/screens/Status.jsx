@@ -74,15 +74,30 @@ export function StatusDetail() {
           <p className="note">{transfer.oldAddress} → {transfer.newAddress}, {transfer.moveDate}</p>
 
           <ul className="list">
-            {transfer.services.map(s => {
+            {transfer.services.map((s, i) => {
               const info = service(s.name);
+              const manualPending = s.sentVia === "manual" && !s.requestSentAt;
               return (
                 <li key={s._id} className="card status-item">
                   <div className="status-head">
                     <span>{info.icon} {info.label}</span>
                     <span className={"pill " + s.status.toLowerCase()}>{STATUS_LABELS[s.status] || s.status}</span>
                   </div>
-                  {s.sentVia && <small>{SENT_VIA_LABELS[s.sentVia] || s.sentVia}</small>}
+                  {s.sentVia && (
+                    <small>
+                      {s.sentVia === "manual" && s.requestSentAt
+                        ? "Вы отметили, что связались сами"
+                        : SENT_VIA_LABELS[s.sentVia] || s.sentVia}
+                    </small>
+                  )}
+                  {manualPending && (
+                    <button
+                      className="btn ghost small"
+                      onClick={() => api.markServiceSent(id, i).then(setTransfer).catch(err => setError(err.message))}
+                    >
+                      Я уже связался
+                    </button>
+                  )}
                   {s.meterReading && <small>Показания: {s.meterReading}</small>}
                   {s.confirmedByTenant && <small>Новый жилец подтвердил показания</small>}
                 </li>

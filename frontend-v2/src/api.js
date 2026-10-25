@@ -64,6 +64,7 @@ export const api = {
   listTransfers: () => request("/transfers"),
   getTransfer: id => request(`/transfers/${id}`),
   submitTransfer: id => request(`/transfers/${id}/submit`, { method: "POST" }),
+  markServiceSent: (id, index) => request(`/transfers/${id}/services/${index}/send`, { method: "PUT" }),
 
   uploadMeterPhoto: (id, serviceIndex, file, meterReading) => {
     const form = new FormData();

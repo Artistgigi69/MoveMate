@@ -348,10 +348,15 @@ router.post("/:id/submit", verifyToken, async (req, res) => {
       }
 
       service.sentVia = sentVia;
-      service.requestSentAt = new Date();
 
-      if (service.status === "Pending") {
-        service.status = "Processing";
+      // Manual ones stay Pending with no requestSentAt, so the next submit
+      // retries them (e.g. once SMTP or a city's email gets configured).
+      if (sentVia !== "manual") {
+        service.requestSentAt = new Date();
+
+        if (service.status === "Pending") {
+          service.status = "Processing";
+        }
       }
 
       results.push({ name: service.name, sentVia, error });
