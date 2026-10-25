@@ -28,6 +28,36 @@ const transferSchema = new mongoose.Schema({
     },
 
 
+    // Municipality keys (see data/municipalities.js) — arnona is closed at
+    // the old city and opened at the new one.
+    oldCity: {
+        type: String,
+        default: ""
+    },
+
+    newCity: {
+        type: String,
+        default: ""
+    },
+
+
+    // The person moving out. Kept on the transfer (not the User) because
+    // utility companies need it per request, and it may differ from the
+    // account holder (e.g. a spouse fills it in).
+    applicant: {
+        name: String,
+        idNumber: String,
+        phone: String,
+        email: String
+    },
+
+
+    leaseFile: {
+        type: String,
+        default: ""
+    },
+
+
     services: [
         {
             name: String,
@@ -38,6 +68,19 @@ const transferSchema = new mongoose.Schema({
             },
 
             meterPhoto: {
+                type: String,
+                default: ""
+            },
+
+            meterReading: {
+                type: String,
+                default: ""
+            },
+
+            // How the request actually went out: "email", "auto" (online
+            // form) or "manual" (we only marked it — the user still has to
+            // contact the provider).
+            sentVia: {
                 type: String,
                 default: ""
             },

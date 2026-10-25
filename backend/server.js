@@ -24,6 +24,7 @@ const checklistRoutes = require("./routes/checklist");
 const pushRoutes = require("./routes/push");
 const exportRoutes = require("./routes/export");
 const supportRoutes = require("./routes/support");
+const municipalityRoutes = require("./routes/municipalities");
 const { checkMoveReminders } = require("./services/reminders");
 
 // ================== CREATE UPLOADS FOLDER ==================
@@ -58,6 +59,7 @@ app.use("/checklist", checklistRoutes);
 app.use("/push", pushRoutes);
 app.use("/export", exportRoutes);
 app.use("/support", supportRoutes);
+app.use("/municipalities", municipalityRoutes);
 
 // ================== TEST ==================
 app.get("/", (req, res) => {

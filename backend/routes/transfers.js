@@ -4,6 +4,9 @@ const crypto = require("crypto");
 const Transfer = require("../models/Transfer");
 const verifyToken = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const mailer = require("../services/mailer");
+const { buildArnonaEmail } = require("../services/arnonaEmail");
+const { findMunicipality } = require("../data/municipalities");
 
 const router = express.Router();
 
@@ -16,7 +19,10 @@ router.post("/", verifyToken, async (req, res) => {
       newAddress,
       moveDate,
       services,
-      newTenant
+      newTenant,
+      applicant,
+      oldCity,
+      newCity
     } = req.body;
 
     if (!oldAddress || !newAddress || !moveDate || !Array.isArray(services) || services.length === 0) {
@@ -31,9 +37,14 @@ router.post("/", verifyToken, async (req, res) => {
       oldAddress,
       newAddress,
       moveDate,
+      oldCity,
+      newCity,
+      applicant,
 
+      // Accepts plain names (old frontend) or { name, meterReading }.
       services: services.map(s => ({
-        name: s,
+        name: typeof s === "string" ? s : s.name,
+        meterReading: typeof s === "string" ? "" : (s.meterReading || ""),
         status: "Pending",
         confirmToken: crypto.randomBytes(16).toString("hex")
       })),
@@ -144,6 +155,8 @@ router.put("/:id", verifyToken, async (req, res) => {
         name,
         status: existing ? existing.status : "Pending",
         meterPhoto: existing ? existing.meterPhoto : "",
+        meterReading: existing ? existing.meterReading : "",
+        sentVia: existing ? existing.sentVia : "",
         requestSentAt: existing ? existing.requestSentAt : null,
         confirmToken: existing ? existing.confirmToken : crypto.randomBytes(16).toString("hex"),
         confirmedByTenant: existing ? existing.confirmedByTenant : false,
@@ -243,6 +256,10 @@ router.post(
 
       transfer.services[serviceIndex].meterPhoto = req.file.filename;
 
+      if (req.body.meterReading) {
+        transfer.services[serviceIndex].meterReading = req.body.meterReading;
+      }
+
       await transfer.save();
 
       res.json(transfer);
@@ -255,6 +272,133 @@ router.post(
   }
 
 );
+
+
+
+// ================== UPLOAD LEASE ==================
+router.post(
+  "/:id/lease",
+  verifyToken,
+  upload.single("lease"),
+
+  async (req, res) => {
+    try {
+
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const transfer = await Transfer.findOne({
+        _id: req.params.id,
+        userId: req.userId
+      });
+
+      if (!transfer) {
+        return res.status(404).json({ message: "Not found" });
+      }
+
+      transfer.leaseFile = req.file.filename;
+
+      await transfer.save();
+
+      res.json(transfer);
+
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
+
+
+// ================== SUBMIT ALL REQUESTS ==================
+// Sends what we can actually send today (arnona letters by email) and marks
+// the rest as manual so the status screen is honest about what happened.
+router.post("/:id/submit", verifyToken, async (req, res) => {
+  try {
+
+    const transfer = await Transfer.findOne({
+      _id: req.params.id,
+      userId: req.userId
+    });
+
+    if (!transfer) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    const results = [];
+
+    for (const service of transfer.services) {
+
+      if (service.requestSentAt) {
+        results.push({ name: service.name, sentVia: service.sentVia, skipped: true });
+        continue;
+      }
+
+      let sentVia = "manual";
+      let error = "";
+
+      if (service.name === "arnona") {
+        try {
+          sentVia = await sendArnona(transfer);
+        } catch (err) {
+          console.log("ARNONA SEND ERROR:", err.message);
+          error = "Email could not be sent";
+        }
+      }
+
+      service.sentVia = sentVia;
+      service.requestSentAt = new Date();
+
+      if (service.status === "Pending") {
+        service.status = "Processing";
+      }
+
+      results.push({ name: service.name, sentVia, error });
+    }
+
+    await transfer.save();
+
+    res.json({ transfer, results });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+// Emails both municipalities (close at old city, open at new city). Returns
+// "email" only if every letter that needed sending went out.
+async function sendArnona(transfer) {
+
+  if (!mailer.isConfigured()) return "manual";
+
+  const letters = [
+    { city: findMunicipality(transfer.oldCity), kind: "close" },
+    { city: findMunicipality(transfer.newCity), kind: "open" }
+  ];
+
+  let sentAll = true;
+
+  for (const { city, kind } of letters) {
+
+    // "auto" cities have no form adapter yet — email is the fallback.
+    if (!city || !city.email) {
+      sentAll = false;
+      continue;
+    }
+
+    const mail = buildArnonaEmail(transfer, kind);
+
+    await mailer.sendMail({
+      to: city.email,
+      cc: transfer.applicant && transfer.applicant.email,
+      ...mail
+    });
+  }
+
+  return sentAll ? "email" : "manual";
+}
 
 
 
