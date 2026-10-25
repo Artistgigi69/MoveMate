@@ -1,0 +1,38 @@
+# Render Blueprint for the backend API. See DEPLOY.md.
+#
+# Uploaded files (meter photos, leases) live on a persistent disk mounted at
+# /var/data — Render wipes the app folder on every deploy. Disks need a paid
+# instance, hence plan: starter.
+
+services:
+  - type: web
+    name: movemate-api
+    runtime: node
+    rootDir: backend
+    plan: starter
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    disk:
+      name: movemate-files
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: STORAGE_DIR
+        value: /var/data
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "465"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false

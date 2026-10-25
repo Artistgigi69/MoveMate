@@ -3,7 +3,6 @@ console.log("SERVER STARTING 🚀");
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const fs = require("fs");
 const helmet = require("helmet");
 
 require("dotenv").config();
@@ -24,12 +23,12 @@ const checklistRoutes = require("./routes/checklist");
 const pushRoutes = require("./routes/push");
 const exportRoutes = require("./routes/export");
 const supportRoutes = require("./routes/support");
+const municipalityRoutes = require("./routes/municipalities");
 const { checkMoveReminders } = require("./services/reminders");
 
-// ================== CREATE UPLOADS FOLDER ==================
-if (!fs.existsSync("uploads")) {
-  fs.mkdirSync("uploads");
-}
+// Upload folders are created (and located, via STORAGE_DIR) in
+// middleware/upload.js.
+const { PUBLIC_DIR } = require("./middleware/upload");
 
 
 // ================== MIDDLEWARE ==================
@@ -39,11 +38,13 @@ app.use(helmet({
   // would silently block those <img> loads.
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
-app.use(cors());
+// Content-Disposition carries the original file name on lease downloads;
+// cross-origin JS can't read it unless it's exposed.
+app.use(cors({ exposedHeaders: ["Content-Disposition"] }));
 app.use(express.json());
 app.use(apiLimiter);
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(PUBLIC_DIR));
 
 
 // ================== ROUTES ==================
@@ -58,6 +59,7 @@ app.use("/checklist", checklistRoutes);
 app.use("/push", pushRoutes);
 app.use("/export", exportRoutes);
 app.use("/support", supportRoutes);
+app.use("/municipalities", municipalityRoutes);
 
 // ================== TEST ==================
 app.get("/", (req, res) => {
