@@ -7,10 +7,11 @@ const router = express.Router();
 
 // ================== LIST (public) ==================
 // The wizard needs the city list before the user has an account.
-// Contact details stay server-side.
+// The form link is public (the user may need to fill it in themselves);
+// the email stays server-side.
 router.get("/", (req, res) => {
   res.json(
-    municipalities.map(({ key, he, ru, method }) => ({ key, he, ru, method }))
+    municipalities.map(({ key, he, ru, method, formUrl }) => ({ key, he, ru, method, formUrl }))
   );
 });
 

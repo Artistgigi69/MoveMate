@@ -55,12 +55,22 @@ export function StatusList() {
 export function StatusDetail() {
   const { id } = useParams();
   const [transfer, setTransfer] = useState(null);
+  const [cities, setCities] = useState([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!getToken()) return;
     api.getTransfer(id).then(setTransfer).catch(err => setError(err.message));
+    api.municipalities().then(setCities).catch(() => setCities([]));
   }, [id]);
+
+  // Arnona that couldn't be emailed: point the user at each city's own form.
+  const arnonaForms = transfer
+    ? [
+        { city: cities.find(c => c.key === transfer.oldCity), label: "закрыть на старой квартире" },
+        { city: cities.find(c => c.key === transfer.newCity), label: "открыть на новой квартире" }
+      ].filter(f => f.city?.formUrl)
+    : [];
 
   if (!getToken()) return <Navigate to="/auth" replace />;
 
@@ -90,6 +100,11 @@ export function StatusDetail() {
                         : SENT_VIA_LABELS[s.sentVia] || s.sentVia}
                     </small>
                   )}
+                  {manualPending && s.name === "arnona" && arnonaForms.map(f => (
+                    <a key={f.label} className="form-link" href={f.city.formUrl} target="_blank" rel="noreferrer">
+                      Форма {f.city.ru}: {f.label} ↗
+                    </a>
+                  ))}
                   {manualPending && (
                     <button
                       className="btn ghost small"

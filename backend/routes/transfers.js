@@ -387,7 +387,7 @@ async function sendArnona(transfer) {
 
   for (const { city, kind } of letters) {
 
-    // "auto" cities have no form adapter yet — email is the fallback.
+    // "form"-only cities have no adapter yet — the user fills the form.
     if (!city || !city.email) {
       sentAll = false;
       continue;

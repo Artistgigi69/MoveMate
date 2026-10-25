@@ -226,4 +226,6 @@ input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1p
 .pill.pending { background: var(--line); color: var(--muted); }
 
 .status-item { display: flex; flex-direction: column; gap: 4px; }
+.form-link { color: var(--accent); font-size: .92rem; padding: 4px 0; }
+
 .status-head { display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
