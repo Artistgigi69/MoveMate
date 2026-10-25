@@ -169,8 +169,8 @@ const municipalities = [
     key: "hadera",
     names: { he: "חדרה", ru: "Хадера", en: "Hadera", ar: "الخضيرة" },
     method: "", email: "", formUrl: "",
-    source: "https://www.hadera.muni.il/%d7%98%d7%a4%d7%a1%d7%99%d7%9d/",
-    note: "На странице форм нет формы смены жильца — проверить вручную.",
+    source: "https://www.hadera.muni.il/%d7%90%d7%92%d7%a4%d7%99%d7%9d-%d7%95%d7%9e%d7%97%d7%9c%d7%a7%d7%95%d7%aa/%d7%90%d7%92%d7%a3-%d7%94%d7%9b%d7%a1%d7%a4%d7%99%d7%9d/%d7%94%d7%9b%d7%a0%d7%a1%d7%95%d7%aa-%d7%95%d7%90%d7%a8%d7%a0%d7%95%d7%a0%d7%94/",
+    note: "Ни формы, ни email для смены жильца; на странице отдела арноны только личные адреса сотрудников — туда не шлём. Уточнить по телефону 04-6303311.",
     water: { names: { he: "מי חדרה", ru: "Мей Хадера", en: "Mei Hadera", ar: "مي الخضيرة" }, url: "" }
   },
   {
