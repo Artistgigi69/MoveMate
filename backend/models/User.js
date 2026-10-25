@@ -54,6 +54,18 @@ const userSchema = new mongoose.Schema({
     premiumUntil: {
         type: Date,
         default: null
+    },
+
+    // Password reset: only a SHA-256 of the emailed token is stored, so a
+    // database leak doesn't hand out working reset links.
+    resetTokenHash: {
+        type: String,
+        default: ""
+    },
+
+    resetTokenExpires: {
+        type: Date,
+        default: null
     }
 
 }, {

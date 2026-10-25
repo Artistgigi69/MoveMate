@@ -663,3 +663,17 @@ input:focus, select:focus {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .scene-inner { transform: rotateX(8deg); }
 }
+
+/* ================== auth extras ================== */
+
+.forgot-link { align-self: flex-end; font-size: .9rem; font-weight: 500; text-decoration: none; margin-top: -6px; }
+.forgot-link:hover { text-decoration: underline; }
+
+.notice { display: flex; align-items: flex-start; gap: 14px; }
+.notice p { margin: 0; }
+.notice-icon {
+  width: 44px; height: 44px; border-radius: 13px; flex: none;
+  display: grid; place-items: center;
+  color: var(--accent-ink);
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Field, Screen } from "../ui";
 import { useDraft } from "../draft";
 import { api, setToken } from "../api";
@@ -9,8 +9,9 @@ export default function Auth() {
   const navigate = useNavigate();
   const { draft } = useDraft();
   const { t, errText } = useI18n();
+  const { state } = useLocation();
 
-  const [mode, setMode] = useState("register");
+  const [mode, setMode] = useState(state?.mode === "login" ? "login" : "register");
   const [name, setName] = useState(draft.applicant.name);
   const [email, setEmail] = useState(draft.applicant.email);
   const [password, setPassword] = useState("");
@@ -82,6 +83,10 @@ export default function Auth() {
               />
             </Field>
           </>
+        )}
+
+        {mode === "login" && !tempToken && (
+          <Link to="/forgot" state={{ email }} className="forgot-link">{t("auth.forgot")}</Link>
         )}
 
         {error && <p className="note error">{error}</p>}

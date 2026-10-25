@@ -2,8 +2,11 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { authenticator } = require("otplib");
+const crypto = require("crypto");
 
 const User = require("../models/User");
+const mailer = require("../services/mailer");
+const { buildResetEmail } = require("../services/resetEmail");
 
 const router = express.Router();
 
@@ -232,6 +235,96 @@ router.post("/2fa/verify-login", async (req, res) => {
     res.status(500).json({
       message: error.message
     });
+  }
+});
+
+
+// ================== FORGOT PASSWORD ==================
+// Emails a one-hour reset link. Answers the same whether or not the email
+// is registered, so the form can't be used to probe for accounts.
+const RESET_TTL_MS = 60 * 60 * 1000;
+
+const hashToken = token => crypto.createHash("sha256").update(token).digest("hex");
+
+router.post("/forgot", async (req, res) => {
+  try {
+    const { email, lang } = req.body;
+
+    if (!email || !EMAIL_RE.test(email)) {
+      return res.status(400).json({
+        message: "Please enter a valid email address"
+      });
+    }
+
+    if (!mailer.isConfigured()) {
+      return res.status(503).json({
+        message: "Password reset by email is not available yet"
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const token = crypto.randomBytes(32).toString("hex");
+
+      user.resetTokenHash = hashToken(token);
+      user.resetTokenExpires = new Date(Date.now() + RESET_TTL_MS);
+      await user.save();
+
+      const frontend = (process.env.FRONTEND_URL || "http://localhost:5174").replace(/\/+$/, "");
+      const mail = buildResetEmail({
+        name: user.username,
+        url: `${frontend}/reset/${token}`,
+        lang
+      });
+
+      try {
+        await mailer.sendMail({ to: user.email, ...mail });
+      } catch (err) {
+        console.log("RESET EMAIL ERROR:", err.message);
+        return res.status(502).json({ message: "Email could not be sent" });
+      }
+    }
+
+    res.json({ message: "If this email is registered, a reset link has been sent" });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+// ================== RESET PASSWORD ==================
+router.post("/reset", async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!password || password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters"
+      });
+    }
+
+    const user = token && await User.findOne({
+      resetTokenHash: hashToken(String(token)),
+      resetTokenExpires: { $gt: new Date() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Reset link is invalid or has expired"
+      });
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.resetTokenHash = "";
+    user.resetTokenExpires = null;
+    await user.save();
+
+    res.json({ message: "Password updated" });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
