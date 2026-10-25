@@ -136,7 +136,7 @@ export function StatusDetail() {
     if (s.name === "water") {
       const known = ends.filter(e => e.city?.water);
       if (known.length === 0) return [{ text: t("st.waterHint") }];
-      return known.map(e => ({ text: `${pick(e.city.water.names)} (${e.end})`, url: e.city.water.url }));
+      return known.map(e => ({ text: t("st.waterCompany", { name: pick(e.city.water.names), end: e.end }), url: e.city.water.url }));
     }
 
     return [];
