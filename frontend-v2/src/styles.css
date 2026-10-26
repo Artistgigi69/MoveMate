@@ -290,6 +290,10 @@ a { color: var(--accent); }
 .btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
 .btn.ghost { background: transparent; color: var(--accent); }
 .btn.ghost:hover { background: var(--accent-soft); }
+.btn.danger { background: var(--danger); color: #fff; }
+.btn.danger:hover { filter: brightness(1.08); }
+.btn.danger:disabled { opacity: .6; cursor: progress; }
+.link-danger { align-self: center; color: var(--danger); font-size: .88rem; text-decoration: underline; text-underline-offset: 3px; padding: 6px; }
 .btn.small { min-height: 40px; padding: 8px 14px; font-weight: 500; font-size: .93rem; border-radius: 11px; }
 .btn.lg { min-height: 56px; font-size: 1.05rem; padding: 16px 28px; }
 

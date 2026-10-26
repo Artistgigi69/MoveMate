@@ -74,6 +74,7 @@ export const api = {
   verify2fa: (tempToken, code) => request("/auth/2fa/verify-login", { method: "POST", body: { tempToken, code } }),
   forgotPassword: (email, lang) => request("/auth/forgot", { method: "POST", body: { email, lang } }),
   resetPassword: (token, password) => request("/auth/reset", { method: "POST", body: { token, password } }),
+  deleteAccount: password => request("/profile", { method: "DELETE", body: { password } }),
   register: (username, email, password) => request("/auth/register", { method: "POST", body: { username, email, password } }),
 
   createTransfer: data => request("/transfers", { method: "POST", body: data }),

@@ -12,6 +12,16 @@ const verifyToken = require("../middleware/auth");
 
 const upload = require("../middleware/upload");
 
+const fileStore = require("../services/fileStore");
+
+const Transfer = require("../models/Transfer");
+const Card = require("../models/Card");
+const CardcomSession = require("../models/CardcomSession");
+const ChecklistItem = require("../models/ChecklistItem");
+const Expense = require("../models/Expense");
+const PushSubscription = require("../models/PushSubscription");
+const SupportMessage = require("../models/SupportMessage");
+
 
 const router = express.Router();
 
@@ -394,6 +404,59 @@ router.post("/2fa/disable", verifyToken, async (req, res) => {
 
   }
 
+});
+
+
+
+
+// ================= DELETE ACCOUNT =================
+// The privacy policy promises deletion on request: removes the user, every
+// transfer with its uploaded files, and the rest of their records. Asks for
+// the password so a stolen token alone can't wipe an account.
+
+router.delete("/", verifyToken, async (req, res) => {
+  try {
+    const { password } = req.body || {};
+
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!password || !(await bcrypt.compare(password, user.password))) {
+      return res.status(400).json({ message: "Wrong password" });
+    }
+
+    const transfers = await Transfer.find({ userId: user._id });
+
+    for (const transfer of transfers) {
+      await fileStore.removeFile("private", transfer.leaseFile);
+      for (const service of transfer.services) {
+        await fileStore.removeFile("public", service.meterPhoto);
+      }
+    }
+
+    await fileStore.removeFile("public", user.avatar);
+
+    const byUser = { userId: user._id };
+    await Promise.all([
+      Transfer.deleteMany(byUser),
+      Card.deleteMany(byUser),
+      CardcomSession.deleteMany(byUser),
+      ChecklistItem.deleteMany(byUser),
+      Expense.deleteMany(byUser),
+      PushSubscription.deleteMany(byUser),
+      SupportMessage.deleteMany(byUser)
+    ]);
+
+    await user.deleteOne();
+
+    res.json({ message: "Account deleted" });
+  } catch (error) {
+    console.log("DELETE ACCOUNT ERROR:", error);
+    res.status(500).json({ message: error.message });
+  }
 });
 
 

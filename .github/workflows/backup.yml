@@ -1,0 +1,53 @@
+name: Database backup
+
+# Daily dump of the production database (Atlas free tier has no backups).
+# The repository is public, so the dump is encrypted before it is stored:
+# without BACKUP_PASSPHRASE the artifact is useless. See DEPLOY.md, section 6.
+
+on:
+  schedule:
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup
+
+jobs:
+  backup:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check secrets
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          if [ -z "$MONGO_URI" ] || [ -z "$BACKUP_PASSPHRASE" ]; then
+            echo "::error::Add MONGO_URI and BACKUP_PASSPHRASE in Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+
+      - name: Install MongoDB Database Tools
+        run: |
+          curl -fsSL -o tools.deb https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x86_64-100.10.0.deb
+          sudo apt-get install -y ./tools.deb
+
+      - name: Dump and encrypt
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          mongodump --uri="$MONGO_URI" --archive=db.archive --gzip
+          gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 \
+            --symmetric --cipher-algo AES256 -o movemate.archive.gpg db.archive <<< "$BACKUP_PASSPHRASE"
+          rm db.archive
+          ls -lh movemate.archive.gpg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: movemate-db-${{ github.run_number }}
+          path: movemate.archive.gpg
+          retention-days: 30
+          if-no-files-found: error

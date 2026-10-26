@@ -111,4 +111,14 @@ async function sendFile(res, kind, filename, downloadName) {
 }
 
 
-module.exports = { multerStorage, readFile, sendFile };
+// Deletes every stored copy of the file; missing files are fine.
+async function removeFile(kind, filename) {
+  if (!filename) return;
+  const files = await bucket(kind).find({ filename }).toArray();
+  for (const file of files) {
+    await bucket(kind).delete(file._id);
+  }
+}
+
+
+module.exports = { multerStorage, readFile, sendFile, removeFile };

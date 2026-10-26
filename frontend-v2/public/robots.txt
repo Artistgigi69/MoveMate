@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /status
+Disallow: /account/
+Disallow: /confirm/
+Disallow: /reset/
+
+Sitemap: https://move-mate-giorgi19.vercel.app/sitemap.xml

@@ -54,6 +54,7 @@ export function StatusList() {
       <button className="btn ghost small with-icon" onClick={() => { setToken(null); window.location.href = "/"; }}>
         <Icon name="logout" size={18} className="flip-rtl" />{t("st.logout")}
       </button>
+      <Link to="/account/delete" className="link-danger">{t("acc.link")}</Link>
     </Screen>
   );
 }

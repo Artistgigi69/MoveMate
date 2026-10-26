@@ -14,6 +14,7 @@ import { StatusDetail, StatusList } from "./screens/Status";
 import Confirm from "./screens/Confirm";
 import { Forgot, Reset } from "./screens/Reset";
 import Legal from "./screens/Legal";
+import { DeleteAccount } from "./screens/Account";
 
 import "./styles.css";
 
@@ -36,6 +37,7 @@ createRoot(document.getElementById("root")).render(
             <Route path="/reset/:token" element={<Reset />} />
             <Route path="/privacy" element={<Legal doc="privacy" />} />
             <Route path="/terms" element={<Legal doc="terms" />} />
+            <Route path="/account/delete" element={<DeleteAccount />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </DraftProvider>

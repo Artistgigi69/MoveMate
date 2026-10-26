@@ -84,6 +84,32 @@
 В Render → сервис → **Environment** → добавьте `FRONTEND_URL` = адрес сайта из
 шага 4 → **Save** (сервис перезапустится).
 
+## 6. Резервные копии базы
+
+У бесплатной базы Atlas резервных копий нет. Их каждую ночь делает GitHub
+(`.github/workflows/backup.yml`) и хранит 30 дней. Репозиторий публичный,
+поэтому копия зашифрована паролем, без него файл бесполезен.
+
+Настройка (один раз): GitHub → репозиторий → **Settings → Secrets and
+variables → Actions → New repository secret**, два секрета:
+
+- `MONGO_URI` — та же строка, что в Render;
+- `BACKUP_PASSPHRASE` — длинный случайный пароль. **Сохраните его в менеджере
+  паролей**: без него копию не открыть.
+
+Проверка: **Actions → Database backup → Run workflow**. Через минуту-две
+у запуска появится файл `movemate-db-N`.
+
+Восстановление (нужны `gpg` и MongoDB Database Tools):
+
+```bash
+gpg -d movemate.archive.gpg > db.archive
+mongorestore --uri="<строка подключения>" --archive=db.archive --gzip
+```
+
+Если в репозитории 60 дней не было коммитов, GitHub отключает расписание. Тогда
+включите его снова в **Actions → Database backup**.
+
 ## Проверка после запуска
 
 - [ ] Открыть сайт с телефона, пройти заявку до конца с тестовыми данными.
