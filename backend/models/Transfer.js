@@ -64,6 +64,13 @@ const transferSchema = new mongoose.Schema({
         default: ""
     },
 
+    // When the applicant ticked "send letters on my behalf / accept the
+    // terms" (v2 frontend). Letters to municipalities rely on it.
+    consentAt: {
+        type: Date,
+        default: null
+    },
+
 
     services: [
         {

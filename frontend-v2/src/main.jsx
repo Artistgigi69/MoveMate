@@ -13,6 +13,7 @@ import Submit from "./screens/Submit";
 import { StatusDetail, StatusList } from "./screens/Status";
 import Confirm from "./screens/Confirm";
 import { Forgot, Reset } from "./screens/Reset";
+import Legal from "./screens/Legal";
 
 import "./styles.css";
 
@@ -33,6 +34,8 @@ createRoot(document.getElementById("root")).render(
             <Route path="/confirm/:token" element={<Confirm />} />
             <Route path="/forgot" element={<Forgot />} />
             <Route path="/reset/:token" element={<Reset />} />
+            <Route path="/privacy" element={<Legal doc="privacy" />} />
+            <Route path="/terms" element={<Legal doc="terms" />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </DraftProvider>

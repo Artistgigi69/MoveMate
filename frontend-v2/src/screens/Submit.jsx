@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Screen } from "../ui";
 import { useDraft } from "../draft";
 import { useI18n } from "../i18n";
@@ -13,6 +13,7 @@ export default function Submit() {
   const [error, setError] = useState("");
   const [transferId, setTransferId] = useState(null);
   const [cities, setCities] = useState([]);
+  const [consent, setConsent] = useState(false);
 
   useEffect(() => {
     api.municipalities().then(setCities).catch(() => setCities([]));
@@ -30,6 +31,11 @@ export default function Submit() {
   const send = async () => {
     setError("");
 
+    if (!consent && !transferId) {
+      setError(t("sub.consentRequired"));
+      return;
+    }
+
     try {
       let id = transferId;
 
@@ -42,6 +48,7 @@ export default function Submit() {
           newCity: draft.newCity,
           moveDate: draft.moveDate,
           applicant: draft.applicant,
+          consent: true,
           newTenant: hasTenant ? draft.newTenant : undefined,
           services: draft.services.map(name => ({
             name,
@@ -110,6 +117,17 @@ export default function Submit() {
       </ul>
 
       <p className="note">{t("sub.note")}</p>
+
+      <label className={"consent card" + (error && !consent ? " has-error" : "")}>
+        <input type="checkbox" checked={consent || Boolean(transferId)} disabled={Boolean(transferId)} onChange={e => setConsent(e.target.checked)} />
+        <span>
+          {t("sub.consent")}
+          <span className="consent-links">
+            <Link to="/terms" target="_blank">{t("legal.terms")}</Link>
+            <Link to="/privacy" target="_blank">{t("legal.privacy")}</Link>
+          </span>
+        </span>
+      </label>
 
       {error && <p className="note error">{error}</p>}
     </Screen>

@@ -677,3 +677,22 @@ input:focus, select:focus {
   color: var(--accent-ink);
   background: linear-gradient(135deg, var(--accent-2), var(--accent));
 }
+
+/* ================== consent, legal, footer ================== */
+
+.consent { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: .92rem; }
+.consent input { width: 20px; height: 20px; min-height: 0; flex: none; margin: 2px 0 0; accent-color: var(--accent); }
+.consent.has-error { border-color: var(--danger); }
+.consent-links { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; font-weight: 500; }
+
+.legal { display: flex; flex-direction: column; gap: 18px; }
+.legal section { display: flex; flex-direction: column; gap: 8px; }
+.legal p { margin: 0; color: var(--text); line-height: 1.6; }
+
+.site-footer {
+  display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: center;
+  margin-top: 16px; padding-top: 18px; border-top: 1px solid var(--line);
+  font-size: .88rem; color: var(--muted);
+}
+.site-footer a { color: var(--muted); text-decoration: none; }
+.site-footer a:hover { color: var(--accent); }

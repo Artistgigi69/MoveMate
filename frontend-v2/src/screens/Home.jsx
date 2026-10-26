@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Screen } from "../ui";
 import { SERVICES, useDraft } from "../draft";
 import { useI18n } from "../i18n";
@@ -142,7 +142,7 @@ export default function Home() {
             ))}
             <span className="float-chip">
               <span className="float-chip-check"><Icon name="check" size={14} strokeWidth={3} /></span>
-              {t("service.electricity")} · {t("status.Completed")}
+              {t("service.arnona")} · {t("sentVia.email")}
             </span>
           </div>
         </div>
@@ -169,6 +169,12 @@ export default function Home() {
           </span>
         ))}
       </section>
+
+      <footer className="site-footer">
+        <span>© {new Date().getFullYear()} MoveMate</span>
+        <Link to="/terms">{t("legal.terms")}</Link>
+        <Link to="/privacy">{t("legal.privacy")}</Link>
+      </footer>
     </Screen>
   );
 }

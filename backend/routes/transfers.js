@@ -26,13 +26,20 @@ router.post("/", verifyToken, async (req, res) => {
       newTenant,
       applicant,
       oldCity,
-      newCity
+      newCity,
+      consent
     } = req.body;
 
     if (!oldAddress || !newAddress || !moveDate || !Array.isArray(services) || services.length === 0) {
       return res.status(400).json({
         message: "Old address, new address, move date and at least one service are required"
       });
+    }
+
+    // v2 sends an applicant, and with it the letters go out in their name —
+    // so it must come with explicit consent.
+    if (applicant && consent !== true) {
+      return res.status(400).json({ message: "Consent is required" });
     }
 
     // The old frontend sends neither block; when they're present (v2),
@@ -58,6 +65,7 @@ router.post("/", verifyToken, async (req, res) => {
       oldCity,
       newCity,
       applicant,
+      consentAt: applicant ? new Date() : null,
 
       // Accepts plain names (old frontend) or { name, meterReading, provider }.
       services: services.map(s => ({
