@@ -180,6 +180,15 @@ export function FilePick({ label, file, onPick, accept, capture, icon = "file" }
   );
 }
 
+// Hebrew words inside a Russian/Arabic/English sentence (form names like
+// «החלפת מחזיק») reorder the punctuation around them; isolating each Hebrew
+// run keeps the sentence intact.
+export function Bidi({ text }) {
+  return String(text)
+    .split(/([֐-׿][֐-׿\s"'-]*[֐-׿]|[֐-׿])/)
+    .map((part, i) => (i % 2 ? <bdi key={i}>{part}</bdi> : part));
+}
+
 // Finger/mouse signature on a white "paper" canvas. Calls onChange(canvas)
 // after each stroke and onChange(null) when cleared; the parent turns the
 // canvas into a PNG with canvas.toBlob.

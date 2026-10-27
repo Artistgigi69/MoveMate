@@ -701,6 +701,15 @@ textarea { min-height: 0; resize: vertical; }
 .consent input { width: 20px; height: 20px; min-height: 0; flex: none; margin: 2px 0 0; accent-color: var(--accent); }
 .consent.has-error { border-color: var(--danger); }
 .consent-links { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; font-weight: 500; }
+.after-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.after-list li { display: flex; flex-direction: column; gap: 2px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.after-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.after-check { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.after-check input { width: 20px; height: 20px; min-height: 0; flex: none; margin: 2px 0 0; accent-color: var(--accent); }
+.after-check span { display: flex; flex-direction: column; gap: 2px; }
+.after-check small { color: var(--muted); font-size: .86rem; line-height: 1.45; }
+.after-list li.done strong { text-decoration: line-through; color: var(--muted); }
+.after-list .form-link { margin-inline-start: 32px; }
 
 .legal { display: flex; flex-direction: column; gap: 18px; }
 .legal section { display: flex; flex-direction: column; gap: 8px; }

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { FilePick, Screen, SignaturePad, Wait } from "../ui";
+import { Bidi, FilePick, Screen, SignaturePad, Wait } from "../ui";
 import { Icon } from "../icons";
 import { useI18n } from "../i18n";
 import { api, getToken, setToken } from "../api";
 import { ELECTRICITY, gasProvider } from "../providers";
+import AfterMove from "./AfterMove";
 
 export function StatusList() {
   const { t, errText } = useI18n();
@@ -251,7 +252,7 @@ export function StatusDetail() {
                   ) : (
                     <small key={l.text}>{l.text}</small>
                   ))}
-                  {showSelf && <p className="how-hint">{howTo(s)}</p>}
+                  {showSelf && <p className="how-hint"><Bidi text={howTo(s)} /></p>}
                   {manualPending && askFor !== i && (
                     <button className="btn secondary small" onClick={() => openAsk(i)}>{t("con.button")}</button>
                   )}
@@ -294,6 +295,8 @@ export function StatusDetail() {
               );
             })}
           </ul>
+
+          <AfterMove transferId={id} />
         </>
       )}
     </Screen>
