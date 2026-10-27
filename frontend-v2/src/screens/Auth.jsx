@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Field, Screen } from "../ui";
+import { Field, Screen, Wait } from "../ui";
 import { useDraft } from "../draft";
 import { api, setToken } from "../api";
 import { useI18n } from "../i18n";
@@ -92,7 +92,7 @@ export default function Auth() {
         {error && <p className="note error">{error}</p>}
 
         <button className="btn primary" disabled={busy}>
-          {busy ? t("auth.wait") : tempToken ? t("auth.confirm") : mode === "register" ? t("auth.createContinue") : t("auth.loginContinue")}
+          {busy ? <Wait /> : tempToken ? t("auth.confirm") : mode === "register" ? t("auth.createContinue") : t("auth.loginContinue")}
         </button>
       </form>
 

@@ -68,6 +68,10 @@ async function request(path, { method = "GET", body, form } = {}) {
 }
 
 export const api = {
+  // Free hosting sleeps when idle; a ping as soon as the site opens wakes it
+  // while the visitor is still reading or filling in the first step.
+  wake: () => fetch(BASE + "/").catch(() => {}),
+
   municipalities: () => request("/municipalities"),
 
   login: (email, password) => request("/auth/login", { method: "POST", body: { email, password } }),

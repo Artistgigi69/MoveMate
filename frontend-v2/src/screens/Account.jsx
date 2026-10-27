@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Field, Screen } from "../ui";
+import { Field, Screen, Wait } from "../ui";
 import { api, getToken, setToken } from "../api";
 import { useI18n } from "../i18n";
 import { Icon } from "../icons";
@@ -55,7 +55,7 @@ export function DeleteAccount() {
         </Field>
         {error && <p className="note error">{error}</p>}
         <button className="btn danger" disabled={busy}>
-          {busy ? t("auth.wait") : t("acc.confirm")}
+          {busy ? <Wait /> : t("acc.confirm")}
         </button>
       </form>
       <Link to="/status" className="btn ghost">{t("common.back")}</Link>

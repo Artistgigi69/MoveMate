@@ -16,7 +16,11 @@ import { Forgot, Reset } from "./screens/Reset";
 import Legal from "./screens/Legal";
 import { DeleteAccount } from "./screens/Account";
 
+import { api } from "./api";
+
 import "./styles.css";
+
+api.wake();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

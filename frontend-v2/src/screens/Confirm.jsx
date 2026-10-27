@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Screen } from "../ui";
+import { Screen, Wait } from "../ui";
 import { Icon } from "../icons";
 import { useI18n } from "../i18n";
 import { api, uploadUrl } from "../api";
@@ -39,7 +39,7 @@ export default function Confirm() {
       title={t("confirm.title")}
       footer={info && !info.confirmedByTenant && (
         <button className="btn primary" onClick={confirm} disabled={busy}>
-          {busy ? t("auth.wait") : t("confirm.button")}
+          {busy ? <Wait /> : t("confirm.button")}
         </button>
       )}
     >

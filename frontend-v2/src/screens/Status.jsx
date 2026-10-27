@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { Screen } from "../ui";
+import { Screen, Wait } from "../ui";
 import { Icon } from "../icons";
 import { useI18n } from "../i18n";
 import { api, getToken, setToken } from "../api";
@@ -26,7 +26,7 @@ export function StatusList() {
       footer={<Link className="btn primary" to="/addresses">{t("st.newMove")}</Link>}
     >
       {error && <p className="note error">{error}</p>}
-      {transfers === null && !error && <p className="note">{t("common.loading")}</p>}
+      {transfers === null && !error && <p className="note"><Wait label={t("common.loading")} /></p>}
       {transfers?.length === 0 && <p className="note">{t("st.empty")}</p>}
 
       <ul className="list">
@@ -155,7 +155,7 @@ export function StatusDetail() {
   return (
     <Screen back="/status" title={t("st.detailTitle")}>
       {error && <p className="note error">{error}</p>}
-      {!transfer && !error && <p className="note">{t("common.loading")}</p>}
+      {!transfer && !error && <p className="note"><Wait label={t("common.loading")} /></p>}
 
       {transfer && (
         <>

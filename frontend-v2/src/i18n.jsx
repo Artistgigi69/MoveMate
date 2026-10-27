@@ -19,6 +19,7 @@ const DICT = {
     "common.myRequests": "Мои заявки",
     "common.choose": "— выберите —",
     "common.loading": "Загружаем…",
+    "common.waking": "Сервер просыпается, это займёт до минуты…",
     "common.tapToChoose": "Нажмите, чтобы выбрать",
     "common.language": "Язык",
 
@@ -220,6 +221,7 @@ const DICT = {
     "common.myRequests": "הבקשות שלי",
     "common.choose": "— בחרו —",
     "common.loading": "טוען…",
+    "common.waking": "השרת מתעורר, זה ייקח עד דקה…",
     "common.tapToChoose": "לחצו לבחירה",
     "common.language": "שפה",
 
@@ -421,6 +423,7 @@ const DICT = {
     "common.myRequests": "طلباتي",
     "common.choose": "— اختر —",
     "common.loading": "جارٍ التحميل…",
+    "common.waking": "الخادم يستيقظ، قد يستغرق ذلك دقيقة…",
     "common.tapToChoose": "اضغط للاختيار",
     "common.language": "اللغة",
 
@@ -622,6 +625,7 @@ const DICT = {
     "common.myRequests": "My requests",
     "common.choose": "— choose —",
     "common.loading": "Loading…",
+    "common.waking": "Waking up the server, this can take up to a minute…",
     "common.tapToChoose": "Tap to choose",
     "common.language": "Language",
 

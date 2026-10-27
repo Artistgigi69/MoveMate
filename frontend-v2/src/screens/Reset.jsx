@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { Field, Screen } from "../ui";
+import { Field, Screen, Wait } from "../ui";
 import { api } from "../api";
 import { useI18n } from "../i18n";
 import { Icon } from "../icons";
@@ -42,7 +42,7 @@ export function Forgot() {
           </Field>
           {error && <p className="note error">{error}</p>}
           <button className="btn primary" disabled={busy}>
-            {busy ? t("auth.wait") : t("forgot.send")}
+            {busy ? <Wait /> : t("forgot.send")}
           </button>
         </form>
       )}
@@ -100,7 +100,7 @@ export function Reset() {
           </Field>
           {error && <p className="note error">{error}</p>}
           <button className="btn primary" disabled={busy}>
-            {busy ? t("auth.wait") : t("reset.save")}
+            {busy ? <Wait /> : t("reset.save")}
           </button>
           {error === t("srv.resetInvalid") && (
             <Link to="/forgot" className="btn ghost">{t("forgot.send")}</Link>

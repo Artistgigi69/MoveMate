@@ -1,8 +1,23 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LANGS, useI18n } from "./i18n";
 import { Icon, Logo } from "./icons";
 
 const STEPS = ["step.addresses", "step.services", "step.details", "step.auth", "step.submit"];
+
+// Busy text that explains a long wait: the free server sleeps when idle and
+// the first request after that takes up to a minute.
+export function Wait({ label }) {
+  const { t } = useI18n();
+  const [slow, setSlow] = useState(false);
+
+  useEffect(() => {
+    const id = setTimeout(() => setSlow(true), 5000);
+    return () => clearTimeout(id);
+  }, []);
+
+  return slow ? t("common.waking") : label || t("auth.wait");
+}
 
 export function LanguageSwitch() {
   const { lang, setLang, t } = useI18n();
