@@ -31,3 +31,6 @@ services:
         sync: false
       - key: SMTP_FROM
         sync: false
+      # Where server-error alerts go (services/alerts.js).
+      - key: ALERT_EMAIL
+        value: 2donutchannel@gmail.com

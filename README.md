@@ -50,8 +50,7 @@ backend/        Express API (MongoDB)
   data/         municipalities.js — arnona contacts per city, with sources
   routes/       auth, transfers, municipalities, …
   services/     mailer (SMTP), arnonaEmail (Hebrew letter), push, …
-frontend/       original web app
-frontend-v2/    new mobile-first app (RU / HE / AR / EN)
+frontend-v2/    mobile-first web app (RU / HE / AR / EN)
 ```
 
 ---

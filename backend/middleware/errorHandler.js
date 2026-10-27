@@ -23,6 +23,9 @@ function errorHandler(err, req, res, next) {
 
   console.log("UNHANDLED ERROR:", err);
 
+  // For the alert email (services/alerts.js).
+  res.locals.error = err;
+
   res.status(err.status || 500).json({
     message: "Something went wrong on our end"
   });

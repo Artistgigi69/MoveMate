@@ -9,6 +9,7 @@ require("dotenv").config();
 
 const { apiLimiter, authLimiter } = require("./middleware/rateLimiters");
 const errorHandler = require("./middleware/errorHandler");
+const alerts = require("./services/alerts");
 
 const authRoutes = require("./routes/auth");
 const transferRoutes = require("./routes/transfers");
@@ -39,6 +40,7 @@ app.use(helmet({
 // Content-Disposition carries the original file name on lease downloads;
 // cross-origin JS can't read it unless it's exposed.
 app.use(cors({ exposedHeaders: ["Content-Disposition"] }));
+app.use(alerts.middleware);
 app.use(express.json());
 app.use(apiLimiter);
 
@@ -80,13 +82,23 @@ mongoose.connect(process.env.MONGO_URI)
   console.log("✅ MongoDB connected");
 
   // Check for upcoming moves once at boot, then every hour.
-  checkMoveReminders().catch(err => console.log("REMINDER CHECK ERROR:", err));
-  setInterval(() => {
-    checkMoveReminders().catch(err => console.log("REMINDER CHECK ERROR:", err));
-  }, 60 * 60 * 1000);
+  const reminders = () => checkMoveReminders().catch(err => {
+    console.log("REMINDER CHECK ERROR:", err);
+    alerts.notify("Move reminder check failed", err.stack || String(err));
+  });
+  reminders();
+  setInterval(reminders, 60 * 60 * 1000);
 })
 .catch((err) => {
   console.log("❌ MongoDB ERROR:", err);
+  alerts.notify("MongoDB connection failed", err.stack || String(err));
+});
+
+// Promises nobody awaited. Without this handler Node would exit and drop
+// every request in flight; log, mail and keep serving instead.
+process.on("unhandledRejection", err => {
+  console.log("UNHANDLED REJECTION:", err);
+  alerts.notify("Unhandled promise rejection", (err && err.stack) || String(err));
 });
 // ================== START ==================
 const PORT = process.env.PORT || 5000;
