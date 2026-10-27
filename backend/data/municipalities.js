@@ -11,8 +11,9 @@
 // water account. Names come from the Water Authority's tariff book (Jan 2026,
 // section 6, the list of water and sewage corporations) where the company
 // name itself names the city, or from the city's own site otherwise (Tel
-// Aviv, Holon, Petah Tikva, Kfar Saba, Karmiel, Haifa, Rishon). `url` is set
-// only where we opened that page.
+// Aviv, Holon, Petah Tikva, Kfar Saba, Karmiel, Haifa, Rishon). `url` is the
+// company's own site as linked from its gov.il public-body page (or found by
+// name where gov.il lists none), each opened on 2026-10-27.
 //
 // Every email/form below was read on the city's official page in `source`
 // (checked 2026-10-25). Never add a guessed address: a wrong one leaks the
@@ -27,7 +28,7 @@ const municipalities = [
     formUrl: "https://jeronlineformsgen.jerusalem.muni.il/ExchangeHolding/Default.aspx",
     source: "https://www.jerusalem.muni.il/he/residents/arnona/transferownershipoftheproperty/",
     note: "Отдельная форма для выезда: https://jeronlineformsgen.jerusalem.muni.il/LeaveAsset/Default.aspx",
-    water: { names: { he: "הגיחון", ru: "Гихон", en: "Hagihon", ar: "هجيحون" }, url: "" }
+    water: { names: { he: "הגיחון", ru: "Гихон", en: "Hagihon", ar: "هجيحون" }, url: "https://www.hagihon.co.il/" }
   },
   {
     key: "tel-aviv",
@@ -36,7 +37,7 @@ const municipalities = [
     formUrl: "https://holders.tel-aviv.gov.il/",
     source: "https://www.tel-aviv.gov.il/Residents/Arnona/pages/arnonaswitching.aspx",
     note: "Также факс/почта с бумажной декларацией.",
-    water: { names: { he: "מי אביבים", ru: "Мей Авивим", en: "Mei Avivim", ar: "مي أفيفيم" }, url: "" }
+    water: { names: { he: "מי אביבים", ru: "Мей Авивим", en: "Mei Avivim", ar: "مي أفيفيم" }, url: "https://www.mei-avivim.co.il/" }
   },
   {
     key: "haifa",
@@ -46,7 +47,7 @@ const municipalities = [
     source: "https://www.haifa.muni.il/resident-service/arnona/switching/",
     note: "Факс 04-8356035.",
     // Named on the city's arnona page; we couldn't open its own site.
-    water: { names: { he: "מי כרמל", ru: "Мей Кармель", en: "Mei Carmel", ar: "مي كرمل" }, url: "" }
+    water: { names: { he: "מי כרמל", ru: "Мей Кармель", en: "Mei Carmel", ar: "مي كرمل" }, url: "https://www.mei-carmel.co.il/" }
   },
   {
     key: "rishon",
@@ -55,7 +56,7 @@ const municipalities = [
     formUrl: "https://cityforms.co.il:60140/appbuilder/forms?code=8102005056A175301188E8CFFEF4DE61&Process=oneproc",
     source: "https://www.rishonlezion.muni.il/Residents/arnona/Pages/PropertyTaxRenting.aspx",
     note: "",
-    water: { names: { he: "מניב ראשון", ru: "Маниб Ришон", en: "Maniv Rishon", ar: "منيف ريشون" }, url: "" }
+    water: { names: { he: "מניב ראשון", ru: "Маниб Ришон", en: "Maniv Rishon", ar: "منيف ريشون" }, url: "https://www.meniv-rishon.co.il/" }
   },
   {
     key: "petah-tikva",
@@ -64,7 +65,7 @@ const municipalities = [
     formUrl: "https://por139.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick&NOSE=1&TAT=101&SUG=2",
     source: "https://www.petah-tikva.muni.il/arnona/ExchangeHolders",
     note: "Email жилого отдела для таких уведомлений. Факс 03-9052540.",
-    water: { names: { he: "מיתב", ru: "Мейтав", en: "Meitav", ar: "ميتاف" }, url: "" }
+    water: { names: { he: "מיתב", ru: "Мейтав", en: "Meitav", ar: "ميتاف" }, url: "https://www.meitav-pt.co.il/" }
   },
   {
     key: "ashdod",
@@ -73,7 +74,7 @@ const municipalities = [
     formUrl: "https://forms-ashdod.binaa.co.il/smartforms/28/",
     source: "https://digital.ashdod.muni.il/page/Gvia-ChangeRentPay-form",
     note: "",
-    water: { names: { he: "יובלים אשדוד", ru: "Ювалим Ашдод", en: "Yuvalim Ashdod", ar: "يوفاليم أسدود" }, url: "" }
+    water: { names: { he: "יובלים אשדוד", ru: "Ювалим Ашдод", en: "Yuvalim Ashdod", ar: "يوفاليم أسدود" }, url: "https://www.yuvallim.co.il/" }
   },
   {
     key: "netanya",
@@ -82,7 +83,7 @@ const municipalities = [
     formUrl: "https://por138.cityforms.co.il/appbuilder/forms?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick&NOSE=1&TAT=101&SUG=1",
     source: "https://www.netanya.muni.il/Residents/Arnona/CustomerService/Pages/default.aspx",
     note: "Выезд: та же форма с SUG=5.",
-    water: { names: { he: "מי נתניה", ru: "Мей Нетания", en: "Mei Netanya", ar: "مي نتانيا" }, url: "" }
+    water: { names: { he: "מי נתניה", ru: "Мей Нетания", en: "Mei Netanya", ar: "مي نتانيا" }, url: "https://www.mei-netanya.co.il/" }
   },
   {
     key: "beer-sheva",
@@ -91,7 +92,7 @@ const municipalities = [
     formUrl: "https://por162.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=B809005056B8060C11DD0B2422DCF607&Process=GVIYA_MAHZIKIM",
     source: "https://www.beer-sheva.muni.il/Residents/Arnona/Pages/HilufeiBealim.aspx",
     note: "",
-    water: { names: { he: "מי שבע", ru: "Мей Шева", en: "Mei Sheva", ar: "مي شيفع" }, url: "" }
+    water: { names: { he: "מי שבע", ru: "Мей Шева", en: "Mei Sheva", ar: "مي شيفع" }, url: "https://www.mey7.co.il/" }
   },
   {
     key: "holon",
@@ -100,7 +101,7 @@ const municipalities = [
     formUrl: "https://por134.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=8145005056A14F7F11CCD5B6BC7D267C&Process=ProcessOneClick&NOSE=1&TAT=101&SUG=7",
     source: "http://www.holon.muni.il/Residents/TaxesWater/Pages/default.aspx",
     note: "",
-    water: { names: { he: "מי שקמה", ru: "Мей Шикма", en: "Mei Shikma", ar: "مي شيكما" }, url: "" }
+    water: { names: { he: "מי שקמה", ru: "Мей Шикма", en: "Mei Shikma", ar: "مي شيكما" }, url: "https://mei-shikma.co.il/" }
   },
   {
     key: "bnei-brak",
@@ -109,7 +110,7 @@ const municipalities = [
     formUrl: "https://forms.bbm.org.il/%D7%A9%D7%99%D7%A0%D7%95%D7%99-%D7%9E%D7%97%D7%96%D7%99%D7%A7-%D7%91%D7%A0%D7%9B%D7%A1/",
     source: "https://www.bnei-brak.muni.il/%d7%a0%d7%95%d7%94%d7%9c-%d7%97%d7%99%d7%9c%d7%95%d7%a4%d7%99-%d7%9e%d7%97%d7%96%d7%99%d7%a7-%d7%91%d7%a0%d7%9b%d7%a1/",
     note: "Факс 03-5776211.",
-    water: { names: { he: "מי ברק", ru: "Мей Брак", en: "Mei Brak", ar: "مي براك" }, url: "" }
+    water: { names: { he: "מי ברק", ru: "Мей Брак", en: "Mei Brak", ar: "مي براك" }, url: "https://www.mei-barak.co.il/" }
   },
   {
     key: "ramat-gan",
@@ -118,7 +119,7 @@ const municipalities = [
     formUrl: "https://por759.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick&NOSE=1&TAT=1001&SUG=1",
     source: "https://www.ramat-gan.muni.il/department-money/content-pages/arnona-header/",
     note: "",
-    water: { names: { he: "מי רמת גן", ru: "Мей Рамат-Ган", en: "Mei Ramat Gan", ar: "مي رمات غان" }, url: "" }
+    water: { names: { he: "מי רמת גן", ru: "Мей Рамат-Ган", en: "Mei Ramat Gan", ar: "مي رمات غان" }, url: "https://mei-rg.co.il/" }
   },
   {
     key: "bat-yam",
@@ -127,7 +128,7 @@ const municipalities = [
     formUrl: "https://forms.milgam.co.il/bat-yam/forms/162/",
     source: "https://www.bat-yam.muni.il/he/122/",
     note: "",
-    water: { names: { he: "מי בת ים", ru: "Мей Бат-Ям", en: "Mei Bat Yam", ar: "مي بات يام" }, url: "" }
+    water: { names: { he: "מי בת ים", ru: "Мей Бат-Ям", en: "Mei Bat Yam", ar: "مي بات يام" }, url: "https://www.mei-bat-yam.co.il/" }
   },
   {
     key: "rehovot",
@@ -145,7 +146,7 @@ const municipalities = [
     formUrl: "https://por154.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick",
     source: "https://ashkelon.muni.gov.il/he/%D7%A9%D7%99%D7%A8%D7%95%D7%AA%D7%99%D7%9D-%D7%9C%D7%AA%D7%95%D7%A9%D7%91/%D7%90%D7%A8%D7%A0%D7%95%D7%A0%D7%94",
     note: "Ссылка на список всех цифровых форм города — смену жильца выбрать в нём.",
-    water: { names: { he: "מי אשקלון", ru: "Мей Ашкелон", en: "Mei Ashkelon", ar: "مي عسقلان" }, url: "" }
+    water: { names: { he: "מי אשקלון", ru: "Мей Ашкелон", en: "Mei Ashkelon", ar: "مي عسقلان" }, url: "https://www.mei-ashkelon.co.il/" }
   },
   {
     key: "herzliya",
@@ -154,7 +155,7 @@ const municipalities = [
     formUrl: "https://por131.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick&NOSE=1&TAT=1001&SUG=1",
     source: "https://www.herzliya.muni.il/רישום-מחזיקים-בארנונה/",
     note: "Выезд: та же форма с SUG=10.",
-    water: { names: { he: "מי הרצליה", ru: "Мей Герцлия", en: "Mei Herzliya", ar: "مي هرتسليا" }, url: "" }
+    water: { names: { he: "מי הרצליה", ru: "Мей Герцлия", en: "Mei Herzliya", ar: "مي هرتسليا" }, url: "https://www.mey-herz.co.il/" }
   },
   {
     key: "kfar-saba",
@@ -171,7 +172,7 @@ const municipalities = [
     method: "", email: "", formUrl: "",
     source: "https://www.hadera.muni.il/%d7%90%d7%92%d7%a4%d7%99%d7%9d-%d7%95%d7%9e%d7%97%d7%9c%d7%a7%d7%95%d7%aa/%d7%90%d7%92%d7%a3-%d7%94%d7%9b%d7%a1%d7%a4%d7%99%d7%9d/%d7%94%d7%9b%d7%a0%d7%a1%d7%95%d7%aa-%d7%95%d7%90%d7%a8%d7%a0%d7%95%d7%a0%d7%94/",
     note: "Ни формы, ни email для смены жильца; на странице отдела арноны только личные адреса сотрудников — туда не шлём. Уточнить по телефону 04-6303311.",
-    water: { names: { he: "מי חדרה", ru: "Мей Хадера", en: "Mei Hadera", ar: "مي الخضيرة" }, url: "" }
+    water: { names: { he: "מי חדרה", ru: "Мей Хадера", en: "Mei Hadera", ar: "مي الخضيرة" }, url: "https://www.mei-hadera.co.il/" }
   },
   {
     key: "modiin",
@@ -180,7 +181,7 @@ const municipalities = [
     formUrl: "https://por256.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick&NOSE=31&TAT=3012&SUG=47",
     source: "https://www.modiin.muni.il/modiinwebsite/ArticlePage.aspx?PageID=1534_10972",
     note: "",
-    water: { names: { he: "מי מודיעין", ru: "Мей Модиин", en: "Mei Modiin", ar: "مي موديعين" }, url: "" }
+    water: { names: { he: "מי מודיעין", ru: "Мей Модиин", en: "Mei Modiin", ar: "مي موديعين" }, url: "https://mei-modiin.co.il/" }
   },
   {
     key: "raanana",
@@ -189,7 +190,7 @@ const municipalities = [
     formUrl: "https://por176.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick",
     source: "https://www.raanana.muni.il/residents/arnona/propertyexchange/",
     note: "Email указан на странице смены жильца «для связи и согласования услуги». Факс 09-7610484.",
-    water: { names: { he: "מי רעננה", ru: "Мей Раанана", en: "Mei Raanana", ar: "مي رعنانا" }, url: "" }
+    water: { names: { he: "מי רעננה", ru: "Мей Раанана", en: "Mei Raanana", ar: "مي رعنانا" }, url: "https://mei-raanana.co.il/" }
   },
   {
     key: "lod",
@@ -198,7 +199,7 @@ const municipalities = [
     formUrl: "https://forms.mast.co.il/PayersReplacment/index?p=3E9B756E-232A-4BDB-8FC3-D6C2A00BB81A&t=2",
     source: "https://www.lod.muni.il/he/106/",
     note: "",
-    water: { names: { he: "מי לוד", ru: "Мей Лод", en: "Mei Lod", ar: "مي اللد" }, url: "" }
+    water: { names: { he: "מי לוד", ru: "Мей Лод", en: "Mei Lod", ar: "مي اللد" }, url: "https://www.mei-lod.co.il/" }
   },
   {
     key: "ramla",
@@ -207,7 +208,7 @@ const municipalities = [
     formUrl: "https://forms.milgam.co.il/ramle/forms/64/",
     source: "https://ramle.org.il/חילופי-דיירים-בנכס/",
     note: "",
-    water: { names: { he: "ת.מ.ר – תאגיד המים רמלה", ru: "ТаМаР (водная компания Рамле)", en: "TAMAR Ramla Water", ar: "تمار – شركة مياه الرملة" }, url: "" }
+    water: { names: { he: "ת.מ.ר – תאגיד המים רמלה", ru: "ТаМаР (водная компания Рамле)", en: "TAMAR Ramla Water", ar: "تمار – شركة مياه الرملة" }, url: "https://tamarwater.co.il/" }
   },
   {
     key: "nazareth",
@@ -216,7 +217,7 @@ const municipalities = [
     formUrl: "",
     source: "https://www.nazareth.muni.il/arabic/service/arnona/Pages/default.aspx",
     note: "На странице арноны только общий email отдела платежей (Paymnt.d@nazareth.muni.il), смена жильца не упомянута — письма туда не шлём.",
-    water: { names: { he: "הרי נצרת", ru: "Харей Нацрат", en: "Harei Natzrat", ar: "هاري نتسرات" }, url: "" }
+    water: { names: { he: "הרי נצרת", ru: "Харей Нацрат", en: "Harei Natzrat", ar: "هاري نتسرات" }, url: "https://www.hari-nazareth.org.il/he/" }
   },
   {
     key: "karmiel",
@@ -234,7 +235,7 @@ const municipalities = [
     formUrl: "https://tiktak.metropolinet.co.il/#!form/220751975577468",
     source: "https://www.nahariya.muni.il/ארנונה-ומים/",
     note: "Это общая форма обращения по арноне, не специальная.",
-    water: { names: { he: "מי נהריה", ru: "Мей Нагария", en: "Mei Nahariya", ar: "مي نهاريا" }, url: "" }
+    water: { names: { he: "מי נהריה", ru: "Мей Нагария", en: "Mei Nahariya", ar: "مي نهاريا" }, url: "https://mey-nahariya.co.il/" }
   },
   {
     key: "eilat",
@@ -243,7 +244,7 @@ const municipalities = [
     formUrl: "https://por148.cityforms.co.il/ApplicationBuilder/eFormRender.html?code=81030050568A4D0111BB33BA9A6234DE&Process=ProcessOneClick&NOSE=1&TAT=1001&SUG=60",
     source: "https://eilat.muni.il/חילופי-מחזיק-או-בעלים-בנכס/",
     note: "",
-    water: { names: { he: "עין נטפים", ru: "Эйн Нетафим", en: "Ein Netafim", ar: "عين نطافيم" }, url: "" }
+    water: { names: { he: "עין נטפים", ru: "Эйн Нетафим", en: "Ein Netafim", ar: "عين نطافيم" }, url: "https://www.ein-netafim.co.il/" }
   }
 ];
 

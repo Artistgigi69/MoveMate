@@ -150,6 +150,15 @@ export function StatusDetail() {
     return [];
   };
 
+  // One line on what to actually do with the links above.
+  const howTo = s => {
+    const date = transfer.moveDate;
+    if (s.name === "arnona") return t("st.howArnona");
+    if (s.name === "internet") return t("st.howInternet", { date });
+    if (s.name === "gas" && !gasProvider(s.provider)?.url) return t("st.howGasCall", { date });
+    return t("st.howTransfer", { date });
+  };
+
   if (!getToken()) return <Navigate to="/auth" replace />;
 
   return (
@@ -199,6 +208,7 @@ export function StatusDetail() {
                   ) : (
                     <small key={l.text}>{l.text}</small>
                   ))}
+                  {manualPending && <p className="how-hint">{howTo(s)}</p>}
                   {manualPending && (
                     <button
                       className="btn ghost small"

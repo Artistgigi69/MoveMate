@@ -643,6 +643,7 @@ input:focus, select:focus {
 .status-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-weight: 600; }
 .status-name { display: inline-flex; align-items: center; gap: 10px; }
 .form-link { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-size: .92rem; font-weight: 500; padding: 4px 0; }
+.how-hint { margin: 2px 0 0; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--text); font-size: .88rem; line-height: 1.5; }
 
 .route { display: flex; flex-direction: column; gap: 10px; }
 .route-point { display: flex; align-items: center; gap: 10px; font-weight: 500; }
