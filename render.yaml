@@ -23,8 +23,9 @@ services:
         generateValue: true
       - key: SMTP_HOST
         value: smtp-relay.brevo.com
+      # Render's free plan blocks outgoing 25/465/587; Brevo also listens on 2525.
       - key: SMTP_PORT
-        value: "587"
+        value: "2525"
       - key: SMTP_USER
         sync: false
       - key: SMTP_PASS

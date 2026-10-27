@@ -38,7 +38,7 @@
 
 Значения: `SMTP_USER` = **Login** со страницы SMTP (вида `xxxx@smtp-brevo.com`),
 `SMTP_PASS` = SMTP-ключ, `SMTP_FROM` = `MoveMate <подтверждённый адрес>`.
-Сервер и порт (`smtp-relay.brevo.com`, 587) уже прописаны в `render.yaml`.
+Сервер и порт (`smtp-relay.brevo.com`, 2525: бесплатный Render закрывает порт 587) уже прописаны в `render.yaml`.
 
 С адресом на gmail.com часть писем может попадать в спам. Для надёжной доставки
 подключите свой домен в Brevo (**Senders, domains, IPs → Domains**).
