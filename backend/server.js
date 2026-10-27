@@ -25,6 +25,7 @@ const pushRoutes = require("./routes/push");
 const exportRoutes = require("./routes/export");
 const supportRoutes = require("./routes/support");
 const municipalityRoutes = require("./routes/municipalities");
+const adminRoutes = require("./routes/admin");
 const { checkMoveReminders } = require("./services/reminders");
 
 const fileStore = require("./services/fileStore");
@@ -64,6 +65,7 @@ app.use("/push", pushRoutes);
 app.use("/export", exportRoutes);
 app.use("/support", supportRoutes);
 app.use("/municipalities", municipalityRoutes);
+app.use("/admin", adminRoutes);
 
 // ================== TEST ==================
 app.get("/", (req, res) => {

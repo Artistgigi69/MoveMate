@@ -10,9 +10,11 @@ export function StatusList() {
   const { t, errText } = useI18n();
   const [transfers, setTransfers] = useState(null);
   const [error, setError] = useState("");
+  const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
     if (!getToken()) return;
+    api.isAdmin().then(setAdmin);
     api.listTransfers()
       .then(list => setTransfers([...list].reverse()))
       .catch(err => setError(errText(err)));
@@ -54,6 +56,7 @@ export function StatusList() {
       <button className="btn ghost small with-icon" onClick={() => { setToken(null); window.location.href = "/"; }}>
         <Icon name="logout" size={18} className="flip-rtl" />{t("st.logout")}
       </button>
+      {admin && <Link to="/admin" className="btn secondary small">{t("st.adminLink")}</Link>}
       <Link to="/account/delete" className="link-danger">{t("acc.link")}</Link>
     </Screen>
   );
@@ -106,10 +109,26 @@ function TenantShare({ transfer, service }) {
 
 export function StatusDetail() {
   const { id } = useParams();
-  const { t, errText, pick } = useI18n();
+  const { t, lang, errText, pick } = useI18n();
   const [transfer, setTransfer] = useState(null);
   const [cities, setCities] = useState([]);
   const [error, setError] = useState("");
+  // Index of the service whose "do it for me" consent box is open.
+  const [askFor, setAskFor] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  const handOver = async index => {
+    setBusy(true);
+    setError("");
+    try {
+      setTransfer(await api.requestConcierge(id, index, lang));
+      setAskFor(null);
+    } catch (err) {
+      setError(errText(err));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   useEffect(() => {
     if (!getToken()) return;
@@ -186,6 +205,9 @@ export function StatusDetail() {
           <ul className="list">
             {transfer.services.map((s, i) => {
               const manualPending = s.sentVia === "manual" && !s.requestSentAt;
+              // Staff couldn't do it: the user is back to doing it themselves.
+              const handBack = s.sentVia === "concierge" && s.status === "Failed";
+              const showSelf = manualPending || handBack;
               const canAskTenant = (s.meterReading || s.meterPhoto) && s.confirmToken && !s.confirmedByTenant;
               return (
                 <li key={s._id} className="card status-item">
@@ -198,18 +220,36 @@ export function StatusDetail() {
                   </div>
                   {s.sentVia && (
                     <small>
-                      {s.sentVia === "manual" && s.requestSentAt ? t("st.markedSelf") : t(`sentVia.${s.sentVia}`)}
+                      {s.sentVia === "manual" && s.requestSentAt ? t("st.markedSelf")
+                        : s.sentVia === "concierge" && s.status === "Completed" ? t("con.done")
+                        : handBack ? t("con.failed")
+                        : t(`sentVia.${s.sentVia}`)}
                     </small>
                   )}
-                  {manualPending && selfServiceLinks(s).map(l => l.url ? (
+                  {s.conciergeNote && <small className="staff-note">{t("st.staffNote", { note: s.conciergeNote })}</small>}
+                  {showSelf && selfServiceLinks(s).map(l => l.url ? (
                     <a key={l.text} className="form-link" href={l.url} target="_blank" rel="noreferrer">
                       {l.text} <Icon name="external" size={14} />
                     </a>
                   ) : (
                     <small key={l.text}>{l.text}</small>
                   ))}
-                  {manualPending && <p className="how-hint">{howTo(s)}</p>}
-                  {manualPending && (
+                  {showSelf && <p className="how-hint">{howTo(s)}</p>}
+                  {manualPending && askFor !== i && (
+                    <button className="btn secondary small" onClick={() => setAskFor(i)}>{t("con.button")}</button>
+                  )}
+                  {manualPending && askFor === i && (
+                    <div className="concierge-ask">
+                      <p>{t("con.text", { service: t(`service.${s.name}`) })}</p>
+                      <div className="share-actions">
+                        <button className="btn primary small" disabled={busy} onClick={() => handOver(i)}>
+                          {busy ? <Wait /> : t("con.agree")}
+                        </button>
+                        <button className="btn ghost small" disabled={busy} onClick={() => setAskFor(null)}>{t("con.cancel")}</button>
+                      </div>
+                    </div>
+                  )}
+                  {showSelf && (
                     <button
                       className="btn ghost small"
                       onClick={() => api.markServiceSent(id, i).then(setTransfer).catch(err => setError(errText(err)))}

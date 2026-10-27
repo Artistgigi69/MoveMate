@@ -54,8 +54,10 @@ async function request(path, { method = "GET", body, form } = {}) {
     return {};
   });
 
-  if (res.status === 401 || res.status === 403) {
-    if (token) setToken(null);
+  // 401 = the token is bad or its account is gone. 403 means "not allowed"
+  // (e.g. a non-staff account on /admin) and must not sign the user out.
+  if (res.status === 401 && token) {
+    setToken(null);
   }
 
   // A non-JSON success (e.g. an HTML page from a misrouted proxy) must not
@@ -65,6 +67,21 @@ async function request(path, { method = "GET", body, form } = {}) {
   }
 
   return data;
+}
+
+// The lease is private, so it's fetched with the token and handed to the
+// browser as a blob rather than linked directly.
+async function downloadBlob(path) {
+  const res = await fetch(BASE + path, { headers: { Authorization: getToken() || "" } });
+  if (!res.ok) throw keyedError("srv.leaseFailed");
+  const cd = res.headers.get("Content-Disposition") || "";
+  const name = decodeURIComponent(
+    cd.match(/filename\*=UTF-8''([^;]+)/i)?.[1] || cd.match(/filename="([^"]+)"/i)?.[1] || "lease"
+  );
+  const url = URL.createObjectURL(await res.blob());
+  const a = Object.assign(document.createElement("a"), { href: url, download: name });
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 export const api = {
@@ -87,6 +104,8 @@ export const api = {
   submitTransfer: id => request(`/transfers/${id}/submit`, { method: "POST" }),
   confirmInfo: token => request(`/transfers/public/confirm/${token}`),
   confirmReading: token => request(`/transfers/public/confirm/${token}`, { method: "POST" }),
+  requestConcierge: (id, index, lang) =>
+    request(`/transfers/${id}/services/${index}/concierge`, { method: "POST", body: { consent: true, lang } }),
   markServiceSent: (id, index) => request(`/transfers/${id}/services/${index}/send`, { method: "PUT" }),
 
   uploadMeterPhoto: (id, serviceIndex, file, meterReading) => {
@@ -97,20 +116,14 @@ export const api = {
     return request(`/transfers/${id}/meter-photo`, { method: "POST", form });
   },
 
-  // The lease is private, so it's fetched with the token and handed to the
-  // browser as a blob rather than linked directly.
-  downloadLease: async id => {
-    const res = await fetch(`${BASE}/transfers/${id}/lease`, { headers: { Authorization: getToken() || "" } });
-    if (!res.ok) throw keyedError("srv.leaseFailed");
-    const cd = res.headers.get("Content-Disposition") || "";
-    const name = decodeURIComponent(
-      cd.match(/filename\*=UTF-8''([^;]+)/i)?.[1] || cd.match(/filename="([^"]+)"/i)?.[1] || "lease"
-    );
-    const url = URL.createObjectURL(await res.blob());
-    const a = Object.assign(document.createElement("a"), { href: url, download: name });
-    a.click();
-    URL.revokeObjectURL(url);
-  },
+  downloadLease: id => downloadBlob(`/transfers/${id}/lease`),
+
+  // Staff only (ADMIN_EMAILS on the server); others get 403.
+  isAdmin: () => request("/admin/me").then(() => true, () => false),
+  adminRequests: done => request(`/admin/requests${done ? "?done=1" : ""}`),
+  adminUpdate: (id, index, status, note) =>
+    request(`/admin/transfers/${id}/services/${index}`, { method: "PUT", body: { status, note } }),
+  adminLease: id => downloadBlob(`/admin/transfers/${id}/lease`),
 
   uploadLease: (id, file) => {
     const form = new FormData();

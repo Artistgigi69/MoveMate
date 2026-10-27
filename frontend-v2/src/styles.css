@@ -324,7 +324,7 @@ a { color: var(--accent); }
 .field-hint { font-size: .8rem; color: var(--muted); }
 .field-error { font-size: .84rem; color: var(--danger); font-weight: 500; }
 
-input, select {
+input, select, textarea {
   width: 100%;
   min-height: 48px;
   padding: 12px 14px;
@@ -337,8 +337,8 @@ input, select {
   transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
 }
 input::placeholder { color: color-mix(in srgb, var(--muted) 70%, transparent); }
-input:hover, select:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
-input:focus, select:focus {
+input:hover, select:hover, textarea:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+input:focus, select:focus, textarea:focus {
   outline: none;
   background: var(--surface);
   border-color: var(--accent);
@@ -644,6 +644,16 @@ input:focus, select:focus {
 .status-name { display: inline-flex; align-items: center; gap: 10px; }
 .form-link { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-size: .92rem; font-weight: 500; padding: 4px 0; }
 .how-hint { margin: 2px 0 0; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--text); font-size: .88rem; line-height: 1.5; }
+.concierge-ask { display: flex; flex-direction: column; gap: 10px; padding: 12px; border: 1px solid var(--accent); border-radius: var(--radius-sm); }
+.concierge-ask p { margin: 0; font-size: .9rem; line-height: 1.5; }
+.staff-note { padding: 8px 10px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--line); }
+textarea { min-height: 0; resize: vertical; }
+
+/* ================== admin queue ================== */
+.admin-block { display: flex; flex-direction: column; gap: 4px; padding-top: 8px; border-top: 1px solid var(--line); }
+.admin-row { display: flex; align-items: center; gap: 8px; font-size: .9rem; min-width: 0; overflow-wrap: anywhere; }
+.admin-label { color: var(--muted); min-width: 110px; flex-shrink: 0; }
+.icon-btn.small { width: 30px; height: 30px; border-radius: 9px; box-shadow: none; flex-shrink: 0; }
 
 .route { display: flex; flex-direction: column; gap: 10px; }
 .route-point { display: flex; align-items: center; gap: 10px; font-weight: 500; }

@@ -71,6 +71,13 @@ const transferSchema = new mongoose.Schema({
         default: null
     },
 
+    // Site language at the last "do it for me" request — status emails to
+    // the user go out in it.
+    lang: {
+        type: String,
+        default: ""
+    },
+
 
     services: [
         {
@@ -108,6 +115,20 @@ const transferSchema = new mongoose.Schema({
             requestSentAt: {
                 type: Date,
                 default: null
+            },
+
+            // "Do it for me": the user asked MoveMate staff to contact the
+            // provider on their behalf (sentVia "concierge"). conciergeNote
+            // is what staff tell the user back (a reference number, or why
+            // it failed).
+            conciergeRequestedAt: {
+                type: Date,
+                default: null
+            },
+
+            conciergeNote: {
+                type: String,
+                default: ""
             },
 
             // Lets the new tenant confirm the meter reading from a link,

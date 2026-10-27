@@ -9,6 +9,8 @@ const { privateUpload } = require("../middleware/upload");
 const fileStore = require("../services/fileStore");
 const mailer = require("../services/mailer");
 const { buildArnonaEmail } = require("../services/arnonaEmail");
+const { buildConciergeRequest } = require("../services/conciergeEmail");
+const { adminEmails } = require("../middleware/admin");
 const { findMunicipality } = require("../data/municipalities");
 const { personError } = require("../utils/validate");
 
@@ -492,6 +494,12 @@ router.put("/:id/services/:index/send", verifyToken, async (req, res) => {
 
     service.requestSentAt = new Date();
 
+    // Staff couldn't do it and the user then did it themselves.
+    if (service.sentVia === "concierge" && service.status === "Failed") {
+      service.sentVia = "manual";
+      service.status = "Processing";
+    }
+
     if (service.status === "Pending") {
       service.status = "Processing";
     }
@@ -505,6 +513,75 @@ router.put("/:id/services/:index/send", verifyToken, async (req, res) => {
   }
 });
 
+
+
+
+// ================== "DO IT FOR ME" ==================
+// The user hands a service they'd otherwise do themselves to MoveMate staff.
+// `consent: true` is the explicit authorisation to contact the provider on
+// their behalf with the request's data.
+router.post("/:id/services/:index/concierge", verifyToken, async (req, res) => {
+  try {
+
+    const { consent, lang } = req.body || {};
+
+    if (consent !== true) {
+      return res.status(400).json({ message: "Consent is required" });
+    }
+
+    const transfer = await Transfer.findOne({
+      _id: req.params.id,
+      userId: req.userId
+    });
+
+    if (!transfer) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    const service = transfer.services[req.params.index];
+
+    if (!service) {
+      return res.status(400).json({ message: "Invalid service" });
+    }
+
+    // Only what's still waiting on the user; already-sent ones are done.
+    if (service.sentVia !== "manual" || service.requestSentAt) {
+      return res.status(400).json({ message: "Already requested" });
+    }
+
+    service.sentVia = "concierge";
+    service.conciergeRequestedAt = new Date();
+    service.requestSentAt = service.conciergeRequestedAt;
+    service.status = "Processing";
+
+    if (["ru", "he", "ar", "en"].includes(lang)) {
+      transfer.lang = lang;
+    }
+
+    await transfer.save();
+
+    // Tell staff. Failure here must not undo the request — it's in the queue.
+    const staff = adminEmails();
+    if (staff.length && mailer.isConfigured()) {
+      const frontend = (process.env.FRONTEND_URL || "http://localhost:5174").replace(/\/+$/, "");
+      mailer.sendMail({
+        to: staff.join(","),
+        ...buildConciergeRequest({
+          service: service.name,
+          oldCity: transfer.oldCity,
+          newCity: transfer.newCity,
+          moveDate: transfer.moveDate,
+          url: `${frontend}/admin`
+        })
+      }).catch(err => console.log("CONCIERGE STAFF EMAIL ERROR:", err.message));
+    }
+
+    res.json(transfer);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 
 

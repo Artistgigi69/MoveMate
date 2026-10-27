@@ -15,6 +15,7 @@ import Confirm from "./screens/Confirm";
 import { Forgot, Reset } from "./screens/Reset";
 import Legal from "./screens/Legal";
 import { DeleteAccount } from "./screens/Account";
+import Admin from "./screens/Admin";
 
 import { api } from "./api";
 
@@ -42,6 +43,7 @@ createRoot(document.getElementById("root")).render(
             <Route path="/privacy" element={<Legal doc="privacy" />} />
             <Route path="/terms" element={<Legal doc="terms" />} />
             <Route path="/account/delete" element={<DeleteAccount />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </DraftProvider>

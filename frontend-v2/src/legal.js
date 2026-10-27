@@ -1,7 +1,7 @@
 // Privacy policy and terms of use. Kept apart from i18n.jsx because these
 // are long documents, not UI strings. Update UPDATED when the text changes.
 
-export const UPDATED = "2026-10-26";
+export const UPDATED = "2026-10-27";
 export const CONTACT = "2donutchannel@gmail.com";
 
 export const LEGAL = {
@@ -22,6 +22,7 @@ export const LEGAL = {
       ["Кому передаются данные", [
         "Муниципалитетам: письмо по арноне с вашими данными, данными нового жильца, показаниями, фото счётчиков и договором — только для городов, куда мы отправляем письма, и только после вашего согласия.",
         "Новому жильцу по ссылке, которой вы с ним поделились: адрес, ваше имя, услуга, показания и фото счётчика.",
+        "Компаниям (Электрической компании, водной и газовой компании, интернет-провайдеру, муниципалитету), если вы нажали «Оформите за меня» для этой услуги: сотрудник MoveMate видит данные вашей заявки (имя, теудат зеут, телефон, email, адреса, показания, фото счётчика, договор, данные нового жильца) и передаёт компании то, что ей нужно для переоформления.",
         "Поставщикам, на которых работает сервис: MongoDB Atlas (база данных), Render (сервер), Vercel (сайт), Brevo (отправка писем). Их серверы могут находиться за пределами Израиля."
       ]],
       ["Хранение и защита", [
@@ -51,6 +52,7 @@ export const LEGAL = {
       ["למי המידע מועבר", [
         "לעיריות: מכתב ארנונה עם הפרטים שלכם, פרטי הדייר החדש, הקריאות, צילומי המונים והחוזה — רק לערים שאליהן אנו שולחים מכתבים ורק לאחר הסכמתכם.",
         "לדייר החדש, דרך קישור ששיתפתם איתו: הכתובת, שמכם, השירות, הקריאה וצילום המונה.",
+        "לחברות (חברת החשמל, תאגיד המים, חברת הגז, ספק האינטרנט, העירייה), אם לחצתם \"תטפלו בזה בשבילי\" עבור השירות: נציג MoveMate רואה את פרטי הבקשה (שם, תעודת זהות, טלפון, דוא\"ל, כתובות, קריאות, צילום מונה, חוזה, פרטי הדייר החדש) ומוסר לחברה את מה שנדרש להעברה.",
         "לספקים שעליהם פועל השירות: MongoDB Atlas (מסד נתונים), Render (שרת), Vercel (אתר), Brevo (שליחת דוא\"ל). השרתים שלהם עשויים להימצא מחוץ לישראל."
       ]],
       ["שמירה ואבטחה", [
@@ -80,6 +82,7 @@ export const LEGAL = {
       ["لمن تُنقل البيانات", [
         "إلى البلديات: رسالة الأرنونا مع بياناتك وبيانات المستأجر الجديد والقراءات وصور العدادات والعقد — فقط للمدن التي نرسل إليها رسائل وبعد موافقتك.",
         "إلى المستأجر الجديد عبر رابط شاركته معه: العنوان واسمك والخدمة والقراءة وصورة العداد.",
+        "إلى الشركات (شركة الكهرباء، شركة المياه، شركة الغاز، مزوّد الإنترنت، البلدية) إذا ضغطت «نفّذوها نيابةً عني» لهذه الخدمة: يطّلع موظف MoveMate على بيانات طلبك (الاسم، رقم الهوية، الهاتف، البريد، العناوين، القراءات، صورة العداد، العقد، بيانات المستأجر الجديد) ويُرسل إلى الشركة ما تحتاجه للنقل.",
         "إلى مزوّدي الخدمة الذين يعمل عليهم الموقع: MongoDB Atlas (قاعدة البيانات)، Render (الخادم)، Vercel (الموقع)، Brevo (إرسال البريد). قد تكون خوادمهم خارج إسرائيل."
       ]],
       ["الحفظ والحماية", [
@@ -109,6 +112,7 @@ export const LEGAL = {
       ["Who receives it", [
         "Municipalities: the arnona letter with your details, the new tenant's details, readings, meter photos and lease — only for cities we email, and only after your consent.",
         "The new tenant, through a link you shared: the address, your first name, the service, the reading and the meter photo.",
+        "Companies (the Electric Corporation, water and gas companies, internet provider, municipality), if you tapped \"Do it for me\" for that service: a MoveMate team member sees your request's details (name, ID number, phone, email, addresses, readings, meter photo, lease, new tenant's details) and gives the company what it needs for the transfer.",
         "Providers the service runs on: MongoDB Atlas (database), Render (server), Vercel (website), Brevo (email). Their servers may be outside Israel."
       ]],
       ["Storage and security", [
@@ -128,7 +132,8 @@ export const LEGAL = {
     ru: [
       ["Что делает сервис", [
         "MoveMate помогает собрать данные для переоформления коммунальных услуг при переезде. Письма по арноне мы отправляем в муниципалитеты, для которых у нас есть официальный email. Для остальных услуг и городов мы даём ссылки на официальные сайты, где вы оформляете всё сами.",
-        "MoveMate не является государственной службой и не связан с муниципалитетами, Электрической компанией, водными и газовыми компаниями."
+        "MoveMate не является государственной службой и не связан с муниципалитетами, Электрической компанией, водными и газовыми компаниями.",
+        "Если вы нажимаете «Оформите за меня», вы поручаете MoveMate связаться с компанией от вашего имени и подать заявку на переоформление по данным заявки. Мы делаем это вручную и стараемся уложиться в несколько рабочих дней, но не гарантируем, что компания примет заявку. О результате мы сообщим по email; если не получится, вам нужно будет сделать это самостоятельно."
       ]],
       ["Ваши обязанности", [
         "Вы указываете верные данные и имеете право передать данные других людей, которые вводите (например, нового жильца). Вы поручаете MoveMate отправить письма в муниципалитеты от вашего имени вместе с приложенными документами."
@@ -150,7 +155,8 @@ export const LEGAL = {
     he: [
       ["מה השירות עושה", [
         "MoveMate עוזר לרכז את הפרטים להעברת חשבונות במעבר דירה. מכתבי ארנונה אנו שולחים לעיריות שיש לנו עבורן כתובת דוא\"ל רשמית. לשאר השירותים והערים אנו נותנים קישורים לאתרים הרשמיים, שבהם אתם מבצעים את ההעברה בעצמכם.",
-        "MoveMate אינו גוף ממשלתי ואינו קשור לעיריות, לחברת החשמל או לחברות המים והגז."
+        "MoveMate אינו גוף ממשלתי ואינו קשור לעיריות, לחברת החשמל או לחברות המים והגז.",
+        "אם לחצתם \"תטפלו בזה בשבילי\", אתם מסמיכים את MoveMate לפנות לחברה בשמכם ולהגיש בקשת העברה לפי פרטי הבקשה. אנו עושים זאת ידנית ומשתדלים לסיים בתוך כמה ימי עבודה, אך איננו מתחייבים שהחברה תקבל את הבקשה. נעדכן אתכם בדוא\"ל; אם לא נצליח, תצטרכו לעשות זאת בעצמכם."
       ]],
       ["האחריות שלכם", [
         "אתם מוסרים פרטים נכונים ורשאים למסור את פרטי האנשים האחרים שאתם מזינים (למשל הדייר החדש). אתם מסמיכים את MoveMate לשלוח בשמכם מכתבים לעיריות יחד עם המסמכים המצורפים."
@@ -172,7 +178,8 @@ export const LEGAL = {
     ar: [
       ["ماذا تقدّم الخدمة", [
         "تساعد MoveMate على جمع البيانات اللازمة لنقل حسابات الخدمات عند الانتقال. نرسل رسائل الأرنونا إلى البلديات التي لدينا بريدها الرسمي. ولباقي الخدمات والمدن نعطيك روابط للمواقع الرسمية حيث تُكمل الإجراء بنفسك.",
-        "MoveMate ليست جهة حكومية ولا ترتبط بالبلديات أو شركة الكهرباء أو شركات المياه والغاز."
+        "MoveMate ليست جهة حكومية ولا ترتبط بالبلديات أو شركة الكهرباء أو شركات المياه والغاز.",
+        "إذا ضغطت «نفّذوها نيابةً عني» فأنت تفوّض MoveMate بالتواصل مع الشركة باسمك وتقديم طلب النقل وفق بيانات الطلب. نقوم بذلك يدويًا ونحاول إنهاءه خلال بضعة أيام عمل، لكننا لا نضمن قبول الشركة للطلب. سنبلغك بالنتيجة عبر البريد؛ وإن لم ننجح فعليك القيام بذلك بنفسك."
       ]],
       ["مسؤوليتك", [
         "تُدخل بيانات صحيحة ويحق لك مشاركة بيانات الأشخاص الآخرين الذين تُدخلهم (مثل المستأجر الجديد). وتفوّض MoveMate بإرسال رسائل إلى البلديات باسمك مع المستندات المرفقة."
@@ -194,7 +201,8 @@ export const LEGAL = {
     en: [
       ["What the service does", [
         "MoveMate helps you gather what's needed to transfer utilities when you move. We email arnona letters to municipalities for which we have an official email address. For other services and cities we give you links to the official sites, where you complete the transfer yourself.",
-        "MoveMate is not a government body and is not affiliated with municipalities, the Israel Electric Corporation, or water and gas companies."
+        "MoveMate is not a government body and is not affiliated with municipalities, the Israel Electric Corporation, or water and gas companies.",
+        "If you tap \"Do it for me\", you authorise MoveMate to contact the company on your behalf and submit the transfer request using your request's details. We do this by hand and aim to finish within a few working days, but we can't guarantee the company will accept it. We'll email you the result; if it doesn't work out, you'll need to do it yourself."
       ]],
       ["Your responsibilities", [
         "You provide correct details and are entitled to share the details of other people you enter (such as the new tenant). You authorise MoveMate to send letters to municipalities on your behalf together with the attached documents."

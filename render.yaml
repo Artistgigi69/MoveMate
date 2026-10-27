@@ -35,3 +35,6 @@ services:
       # Where server-error alerts go (services/alerts.js).
       - key: ALERT_EMAIL
         value: 2donutchannel@gmail.com
+      # Staff who see /admin and get "do it for me" requests (comma separated).
+      - key: ADMIN_EMAILS
+        value: 2donutchannel@gmail.com
