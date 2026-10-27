@@ -19,6 +19,37 @@ export function Wait({ label }) {
   return slow ? t("common.waking") : label || t("auth.wait");
 }
 
+const THEME_KEY = "mm2_theme";
+
+// Light/dark switch. Until the user picks, the site follows the system
+// setting; the choice is stored and applied before first paint by the
+// inline script in index.html (no flash of the wrong theme).
+export function ThemeSwitch() {
+  const { t } = useI18n();
+  const systemDark = () => window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+  const [dark, setDark] = useState(() => {
+    const set = document.documentElement.dataset.theme;
+    return set ? set === "dark" : systemDark();
+  });
+
+  const toggle = () => {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.dataset.theme = next ? "dark" : "light";
+    try {
+      localStorage.setItem(THEME_KEY, next ? "dark" : "light");
+    } catch {
+      // Not saved — the choice lasts until reload.
+    }
+  };
+
+  return (
+    <button className="icon-btn" onClick={toggle} aria-label={t(dark ? "theme.light" : "theme.dark")} title={t(dark ? "theme.light" : "theme.dark")}>
+      <Icon name={dark ? "sun" : "moon"} size={18} />
+    </button>
+  );
+}
+
 export function LanguageSwitch() {
   const { lang, setLang, t } = useI18n();
 
@@ -85,6 +116,7 @@ export function Screen({ step, title, lead, back, children, footer, hideNav, wid
                 <span>{t("common.myRequests")}</span>
               </Link>
             )}
+            <ThemeSwitch />
             <LanguageSwitch />
           </span>
         </div>

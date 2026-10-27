@@ -46,8 +46,10 @@
   color-scheme: light;
 }
 
+/* Dark theme: follows the system unless the user picked one with the switch
+   in the header (data-theme on <html>, see ThemeSwitch in ui.jsx). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0a1210;
     --surface: #121d1b;
     --surface-2: #172422;
@@ -79,6 +81,39 @@
 
     color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0a1210;
+  --surface: #121d1b;
+  --surface-2: #172422;
+  --glass: rgba(14, 24, 22, .72);
+  --text: #e9f1ef;
+  --muted: #96a7a3;
+  --line: #243331;
+  --accent: #2cc7a6;
+  --accent-2: #5fe0c2;
+  --accent-ink: #04201a;
+  --accent-soft: #123a33;
+  --danger: #ff8a7f;
+  --warn: #f0c060;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -12px rgba(0, 0, 0, .6);
+  --shadow-lg: 0 2px 4px rgba(0, 0, 0, .3), 0 24px 48px -20px rgba(0, 0, 0, .7);
+  --shadow-ink: #000;
+
+  --blob-1: rgba(44, 199, 166, .20);
+  --blob-2: rgba(255, 170, 70, .10);
+  --blob-3: rgba(110, 130, 255, .14);
+  --dots: rgba(150, 220, 205, .07);
+  --orb-hi: rgba(160, 255, 230, .10);
+
+  --wall-l1: #dfe9e6;
+  --wall-l2: #b9cbc6;
+  --wall-r1: #c8d8d4;
+  --wall-r2: #97afa9;
+  --glass-win: #6cc0f0;
+
+  color-scheme: dark;
 }
 
 /* ================== base ================== */
@@ -635,9 +670,11 @@ input:focus, select:focus, textarea:focus {
 .pill.failed, .pill.rejected { background: color-mix(in srgb, var(--danger) 12%, var(--surface)); color: var(--danger); }
 
 @media (prefers-color-scheme: dark) {
-  .pill { color: #f0c060; }
-  .pill.processing { color: #7cb8ff; }
+  :root:not([data-theme="light"]) .pill { color: #f0c060; }
+  :root:not([data-theme="light"]) .pill.processing { color: #7cb8ff; }
 }
+:root[data-theme="dark"] .pill { color: #f0c060; }
+:root[data-theme="dark"] .pill.processing { color: #7cb8ff; }
 
 .status-item { display: flex; flex-direction: column; gap: 6px; }
 .status-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-weight: 600; }

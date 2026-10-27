@@ -83,7 +83,14 @@ const PATHS = {
   ),
   chat: <path d="M4 20l1.4-4A8 8 0 1 1 8 18.6L4 20z" />,
   phone: <path d="M6.5 4h3l1.5 4-2 1.3a11 11 0 0 0 5.7 5.7l1.3-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 6a2 2 0 0 1 2-2z" />,
-  mail: <path d="M4 6h16v12H4zM4 7l8 6 8-6" />
+  mail: <path d="M4 6h16v12H4zM4 7l8 6 8-6" />,
+  sun: (
+    <>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4" />
+    </>
+  ),
+  moon: <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
 };
 
 export function Icon({ name, size = 20, className = "", strokeWidth = 1.8 }) {
