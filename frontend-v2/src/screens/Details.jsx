@@ -87,6 +87,21 @@ export default function Details() {
         </Section>
       )}
 
+      {draft.services.length > 0 && (
+        <Section icon="file" title={t("det.accounts")} note={t("det.accountsNote")}>
+          {SERVICES.filter(s => draft.services.includes(s.key)).map(s => (
+            <Field key={s.key} label={t(`acct.${s.key}`)} hint={t(`acct.${s.key}Hint`)}>
+              <input
+                dir="ltr"
+                maxLength={60}
+                value={draft.accounts?.[s.key] || ""}
+                onChange={e => update({ accounts: { ...draft.accounts, [s.key]: e.target.value } })}
+              />
+            </Field>
+          ))}
+        </Section>
+      )}
+
       <Section icon="users" title={t("det.tenant")} note={t("det.tenantNote")}>
         <PersonFields
           value={draft.newTenant}

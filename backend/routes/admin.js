@@ -57,6 +57,7 @@ router.get("/requests", async (req, res) => {
             status: s.status,
             provider: s.provider,
             meterReading: s.meterReading,
+            accountNumber: s.accountNumber,
             meterPhoto: s.meterPhoto,
             confirmedByTenant: s.confirmedByTenant,
             conciergeRequestedAt: s.conciergeRequestedAt,
@@ -70,6 +71,8 @@ router.get("/requests", async (req, res) => {
           applicant: t.applicant,
           newTenant: t.newTenant,
           leaseFileName: t.leaseFile ? t.leaseFileName || "lease" : "",
+          idFileName: t.idFile ? t.idFileName || "id" : "",
+          authorizedAt: t.authorizedAt,
           account: owner ? { email: owner.email, name: owner.username } : null
         });
       });
@@ -140,6 +143,44 @@ router.put("/transfers/:id/services/:index", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+
+// ================== ONE TRANSFER (for the power of attorney page) ==================
+router.get("/transfers/:id", async (req, res) => {
+  try {
+    const t = await Transfer.findById(req.params.id)
+      .select("applicant oldAddress newAddress oldCity newCity moveDate authorizedAt signatureFile services.name")
+      .lean();
+    if (!t) return res.status(404).json({ message: "Not found" });
+    res.json({ ...t, hasSignature: Boolean(t.signatureFile), signatureFile: undefined });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+// ================== ID COPY AND SIGNATURE (staff copies) ==================
+for (const [route, field, nameField, fallback] of [
+  ["id-file", "idFile", "idFileName", "id"],
+  ["signature", "signatureFile", null, "signature"]
+]) {
+  router.get(`/transfers/:id/${route}`, async (req, res) => {
+    try {
+      const transfer = await Transfer.findById(req.params.id);
+      if (!transfer || !transfer[field]) {
+        return res.status(404).json({ message: "Not found" });
+      }
+      await fileStore.sendFile(
+        res,
+        "private",
+        transfer[field],
+        (nameField && transfer[nameField]) || fallback + path.extname(transfer[field])
+      );
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+}
 
 
 // ================== LEASE (staff copy) ==================

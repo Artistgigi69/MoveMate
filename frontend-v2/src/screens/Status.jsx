@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { Screen, Wait } from "../ui";
+import { FilePick, Screen, SignaturePad, Wait } from "../ui";
 import { Icon } from "../icons";
 import { useI18n } from "../i18n";
 import { api, getToken, setToken } from "../api";
@@ -116,15 +116,32 @@ export function StatusDetail() {
   // Index of the service whose "do it for me" consent box is open.
   const [askFor, setAskFor] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [askError, setAskError] = useState("");
+  // Power of attorney, asked once per transfer before the first hand-over.
+  const [idFile, setIdFile] = useState(null);
+  const [signature, setSignature] = useState(null);
+
+  const openAsk = index => {
+    setAskFor(index);
+    setAskError("");
+  };
 
   const handOver = async index => {
+    setAskError("");
+    const needAuth = !transfer.authorizedAt;
+    if (needAuth && !idFile) return setAskError(t("poa.needId"));
+    if (needAuth && !signature) return setAskError(t("poa.needSign"));
+
     setBusy(true);
-    setError("");
     try {
+      if (needAuth) {
+        const png = await new Promise(resolve => signature.toBlob(resolve, "image/png"));
+        setTransfer(await api.authorize(id, idFile, png));
+      }
       setTransfer(await api.requestConcierge(id, index, lang));
       setAskFor(null);
     } catch (err) {
-      setError(errText(err));
+      setAskError(errText(err));
     } finally {
       setBusy(false);
     }
@@ -236,11 +253,23 @@ export function StatusDetail() {
                   ))}
                   {showSelf && <p className="how-hint">{howTo(s)}</p>}
                   {manualPending && askFor !== i && (
-                    <button className="btn secondary small" onClick={() => setAskFor(i)}>{t("con.button")}</button>
+                    <button className="btn secondary small" onClick={() => openAsk(i)}>{t("con.button")}</button>
                   )}
                   {manualPending && askFor === i && (
                     <div className="concierge-ask">
                       <p>{t("con.text", { service: t(`service.${s.name}`) })}</p>
+                      {transfer.authorizedAt ? (
+                        <small className="ok-line"><Icon name="check" size={14} strokeWidth={2.6} />{t("poa.done")}</small>
+                      ) : (
+                        <>
+                          <p>{t("poa.needed")}</p>
+                          <FilePick label={t("poa.idLabel")} accept="image/*,application/pdf" icon="file" file={idFile} onPick={setIdFile} />
+                          <small>{t("poa.sign")}</small>
+                          <SignaturePad onChange={setSignature} />
+                          <small>{t("poa.text")}</small>
+                        </>
+                      )}
+                      {askError && <p className="note error">{askError}</p>}
                       <div className="share-actions">
                         <button className="btn primary small" disabled={busy} onClick={() => handOver(i)}>
                           {busy ? <Wait /> : t("con.agree")}
@@ -257,6 +286,7 @@ export function StatusDetail() {
                       {t("st.iContacted")}
                     </button>
                   )}
+                  {s.accountNumber && <small>{t("st.account", { value: s.accountNumber })}</small>}
                   {s.meterReading && <small>{t("st.reading", { value: s.meterReading })}</small>}
                   {s.confirmedByTenant && <small className="ok-line"><Icon name="check" size={14} strokeWidth={2.6} />{t("st.tenantConfirmed")}</small>}
                   {canAskTenant && <TenantShare transfer={transfer} service={s} />}

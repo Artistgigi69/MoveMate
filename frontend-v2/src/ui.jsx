@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LANGS, useI18n } from "./i18n";
 import { Icon, Logo } from "./icons";
@@ -177,5 +177,75 @@ export function FilePick({ label, file, onPick, accept, capture, icon = "file" }
         <small>{file ? file.name : t("common.tapToChoose")}</small>
       </span>
     </label>
+  );
+}
+
+// Finger/mouse signature on a white "paper" canvas. Calls onChange(canvas)
+// after each stroke and onChange(null) when cleared; the parent turns the
+// canvas into a PNG with canvas.toBlob.
+export function SignaturePad({ onChange }) {
+  const { t } = useI18n();
+  const canvasRef = useRef(null);
+  const drawing = useRef(false);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ratio = window.devicePixelRatio || 1;
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(ratio, ratio);
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#10201c";
+  }, []);
+
+  const point = e => {
+    const r = canvasRef.current.getBoundingClientRect();
+    return [e.clientX - r.left, e.clientY - r.top];
+  };
+
+  const down = e => {
+    e.preventDefault();
+    canvasRef.current.setPointerCapture(e.pointerId);
+    drawing.current = true;
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.beginPath();
+    ctx.moveTo(...point(e));
+  };
+
+  const move = e => {
+    if (!drawing.current) return;
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.lineTo(...point(e));
+    ctx.stroke();
+  };
+
+  const up = () => {
+    if (!drawing.current) return;
+    drawing.current = false;
+    onChange(canvasRef.current);
+  };
+
+  const clear = () => {
+    const canvas = canvasRef.current;
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    onChange(null);
+  };
+
+  return (
+    <div className="signature">
+      <canvas
+        ref={canvasRef}
+        className="signature-pad"
+        onPointerDown={down}
+        onPointerMove={move}
+        onPointerUp={up}
+        onPointerLeave={up}
+        aria-label={t("poa.sign")}
+      />
+      <button type="button" className="btn ghost small" onClick={clear}>{t("poa.clear")}</button>
+    </div>
   );
 }

@@ -104,6 +104,12 @@ export const api = {
   submitTransfer: id => request(`/transfers/${id}/submit`, { method: "POST" }),
   confirmInfo: token => request(`/transfers/public/confirm/${token}`),
   confirmReading: token => request(`/transfers/public/confirm/${token}`, { method: "POST" }),
+  authorize: (id, idFile, signature) => {
+    const form = new FormData();
+    form.append("idFile", idFile);
+    form.append("signature", signature, "signature.png");
+    return request(`/transfers/${id}/authorization`, { method: "POST", form });
+  },
   requestConcierge: (id, index, lang) =>
     request(`/transfers/${id}/services/${index}/concierge`, { method: "POST", body: { consent: true, lang } }),
   markServiceSent: (id, index) => request(`/transfers/${id}/services/${index}/send`, { method: "PUT" }),
@@ -124,6 +130,14 @@ export const api = {
   adminUpdate: (id, index, status, note) =>
     request(`/admin/transfers/${id}/services/${index}`, { method: "PUT", body: { status, note } }),
   adminLease: id => downloadBlob(`/admin/transfers/${id}/lease`),
+  adminIdFile: id => downloadBlob(`/admin/transfers/${id}/id-file`),
+  adminTransfer: id => request(`/admin/transfers/${id}`),
+  // Private image as an object URL for <img> (the signature on the PoA).
+  adminImageUrl: async path => {
+    const res = await fetch(BASE + path, { headers: { Authorization: getToken() || "" } });
+    if (!res.ok) throw keyedError("srv.generic");
+    return URL.createObjectURL(await res.blob());
+  },
 
   uploadLease: (id, file) => {
     const form = new FormData();

@@ -432,6 +432,8 @@ router.delete("/", verifyToken, async (req, res) => {
 
     for (const transfer of transfers) {
       await fileStore.removeFile("private", transfer.leaseFile);
+      await fileStore.removeFile("private", transfer.idFile);
+      await fileStore.removeFile("private", transfer.signatureFile);
       for (const service of transfer.services) {
         await fileStore.removeFile("public", service.meterPhoto);
       }

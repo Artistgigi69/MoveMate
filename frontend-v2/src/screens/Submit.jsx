@@ -53,7 +53,8 @@ export default function Submit() {
           services: draft.services.map(name => ({
             name,
             meterReading: draft.readings[name] || "",
-            provider: name === "gas" ? draft.gasProvider : ""
+            provider: name === "gas" ? draft.gasProvider : "",
+            accountNumber: draft.accounts?.[name] || ""
           }))
         });
         id = created._id;
@@ -109,8 +110,11 @@ export default function Submit() {
           <li key={name}>
             <span>{service(name)}</span>
             <small>
-              {draft.readings[name] ? t("sub.reading", { value: draft.readings[name] }) : ""}
-              {files.photos[name] ? ` · ${t("sub.photo")}` : ""}
+              {[
+                draft.readings[name] && t("sub.reading", { value: draft.readings[name] }),
+                files.photos[name] && t("sub.photo"),
+                draft.accounts?.[name] && t("st.account", { value: draft.accounts[name] })
+              ].filter(Boolean).join(" · ")}
             </small>
           </li>
         ))}

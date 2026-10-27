@@ -71,6 +71,29 @@ const transferSchema = new mongoose.Schema({
         default: null
     },
 
+    // "Do it for me" paperwork, given once per transfer: an ID copy and the
+    // user's signature on the power of attorney (both in private_uploads).
+    // authorizedAt is when they signed.
+    idFile: {
+        type: String,
+        default: ""
+    },
+
+    idFileName: {
+        type: String,
+        default: ""
+    },
+
+    signatureFile: {
+        type: String,
+        default: ""
+    },
+
+    authorizedAt: {
+        type: Date,
+        default: null
+    },
+
     // Site language at the last "do it for me" request — status emails to
     // the user go out in it.
     lang: {
@@ -94,6 +117,13 @@ const transferSchema = new mongoose.Schema({
             },
 
             meterReading: {
+                type: String,
+                default: ""
+            },
+
+            // The user's number with that provider (IEC contract, water
+            // consumer, arnona property…), from their last bill. Optional.
+            accountNumber: {
                 type: String,
                 default: ""
             },

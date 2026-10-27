@@ -104,6 +104,7 @@ function Request({ item, cities, onSaved }) {
         <Row label="Куда" value={`${item.newAddress}, ${cityName(item.newCity)}`} copy />
         <Row label="Дата" value={item.moveDate} copy />
         <Row label="Показания" value={s.meterReading} copy />
+        <Row label="Номер счёта" value={s.accountNumber} copy />
         <Row label="Газовая компания" value={s.provider} />
         {s.confirmedByTenant && <small className="ok-line"><Icon name="check" size={14} />Жилец подтвердил показания</small>}
         {s.meterPhoto && <a className="form-link" href={uploadUrl(s.meterPhoto)} target="_blank" rel="noreferrer">Фото счётчика <Icon name="external" size={14} /></a>}
@@ -111,6 +112,27 @@ function Request({ item, cities, onSaved }) {
           <button className="btn secondary small with-icon" onClick={() => api.adminLease(item.transferId).catch(e => setMsg(e.message))}>
             <Icon name="download" size={16} />Договор ({item.leaseFileName})
           </button>
+        )}
+      </div>
+
+      <div className="admin-block">
+        <strong>Доверенность</strong>
+        {item.authorizedAt ? (
+          <>
+            <small className="ok-line"><Icon name="check" size={14} />Подписана {new Date(item.authorizedAt).toLocaleString("ru-RU")}</small>
+            <div className="share-actions">
+              <a className="btn secondary small with-icon" href={`/admin/poa/${item.transferId}`} target="_blank" rel="noreferrer">
+                <Icon name="file" size={16} />Открыть и распечатать
+              </a>
+              {item.idFileName && (
+                <button className="btn secondary small with-icon" onClick={() => api.adminIdFile(item.transferId).catch(e => setMsg(e.message))}>
+                  <Icon name="download" size={16} />Теудат зеут
+                </button>
+              )}
+            </div>
+          </>
+        ) : (
+          <small>Нет (заявка старого формата) — попросите у клиента копию теудат зеута и подпись.</small>
         )}
       </div>
 

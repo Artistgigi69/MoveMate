@@ -26,6 +26,7 @@ const initialDraft = {
   moveDate: "",
   services: [],
   readings: {},
+  accounts: {},
   gasProvider: "",
   applicant: emptyPerson,
   newTenant: emptyPerson

@@ -74,6 +74,7 @@ router.post("/", verifyToken, async (req, res) => {
         name: typeof s === "string" ? s : s.name,
         meterReading: typeof s === "string" ? "" : (s.meterReading || ""),
         provider: typeof s === "string" ? "" : (s.provider || ""),
+        accountNumber: typeof s === "string" ? "" : String(s.accountNumber || "").trim().slice(0, 60),
         status: "Pending",
         confirmToken: crypto.randomBytes(16).toString("hex")
       })),
@@ -516,6 +517,59 @@ router.put("/:id/services/:index/send", verifyToken, async (req, res) => {
 
 
 
+// ================== POWER OF ATTORNEY ==================
+// ID copy + signature for "do it for me". Providers won't act on a third
+// party's request without them. Replaces any earlier pair.
+router.post(
+  "/:id/authorization",
+  verifyToken,
+  privateUpload.fields([{ name: "idFile", maxCount: 1 }, { name: "signature", maxCount: 1 }]),
+  async (req, res) => {
+    try {
+
+      const idFile = req.files && req.files.idFile && req.files.idFile[0];
+      const signature = req.files && req.files.signature && req.files.signature[0];
+
+      const transfer = await Transfer.findOne({
+        _id: req.params.id,
+        userId: req.userId
+      });
+
+      // Uploads already landed in storage; drop them if we won't keep them.
+      const discard = () => Promise.all(
+        [idFile, signature].filter(Boolean).map(f => fileStore.removeFile("private", f.filename))
+      );
+
+      if (!transfer) {
+        await discard();
+        return res.status(404).json({ message: "Not found" });
+      }
+
+      if (!idFile || !signature || !signature.mimetype.startsWith("image/")) {
+        await discard();
+        return res.status(400).json({ message: "ID copy and signature are required" });
+      }
+
+      await fileStore.removeFile("private", transfer.idFile);
+      await fileStore.removeFile("private", transfer.signatureFile);
+
+      transfer.idFile = idFile.filename;
+      transfer.idFileName = idFile.originalname;
+      transfer.signatureFile = signature.filename;
+      transfer.authorizedAt = new Date();
+
+      await transfer.save();
+
+      res.json(transfer);
+
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
+
+
 // ================== "DO IT FOR ME" ==================
 // The user hands a service they'd otherwise do themselves to MoveMate staff.
 // `consent: true` is the explicit authorisation to contact the provider on
@@ -542,6 +596,10 @@ router.post("/:id/services/:index/concierge", verifyToken, async (req, res) => {
 
     if (!service) {
       return res.status(400).json({ message: "Invalid service" });
+    }
+
+    if (!transfer.authorizedAt) {
+      return res.status(400).json({ message: "Authorization required" });
     }
 
     // Only what's still waiting on the user; already-sent ones are done.
