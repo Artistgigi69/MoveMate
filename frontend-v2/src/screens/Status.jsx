@@ -6,6 +6,7 @@ import { useI18n } from "../i18n";
 import { api, getToken, setToken } from "../api";
 import { ELECTRICITY, gasProvider } from "../providers";
 import AfterMove from "./AfterMove";
+import { ContactLine } from "./Contact";
 
 export function StatusList() {
   const { t, errText } = useI18n();
@@ -297,6 +298,7 @@ export function StatusDetail() {
           </ul>
 
           <AfterMove transferId={id} />
+          <ContactLine />
         </>
       )}
     </Screen>

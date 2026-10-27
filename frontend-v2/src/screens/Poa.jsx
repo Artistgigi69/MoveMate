@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { api, getToken } from "../api";
+import { BUSINESS } from "../business";
+
+const OSEK = ["עוסק פטור", BUSINESS.osekNumber].filter(Boolean).join(" ");
 
 // /admin/poa/:id — the user's power of attorney as a printable Hebrew page
 // (providers are Israeli), with the signature they drew. Staff print it to
@@ -42,7 +45,7 @@ export default function Poa() {
 
       <p>
         אני הח"מ, <strong>{p.name}</strong>, ת"ז <strong><bdi>{p.idNumber}</bdi></strong>, טלפון <bdi>{p.phone}</bdi>,
-        מייפה בזאת את כוחם של MoveMate ונציגיה לפנות בשמי לחברת החשמל לישראל, לתאגידי המים והביוב,
+        מייפה בזאת את כוחם של MoveMate ({OSEK}) ונציגיה לפנות בשמי לחברת החשמל לישראל, לתאגידי המים והביוב,
         לחברות הגז, לספקי האינטרנט ולרשויות המקומיות, ולבצע את הפעולות הנדרשות להעברת החשבונות
         והחלפת המחזיקים בעקבות מעבר הדירה:
       </p>

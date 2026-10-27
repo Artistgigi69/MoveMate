@@ -4,6 +4,7 @@ import { Screen } from "../ui";
 import { SERVICES, useDraft } from "../draft";
 import { useI18n } from "../i18n";
 import { Icon } from "../icons";
+import { ContactCard } from "./Contact";
 
 // Isometric house + moving box, drawn by hand so the hero stays a few KB.
 function HouseScene() {
@@ -170,8 +171,11 @@ export default function Home() {
         ))}
       </section>
 
+      <ContactCard />
+
       <footer className="site-footer">
         <span>© {new Date().getFullYear()} MoveMate</span>
+        <Link to="/contact">{t("contact.link")}</Link>
         <Link to="/terms">{t("legal.terms")}</Link>
         <Link to="/privacy">{t("legal.privacy")}</Link>
       </footer>

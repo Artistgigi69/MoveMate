@@ -81,7 +81,9 @@ const PATHS = {
       <path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" />
     </>
   ),
-  chat: <path d="M4 20l1.4-4A8 8 0 1 1 8 18.6L4 20z" />
+  chat: <path d="M4 20l1.4-4A8 8 0 1 1 8 18.6L4 20z" />,
+  phone: <path d="M6.5 4h3l1.5 4-2 1.3a11 11 0 0 0 5.7 5.7l1.3-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 6a2 2 0 0 1 2-2z" />,
+  mail: <path d="M4 6h16v12H4zM4 7l8 6 8-6" />
 };
 
 export function Icon({ name, size = 20, className = "", strokeWidth = 1.8 }) {

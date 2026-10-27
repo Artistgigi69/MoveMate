@@ -17,6 +17,7 @@ import Legal from "./screens/Legal";
 import { DeleteAccount } from "./screens/Account";
 import Admin from "./screens/Admin";
 import Poa from "./screens/Poa";
+import Contact from "./screens/Contact";
 
 import { api } from "./api";
 
@@ -43,6 +44,7 @@ createRoot(document.getElementById("root")).render(
             <Route path="/reset/:token" element={<Reset />} />
             <Route path="/privacy" element={<Legal doc="privacy" />} />
             <Route path="/terms" element={<Legal doc="terms" />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/account/delete" element={<DeleteAccount />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/poa/:id" element={<Poa />} />

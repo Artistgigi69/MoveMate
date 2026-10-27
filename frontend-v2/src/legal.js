@@ -2,14 +2,19 @@
 // are long documents, not UI strings. Update UPDATED when the text changes.
 
 export const UPDATED = "2026-10-27";
-export const CONTACT = "2donutchannel@gmail.com";
+import { BUSINESS } from "./business";
+
+export const CONTACT = BUSINESS.email;
+const PHONE = BUSINESS.phone;
+// "עוסק פטור" or "עוסק פטור 123456789" once the number is filled in.
+const OSEK = ["עוסק פטור", BUSINESS.osekNumber].filter(Boolean).join(" ");
 
 export const LEGAL = {
   privacy: {
     ru: [
       ["Кто мы", [
         "MoveMate — онлайн-сервис, который помогает при переезде в Израиле собрать данные для переоформления коммунальных услуг, отправить письма по арноне в муниципалитеты и подсказать, где переоформить остальные услуги.",
-        `По любым вопросам о ваших данных пишите на ${CONTACT}.`
+        `Сервис ведёт частный бизнес MoveMate (${OSEK}). По любым вопросам о ваших данных пишите на ${CONTACT} или звоните / пишите в WhatsApp: ${PHONE}.`
       ]],
       ["Какие данные мы собираем", [
         "Ваши имя, номер теудат зеут, телефон и email; старый и новый адрес, дату переезда; показания и фото счётчиков; копию договора аренды; данные нового жильца или владельца, если вы их указали; email и пароль для входа (пароль хранится только в зашифрованном виде).",
@@ -39,7 +44,7 @@ export const LEGAL = {
     he: [
       ["מי אנחנו", [
         "MoveMate הוא שירות מקוון שעוזר במעבר דירה בישראל לרכז את הפרטים להעברת חשבונות, לשלוח מכתבי ארנונה לעיריות ולהפנות להעברת שאר השירותים.",
-        `לכל שאלה על המידע שלכם כתבו אל ${CONTACT}.`
+        `השירות מופעל על ידי העסק הפרטי MoveMate (${OSEK}). לכל שאלה על המידע שלכם כתבו אל ${CONTACT} או התקשרו / כתבו בוואטסאפ: ${PHONE}.`
       ]],
       ["איזה מידע אנחנו אוספים", [
         "שם, מספר תעודת זהות, טלפון ודוא\"ל; כתובת ישנה וחדשה ותאריך המעבר; קריאות וצילומי מונים; עותק של חוזה השכירות; פרטי הדייר/ת החדש/ה או הבעלים, אם מסרתם; דוא\"ל וסיסמה לכניסה (הסיסמה נשמרת רק בצורה מוצפנת).",
@@ -69,7 +74,7 @@ export const LEGAL = {
     ar: [
       ["من نحن", [
         "MoveMate خدمة إلكترونية تساعد عند الانتقال في إسرائيل على جمع البيانات اللازمة لنقل الحسابات، وإرسال رسائل الأرنونا إلى البلديات، وإرشادك إلى أماكن نقل باقي الخدمات.",
-        `لأي سؤال عن بياناتك راسلنا على ${CONTACT}.`
+        `تديرُ الخدمةَ المصلحةُ الخاصة MoveMate (${OSEK}). لأي سؤال عن بياناتك راسلنا على ${CONTACT} أو اتصل / راسلنا عبر واتساب: ${PHONE}.`
       ]],
       ["ما البيانات التي نجمعها", [
         "اسمك ورقم الهوية والهاتف والبريد الإلكتروني؛ العنوان القديم والجديد وتاريخ الانتقال؛ قراءات العدادات وصورها؛ نسخة من عقد الإيجار؛ بيانات المستأجر الجديد أو المالك إن أدخلتها؛ البريد وكلمة المرور للدخول (تُحفظ كلمة المرور مشفّرة فقط).",
@@ -99,7 +104,7 @@ export const LEGAL = {
     en: [
       ["Who we are", [
         "MoveMate is an online service that helps people moving within Israel collect what's needed to transfer utilities, email arnona letters to municipalities, and find where to transfer the other services.",
-        `For any question about your data, write to ${CONTACT}.`
+        `The service is run by the private business MoveMate (${OSEK}). For any question about your data, write to ${CONTACT} or call / WhatsApp ${PHONE}.`
       ]],
       ["What we collect", [
         "Your name, ID number, phone and email; old and new address and move date; meter readings and photos; a copy of your lease; the new tenant's or owner's details if you give them; your sign-in email and password (the password is stored only in hashed form).",
@@ -149,7 +154,7 @@ export const LEGAL = {
       ]],
       ["Изменения и закон", [
         "Мы можем обновлять эти условия; дата обновления указана вверху страницы. К условиям применяется право Государства Израиль.",
-        `Вопросы: ${CONTACT}.`
+        `Вопросы: ${CONTACT}, телефон и WhatsApp ${PHONE}. Сервис ведёт MoveMate (${OSEK}).`
       ]]
     ],
     he: [
@@ -172,7 +177,7 @@ export const LEGAL = {
       ]],
       ["שינויים ודין", [
         "אנו רשאים לעדכן את התנאים; תאריך העדכון מופיע בראש העמוד. על התנאים חל הדין של מדינת ישראל.",
-        `שאלות: ${CONTACT}.`
+        `שאלות: ${CONTACT}, טלפון ווואטסאפ ${PHONE}. השירות מופעל על ידי MoveMate (${OSEK}).`
       ]]
     ],
     ar: [
@@ -195,7 +200,7 @@ export const LEGAL = {
       ]],
       ["التعديلات والقانون", [
         "قد نحدّث هذه الشروط؛ تاريخ التحديث مذكور أعلى الصفحة. يسري على الشروط قانون دولة إسرائيل.",
-        `للأسئلة: ${CONTACT}.`
+        `للأسئلة: ${CONTACT}، الهاتف وواتساب ${PHONE}. تدير الخدمة MoveMate (${OSEK}).`
       ]]
     ],
     en: [
@@ -218,7 +223,7 @@ export const LEGAL = {
       ]],
       ["Changes and law", [
         "We may update these terms; the date of the last update is shown at the top of the page. These terms are governed by the laws of the State of Israel.",
-        `Questions: ${CONTACT}.`
+        `Questions: ${CONTACT}, phone and WhatsApp ${PHONE}. The service is run by MoveMate (${OSEK}).`
       ]]
     ]
   }

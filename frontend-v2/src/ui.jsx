@@ -182,7 +182,8 @@ export function FilePick({ label, file, onPick, accept, capture, icon = "file" }
 
 // Hebrew words inside a Russian/Arabic/English sentence (form names like
 // «החלפת מחזיק») reorder the punctuation around them; isolating each Hebrew
-// run keeps the sentence intact.
+// run keeps the sentence intact. The character class is the Hebrew block,
+// U+0590 to U+05FF.
 export function Bidi({ text }) {
   return String(text)
     .split(/([֐-׿][֐-׿\s"'-]*[֐-׿]|[֐-׿])/)
